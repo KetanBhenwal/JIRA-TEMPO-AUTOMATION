@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JIRA Tempo Time Logger</title>
+  <style>
+    .navigation {
+      background-color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .navigation a {
+      color: #0052cc;
+      text-decoration: none;
+      margin-right: 20px;
+      font-weight: 500;
+    }
+    .navigation a:hover {
+      text-decoration: underline;
+    }
+    .navigation a.active {
+      color: #0747a6;
+      border-bottom: 2px solid #0052cc;
+      padding-bottom: 2px;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f7fa;
+    }
+    h1, h2 {
+      color: #0052cc;
+    }
+    .container {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e1e4e8;
+    }
+    th {
+      background-color: #f6f8fa;
+      color: #24292e;
+      font-weight: 600;
+    }
+    tr:hover {
+      background-color: #f6f8fa;
+    }
+    .selected-row {
+      background-color: #e2ecff !important;
+    }
+    .button {
+      background-color: #0052cc;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px 0;
+      transition: background-color 0.2s;
+    }
+    .button:hover {
+      background-color: #0747a6;
+    }
+    .button:disabled {
+      background-color: #b3cdfb;
+      cursor: not-allowed;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #dfe1e6;
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+    label {
+      font-weight: 500;
+      display: block;
+      margin-top: 15px;
+    }
+    .success-message {
+      background-color: #e3fcef;
+      border-left: 4px solid #36b37e;
+      padding: 15px;
+      margin: 15px 0;
+      color: #006644;
+      border-radius: 3px;
+    }
+    .error-message {
+      background-color: #ffebe6;
+      border-left: 4px solid #ff5630;
+      padding: 15px;
+      margin: 15px 0;
+      color: #ae2a19;
+      border-radius: 3px;
+    }
+    .hidden {
+      display: none;
+    }
+    .columns {
+      display: flex;
+      gap: 20px;
+    }
+    .column {
+      flex: 1;
+    }
+    .search-box {
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 1px solid #dfe1e6;
+      border-radius: 3px;
+    }
+    .loading {
+      text-align: center;
+      padding: 20px;
+    }
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #0052cc;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 2s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Pagination styles */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+      gap: 10px;
+    }
+    .pagination-button {
+      background-color: #f4f5f7;
+      border: 1px solid #dfe1e6;
+      color: #42526e;
+      padding: 8px 16px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .pagination-button:hover:not(:disabled) {
+      background-color: #ebecf0;
+    }
+    .pagination-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+    .pagination-info {
+      margin: 0 15px;
+      color: #42526e;
+      font-size: 14px;
+    }
+    
+    /* Tabs styles */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #dfe1e6;
+      margin-bottom: 20px;
+    }
+    .tab-button {
+      padding: 10px 20px;
+      background-color: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 16px;
+      color: #42526e;
+    }
+    .tab-button:hover {
+      color: #0052cc;
+    }
+    .active-tab {
+      color: #0052cc;
+      border-bottom-color: #0052cc;
+    }
+    .tab-content {
+      padding: 10px 0;
+    }
+    
+    /* Dialog styles */
+    .dialog-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(9, 30, 66, 0.54);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .dialog {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 14px rgba(9, 30, 66, 0.25);
+      padding: 25px;
+      width: 90%;
+      max-width: 700px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .dialog-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #dfe1e6;
+    }
+    .dialog-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #42526e;
+    }
+    .dialog-close:hover {
+      color: #0052cc;
+    }
+    .select-issue-button {
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+    
+    /* Modal styles for time tracking details */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 500px;
+      position: relative;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      position: absolute;
+      right: 15px;
+      top: 10px;
+    }
+    .close:hover {
+      color: black;
+    }
+    .time-tracking-details {
+      margin-top: 20px;
+    }
+    .time-section {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+    }
+    .time-section h4 {
+      margin-top: 0;
+      color: #333;
+    }
+    .time-section p {
+      margin: 8px 0;
+    }
+    
+    /* Date range styling */
+    #dateRangeMode {
+      margin-right: 8px;
+    }
+    
+    #endDateContainer {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      border-left: 3px solid #007bff;
+    }
+    
+    #endDateContainer.hidden {
+      display: none;
+    }
+    
+    /* Enhanced form styling */
+    .column > div {
+      margin-bottom: 15px;
+    }
+    
+    .column > div > label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    
+    /* Meeting-specific styles */
+    .meeting-time {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      color: #0052cc;
+    }
+    
+    .meeting-duration {
+      background-color: #e3fcef;
+      color: #006644;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    .meeting-description {
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .meeting-description:hover {
+      white-space: normal;
+      word-wrap: break-word;
+    }
+    
+    .meeting-controls {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      border: 1px solid #e1e4e8;
+    }
+    
+    .meeting-summary-stats {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 100px;
+    }
+    
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #0052cc;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: #666;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="navigation">
+    <a href="index.html" class="active">Time Logger</a>
+    <a href="ai-agent.html">AI Agent</a>
+    <a href="debug.html">Debug</a>
+  <a href="config.html">Config</a>
+    <a href="daily-notes.html">Daily Notes (AI)</a>
+  </div>
+
+  <h1>JIRA Tempo Time Logger</h1>
+  
+  <div class="container">
+    <h2>Search for Issues</h2>
+    <div class="search-container">
+      <input type="text" id="globalSearchBox" class="search-box" placeholder="Search issue by key or name (e.g., CON22-, Project name)">
+      <button id="globalSearchButton" class="button">Search</button>
+    </div>
+    
+    <div id="loadingSearchResults" class="loading hidden">
+      <div class="spinner"></div>
+      <p>Searching for issues...</p>
+    </div>
+    
+    <div id="searchResultsContainer" class="hidden">
+      <h3>Search Results</h3>
+      <table id="searchResultsTable">
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Summary</th>
+            <th>Status</th>
+            <th>Time Spent</th>
+            <th>Estimate</th>
+            <th>Source</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="searchResultsList">
+          <!-- Search results will be populated here -->
+        </tbody>
+      </table>
+      <div id="searchPagination" class="pagination hidden">
+        <!-- Pagination controls will be generated here -->
+      </div>
+      <p id="noSearchResults" class="hidden">No issues found matching your search criteria.</p>
+    </div>
+    
+    <div id="errorSearchingIssues" class="error-message hidden">
+      Failed to search for issues. Please check your connection and credentials.
+    </div>
+  </div>
+  
+  <div class="container">
+    <div class="tabs">
+      <button id="issuesTabButton" class="tab-button active-tab">Your Issues</button>
+      <button id="mentionedTabButton" class="tab-button">Adhoc Tasks</button>
+      <button id="meetingsTabButton" class="tab-button">My Meetings</button>
+    </div>
+    
+    <div id="issuesTab" class="tab-content">
+      <h2>Your Assigned Issues</h2>
+      <input type="text" id="searchBox" class="search-box" placeholder="Search issues..." onkeyup="filterIssues()">
+      
+      <div id="loadingIssues" class="loading">
+        <div class="spinner"></div>
+        <p>Loading your issues...</p>
+      </div>
+      
+      <div id="issuesContainer" class="hidden">
+        <table id="issuesTable">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Summary</th>
+              <th>Status</th>
+              <th>Time Spent</th>
+              <th>Estimate</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="issuesList">
+            <!-- Issues will be populated here -->
+          </tbody>
+        </table>
+        <div id="issuesPagination" class="pagination hidden">
+          <!-- Pagination controls will be generated here -->
+        </div>
+        <p id="noIssues" class="hidden">No issues found matching your criteria.</p>
+      </div>
+      
+      <div id="errorLoadingIssues" class="error-message hidden">
+        Failed to load issues. Please check your connection and credentials.
+      </div>
+    </div>
+    
+    <div id="mentionedTab" class="tab-content hidden">
+      <h2>Adhoc Tasks (Issues Where You Were Mentioned in Comments)</h2>
+      <input type="text" id="mentionedSearchBox" class="search-box" placeholder="Search mentioned issues..." onkeyup="filterMentionedIssues()">
+      
+      <div id="loadingMentionedIssues" class="loading">
+        <div class="spinner"></div>
+        <p>Loading issues where you were mentioned in comments...</p>
+      </div>
+      
+      <div id="mentionedIssuesContainer" class="hidden">
+        <table id="mentionedIssuesTable">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Summary</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="mentionedIssuesList">
+            <!-- Mentioned issues will be populated here -->
+          </tbody>
+        </table>
+        <div id="mentionedPagination" class="pagination hidden">
+          <!-- Pagination controls will be generated here -->
+        </div>
+        <p id="noMentionedIssues" class="hidden">No issues found where you were mentioned in comments.</p>
+      </div>
+      
+      <div id="errorLoadingMentionedIssues" class="error-message hidden">
+        Failed to load issues where you were mentioned in comments. Please check your connection and credentials.
+      </div>
+    </div>
+    
+    <div id="meetingsTab" class="tab-content hidden">
+      <h2>My Meetings & Events</h2>
+      
+      <div class="meeting-controls" style="margin-bottom: 20px; display: flex; gap: 15px; align-items: end; flex-wrap: wrap;">
+        <div>
+          <label for="meetingFromDate">From Date:</label>
+          <input type="date" id="meetingFromDate" style="width: auto;">
+        </div>
+        <div>
+          <label for="meetingToDate">To Date:</label>
+          <input type="date" id="meetingToDate" style="width: auto;">
+        </div>
+        <button id="refreshMeetingsButton" class="button">Refresh My Meetings</button>
+      </div>
+      
+      <input type="text" id="meetingSearchBox" class="search-box" placeholder="Search my meetings..." onkeyup="filterMeetings()">
+      
+      <div id="loadingMeetings" class="loading">
+        <div class="spinner"></div>
+        <p>Loading meetings and events...</p>
+      </div>
+      
+      <div id="meetingsContainer" class="hidden">
+        <div id="meetingSummary" class="container" style="margin-bottom: 20px; padding: 15px; background-color: #f0f7ff; border-left: 4px solid #0052cc;">
+          <!-- Meeting summary will be populated here -->
+        </div>
+        
+        <table id="meetingsTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Duration</th>
+              <th>Meeting/Event</th>
+              <th>Issue</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody id="meetingsList">
+            <!-- Meetings will be populated here -->
+          </tbody>
+        </table>
+        <div id="meetingsPagination" class="pagination hidden">
+          <!-- Pagination controls will be generated here -->
+        </div>
+        <p id="noMeetings" class="hidden">No meetings found for the selected date range in your worklogs.</p>
+      </div>
+      
+      <div id="errorLoadingMeetings" class="error-message hidden">
+        Failed to load your meetings. Please check your connection and credentials.
+      </div>
+    </div>
+  </div>
+  
+  <div id="logTimeContainer" class="container hidden">
+    <h2>Log Time</h2>
+    
+    <div class="columns">
+      <div class="column">
+        <div>
+          <label>Issue:</label>
+          <div><strong id="selectedIssueKey"></strong> - <span id="selectedIssueSummary"></span></div>
+        </div>
+        
+        <div>
+          <label for="timeSpent">Time Spent (hours):</label>
+          <input type="number" id="timeSpent" min="0.1" step="0.1" value="1">
+        </div>
+        
+        <div>
+          <label for="workDescription">Work Description:</label>
+          <textarea id="workDescription" rows="4" placeholder="Describe the work you did"></textarea>
+        </div>
+      </div>
+      
+      <div class="column">
+        <div>
+          <label for="workDate">Start Date:</label>
+          <input type="date" id="workDate" onchange="updateEndDateMin()">
+        </div>
+        
+        <div>
+          <input type="checkbox" id="dateRangeMode" onchange="toggleDateRangeMode()">
+          <label for="dateRangeMode">Log for multiple days (date range)</label>
+          <small style="display: block; color: #6c757d; margin-top: 5px;">
+            Check this to log the same hours for multiple consecutive days
+          </small>
+        </div>
+        
+        <div id="endDateContainer" class="hidden">
+          <label for="endDate">End Date:</label>
+          <input type="date" id="endDate" onchange="updateDateRangePreview()">
+        </div>
+        
+        <div>
+          <label for="startTime">Start Time (HH:MM:SS):</label>
+          <input type="time" id="startTime" value="09:00:00" step="1">
+        </div>
+        
+        <!-- Work Attributes Container - Will be populated by workAttributes.js -->
+        <div id="workAttributesContainer">
+          <h3>Work Attributes</h3>
+          <div class="spinner" style="margin: 20px auto;"></div>
+          <p style="text-align: center;">Loading work attributes...</p>
+        </div>
+      </div>
+    </div>
+    
+    <div style="margin-top: 20px;">
+      <button id="submitTimeButton" class="button">Submit Time Log</button>
+      <button id="cancelButton" class="button" style="background-color: #6c757d;">Cancel</button>
+    </div>
+    
+    <div id="loggingResult" class="hidden">
+      <!-- Success/Error message will be displayed here -->
+    </div>
+  </div>
+
+  <script src="workAttributes.js"></script>
+  <script src="pagination.js"></script>
+  <script src="issueSearch.js"></script>
+  <script>
+    // Global variables
+    let selectedIssue = null;
+    let allIssues = [];
+    let allMentionedIssues = [];
+    let allMeetings = [];
+    let searchResults = [];
+    
+    // Set today's date as default
+    document.addEventListener('DOMContentLoaded', function() {
+      const today = new Date();
+      const formattedDate = today.toISOString().split('T')[0];
+      document.getElementById('workDate').value = formattedDate;
+      
+      // Set default meeting date range (last 7 days)
+      const lastWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      document.getElementById('meetingFromDate').value = lastWeek.toISOString().split('T')[0];
+      document.getElementById('meetingToDate').value = formattedDate;
+      
+      // Add event listener for global search button
+      document.getElementById('globalSearchButton').addEventListener('click', performGlobalSearch);
+      
+      // Add event listener for pressing Enter in the search box
+      document.getElementById('globalSearchBox').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+          performGlobalSearch();
+        }
+      });
+      
+      // Add event listener for refresh meetings button
+      document.getElementById('refreshMeetingsButton').addEventListener('click', fetchMeetings);
+      
+      // Set up tab navigation
+      setupTabNavigation();
+      
+      // Fetch both types of issues
+      fetchIssues();
+      fetchMentionedIssues();
+      
+      // Add event listeners for form buttons
+      document.getElementById('submitTimeButton').addEventListener('click', submitTimeLog);
+      document.getElementById('cancelButton').addEventListener('click', cancelTimeLogging);
+    });
+    
+    // Fetch issues from server
+    async function fetchIssues() {
+      document.getElementById('loadingIssues').classList.remove('hidden');
+      document.getElementById('issuesContainer').classList.add('hidden');
+      document.getElementById('errorLoadingIssues').classList.add('hidden');
+      
+      try {
+        const response = await fetch('/api/issues');
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        allIssues = await response.json();
+        
+        document.getElementById('loadingIssues').classList.add('hidden');
+        document.getElementById('issuesContainer').classList.remove('hidden');
+        
+        renderIssues(allIssues);
+      } catch (error) {
+        console.error('Error fetching issues:', error);
+        document.getElementById('loadingIssues').classList.add('hidden');
+        document.getElementById('errorLoadingIssues').classList.remove('hidden');
+      }
+    }
+    
+    // Render issues in the table
+    function renderIssues(issues) {
+      const issuesList = document.getElementById('issuesList');
+      issuesList.innerHTML = '';
+      
+      if (issues.length === 0) {
+        document.getElementById('noIssues').classList.remove('hidden');
+        return;
+      }
+      
+      document.getElementById('noIssues').classList.add('hidden');
+      
+      issues.forEach(issue => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${issue.key}</td>
+          <td>${issue.summary}</td>
+          <td>${issue.status}</td>
+          <td style="cursor: pointer; color: #0747a6; text-decoration: underline;" onclick="showTimeTrackingDetails('${issue.key}')" title="Click for detailed time tracking">${issue.timeSpent || '-'}</td>
+          <td>${issue.originalEstimate || '-'}</td>
+          <td><button class="button log-button" data-issue-id="${issue.id}" data-issue-key="${issue.key}" data-issue-summary="${issue.summary}">Log Time</button></td>
+        `;
+        issuesList.appendChild(row);
+      });
+      
+      // Add event listeners to log buttons
+      document.querySelectorAll('.log-button').forEach(button => {
+        button.addEventListener('click', function() {
+          const issueId = this.getAttribute('data-issue-id');
+          const issueKey = this.getAttribute('data-issue-key');
+          const issueSummary = this.getAttribute('data-issue-summary');
+          
+          selectIssue({id: issueId, key: issueKey, summary: issueSummary});
+        });
+      });
+    }
+    
+    // Filter issues based on search input
+    function filterIssues() {
+      const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+      
+      if (!searchTerm) {
+        renderIssues(allIssues);
+        return;
+      }
+      
+      const filteredIssues = allIssues.filter(issue => 
+        issue.key.toLowerCase().includes(searchTerm) || 
+        issue.summary.toLowerCase().includes(searchTerm) ||
+        issue.status.toLowerCase().includes(searchTerm)
+      );
+      
+      renderIssues(filteredIssues);
+    }
+    
+    // Fetch mentioned issues (adhoc tasks) from server
+    async function fetchMentionedIssues() {
+      document.getElementById('loadingMentionedIssues').classList.remove('hidden');
+      document.getElementById('mentionedIssuesContainer').classList.add('hidden');
+      document.getElementById('errorLoadingMentionedIssues').classList.add('hidden');
+      
+      try {
+        const response = await fetch('/api/mentioned-issues');
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        allMentionedIssues = await response.json();
+        
+        // Filter out any issues that are already in the assigned issues list
+        if (allIssues && allIssues.length > 0) {
+          const assignedIssueKeys = allIssues.map(issue => issue.key);
+          allMentionedIssues = allMentionedIssues.filter(issue => !assignedIssueKeys.includes(issue.key));
+        }
+        
+        document.getElementById('loadingMentionedIssues').classList.add('hidden');
+        document.getElementById('mentionedIssuesContainer').classList.remove('hidden');
+        
+        renderMentionedIssues(allMentionedIssues);
+      } catch (error) {
+        console.error('Error fetching mentioned issues:', error);
+        document.getElementById('loadingMentionedIssues').classList.add('hidden');
+        document.getElementById('errorLoadingMentionedIssues').classList.remove('hidden');
+      }
+    }
+    
+    // Render mentioned issues in the table
+    function renderMentionedIssues(issues) {
+      const issuesList = document.getElementById('mentionedIssuesList');
+      issuesList.innerHTML = '';
+      
+      if (issues.length === 0) {
+        document.getElementById('noMentionedIssues').classList.remove('hidden');
+        return;
+      }
+      
+      document.getElementById('noMentionedIssues').classList.add('hidden');
+      
+      issues.forEach(issue => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${issue.key}</td>
+          <td>${issue.summary}</td>
+          <td>${issue.status}</td>
+          <td><button class="button log-button" data-issue-id="${issue.id}" data-issue-key="${issue.key}" data-issue-summary="${issue.summary}">Log Time</button></td>
+        `;
+        issuesList.appendChild(row);
+      });
+      
+      // Add event listeners to log buttons
+      document.querySelectorAll('#mentionedIssuesList .log-button').forEach(button => {
+        button.addEventListener('click', function() {
+          const issueId = this.getAttribute('data-issue-id');
+          const issueKey = this.getAttribute('data-issue-key');
+          const issueSummary = this.getAttribute('data-issue-summary');
+          
+          selectIssue({id: issueId, key: issueKey, summary: issueSummary});
+        });
+      });
+    }
+    
+    // Filter mentioned issues based on search input
+    function filterMentionedIssues() {
+      const searchTerm = document.getElementById('mentionedSearchBox').value.toLowerCase();
+      
+      if (!searchTerm) {
+        renderMentionedIssues(allMentionedIssues);
+        return;
+      }
+      
+      const filteredIssues = allMentionedIssues.filter(issue => 
+        issue.key.toLowerCase().includes(searchTerm) || 
+        issue.summary.toLowerCase().includes(searchTerm) ||
+        issue.status.toLowerCase().includes(searchTerm)
+      );
+      
+      renderMentionedIssues(filteredIssues);
+    }
+    
+    // Select an issue for time logging - make it globally accessible
+    window.selectIssue = function(issue) {
+      selectedIssue = issue;
+      
+      document.getElementById('selectedIssueKey').textContent = issue.key;
+      document.getElementById('selectedIssueSummary').textContent = issue.summary;
+      
+      document.getElementById('logTimeContainer').classList.remove('hidden');
+      document.getElementById('loggingResult').classList.add('hidden');
+      document.getElementById('loggingResult').innerHTML = '';
+      
+      // Scroll to the time logging form
+      document.getElementById('logTimeContainer').scrollIntoView({
+        behavior: 'smooth'
+      });
+    }
+    
+    // Perform global search for issues
+    async function performGlobalSearch() {
+      const searchTerm = document.getElementById('globalSearchBox').value.trim();
+      
+      if (!searchTerm || searchTerm.length < 2) {
+        showError('Please enter at least 2 characters to search');
+        return;
+      }
+      
+      document.getElementById('loadingSearchResults').classList.remove('hidden');
+      document.getElementById('searchResultsContainer').classList.add('hidden');
+      document.getElementById('errorSearchingIssues').classList.add('hidden');
+      
+      try {
+        const response = await fetch(`/api/search-issues?query=${encodeURIComponent(searchTerm)}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        searchResults = await response.json();
+        
+        document.getElementById('loadingSearchResults').classList.add('hidden');
+        document.getElementById('searchResultsContainer').classList.remove('hidden');
+        
+        renderSearchResults(searchResults);
+      } catch (error) {
+        console.error('Error searching for issues:', error);
+        document.getElementById('loadingSearchResults').classList.add('hidden');
+        document.getElementById('errorSearchingIssues').classList.remove('hidden');
+      }
+    }
+    
+    // Render search results in the table
+    function renderSearchResults(issues) {
+      const searchResultsList = document.getElementById('searchResultsList');
+      searchResultsList.innerHTML = '';
+      
+      if (issues.length === 0) {
+        document.getElementById('noSearchResults').classList.remove('hidden');
+        document.getElementById('searchPagination').classList.add('hidden');
+        return;
+      }
+      
+      document.getElementById('noSearchResults').classList.add('hidden');
+      
+      issues.forEach(issue => {
+        const row = document.createElement('tr');
+        
+        // Highlight the source (local or API)
+        const sourceStyle = issue.source === 'local' ? 
+          'background-color: #e3fcef; color: #006644;' : 
+          'background-color: #deebff; color: #0747a6;';
+        
+        row.innerHTML = `
+          <td>${issue.key}</td>
+          <td>${issue.summary}</td>
+          <td>${issue.status}</td>
+          <td style="cursor: pointer; color: #0747a6; text-decoration: underline;" onclick="showTimeTrackingDetails('${issue.key}')" title="Click for detailed time tracking">${issue.timeSpent || '-'}</td>
+          <td>${issue.originalEstimate || '-'}</td>
+          <td style="${sourceStyle}">${issue.source === 'local' ? 'Local' : issue.source === 'direct-lookup' ? 'Direct' : 'JIRA API'}</td>
+          <td><button class="button log-button" data-issue-id="${issue.id}" data-issue-key="${issue.key}" data-issue-summary="${issue.summary}">Log Time</button></td>
+        `;
+        searchResultsList.appendChild(row);
+      });
+      
+      // Add event listeners to log buttons
+      document.querySelectorAll('#searchResultsList .log-button').forEach(button => {
+        button.addEventListener('click', function() {
+          const issueId = this.getAttribute('data-issue-id');
+          const issueKey = this.getAttribute('data-issue-key');
+          const issueSummary = this.getAttribute('data-issue-summary');
+          
+          selectIssue({id: issueId, key: issueKey, summary: issueSummary});
+        });
+      });
+      
+      // Show pagination if needed
+      if (searchResults.length > 10) {
+        document.getElementById('searchPagination').classList.remove('hidden');
+      }
+    }
+    
+    // Submit time log
+    async function submitTimeLog() {
+      if (!selectedIssue) {
+        showError('No issue selected. Please select an issue first.');
+        return;
+      }
+      
+      const timeSpent = parseFloat(document.getElementById('timeSpent').value);
+      const description = document.getElementById('workDescription').value.trim();
+      const workDate = document.getElementById('workDate').value;
+      const startTime = document.getElementById('startTime').value;
+      const dateRangeMode = document.getElementById('dateRangeMode').checked;
+      const endDate = document.getElementById('endDate').value;
+      
+      if (isNaN(timeSpent) || timeSpent <= 0) {
+        showError('Please enter a valid time spent value greater than 0.');
+        return;
+      }
+      
+      if (!description) {
+        showError('Please enter a work description.');
+        return;
+      }
+      
+      if (!workDate) {
+        showError('Please select a start date.');
+        return;
+      }
+      
+      if (dateRangeMode && !endDate) {
+        showError('Please select an end date for date range mode.');
+        return;
+      }
+      
+      if (dateRangeMode && endDate < workDate) {
+        showError('End date must be on or after start date.');
+        return;
+      }
+      
+      if (!startTime) {
+        showError('Please select a start time.');
+        return;
+      }
+      
+      // Validate required work attributes (from workAttributes.js)
+      if (!validateWorkAttributes()) {
+        showError('Please fill in all required work attributes.');
+        return;
+      }
+      
+      // Ensure time format is HH:MM:SS (add seconds if needed)
+      let formattedStartTime = startTime;
+      if (formattedStartTime.split(':').length === 2) {
+        formattedStartTime = `${formattedStartTime}:00`;
+      }
+      
+      // Convert time to seconds for API
+      const timeSpentSeconds = Math.round(timeSpent * 3600);
+      
+      // Get selected work attributes from workAttributes.js
+      const attributes = getSelectedWorkAttributes();
+      
+      // Log the attributes for debugging
+      console.log('Selected work attributes for submission:', attributes);
+      
+      const payload = {
+        issueId: parseInt(selectedIssue.id),
+        timeSpentSeconds,
+        description,
+        startDate: workDate,
+        startTime: formattedStartTime,
+        attributes
+      };
+      
+      // Add end date if in date range mode
+      if (dateRangeMode && endDate) {
+        payload.endDate = endDate;
+      }
+      
+      // Disable submit button
+      const submitButton = document.getElementById('submitTimeButton');
+      submitButton.disabled = true;
+      
+      // Update button text based on mode
+      if (dateRangeMode && endDate) {
+        const startDateObj = new Date(workDate);
+        const endDateObj = new Date(endDate);
+        const daysDiff = Math.ceil((endDateObj - startDateObj) / (1000 * 60 * 60 * 24)) + 1;
+        submitButton.textContent = `Submitting for ${daysDiff} days...`;
+      } else {
+        submitButton.textContent = 'Submitting...';
+      }
+      
+      try {
+        const response = await fetch('/api/log-time', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to log time');
+        }
+        
+        const result = await response.json();
+        
+        // Handle multiple day results
+        if (result.results && Array.isArray(result.results)) {
+          const successCount = result.results.filter(r => r.success).length;
+          const totalCount = result.results.length;
+          
+          if (result.success) {
+            showSuccess(`Time logged successfully for ${selectedIssue.key} across ${totalCount} days!`);
+          } else {
+            const failedDates = result.results.filter(r => !r.success).map(r => r.date).join(', ');
+            showError(`Time logged for ${successCount} out of ${totalCount} days. Failed for: ${failedDates}`);
+          }
+          
+          // Show detailed results
+          console.log('Detailed results:', result.results);
+        } else {
+          showSuccess(`Time logged successfully for ${selectedIssue.key}! Worklog ID: ${result.worklogId}`);
+        }
+        
+        // Clear form
+        document.getElementById('timeSpent').value = '1';
+        document.getElementById('workDescription').value = '';
+        document.getElementById('dateRangeMode').checked = false;
+        toggleDateRangeMode(); // Hide end date field
+      } catch (error) {
+        console.error('Error logging time:', error);
+        showError(`Failed to log time: ${error.message}`);
+      } finally {
+        // Re-enable submit button
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit Time Log';
+      }
+    }
+    
+    // Cancel time logging
+    function cancelTimeLogging() {
+      document.getElementById('logTimeContainer').classList.add('hidden');
+      selectedIssue = null;
+    }
+    
+    // Show success message
+    function showSuccess(message) {
+      const container = document.getElementById('loggingResult');
+      container.innerHTML = `<div class="success-message">${message}</div>`;
+      container.classList.remove('hidden');
+    }
+    
+    // Show error message
+    function showError(message) {
+      const container = document.getElementById('loggingResult');
+      container.innerHTML = `<div class="error-message">${message}</div>`;
+      container.classList.remove('hidden');
+    }
+    
+    // Set up tab navigation
+    function setupTabNavigation() {
+      document.getElementById('issuesTabButton').addEventListener('click', function() {
+        showTab('issuesTab', this);
+      });
+      
+      document.getElementById('mentionedTabButton').addEventListener('click', function() {
+        showTab('mentionedTab', this);
+      });
+      
+      document.getElementById('meetingsTabButton').addEventListener('click', function() {
+        showTab('meetingsTab', this);
+        // Load meetings when tab is first opened
+        if (allMeetings.length === 0) {
+          fetchMeetings();
+        }
+      });
+    }
+    
+    // Show the selected tab and hide others
+    function showTab(tabId, button) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.add('hidden');
+      });
+      
+      // Show the selected tab
+      document.getElementById(tabId).classList.remove('hidden');
+      
+      // Update active tab button
+      document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active-tab');
+      });
+      button.classList.add('active-tab');
+    }
+    
+    // Fetch meetings from server
+    async function fetchMeetings() {
+      const fromDate = document.getElementById('meetingFromDate').value;
+      const toDate = document.getElementById('meetingToDate').value;
+      
+      if (!fromDate || !toDate) {
+        showError('Please select both from and to dates');
+        return;
+      }
+      
+      document.getElementById('loadingMeetings').classList.remove('hidden');
+      document.getElementById('meetingsContainer').classList.add('hidden');
+      document.getElementById('errorLoadingMeetings').classList.add('hidden');
+      
+      try {
+        const response = await fetch(`/api/meetings?from=${fromDate}&to=${toDate}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        allMeetings = data.meetings || [];
+        
+        document.getElementById('loadingMeetings').classList.add('hidden');
+        document.getElementById('meetingsContainer').classList.remove('hidden');
+        
+        renderMeetings(allMeetings);
+        renderMeetingSummary(data.summary || {});
+      } catch (error) {
+        console.error('Error fetching meetings:', error);
+        document.getElementById('loadingMeetings').classList.add('hidden');
+        document.getElementById('errorLoadingMeetings').classList.remove('hidden');
+      }
+    }
+    
+    // Render meetings in the table
+    function renderMeetings(meetings) {
+      const meetingsList = document.getElementById('meetingsList');
+      meetingsList.innerHTML = '';
+      
+      if (meetings.length === 0) {
+        document.getElementById('noMeetings').classList.remove('hidden');
+        return;
+      }
+      
+      document.getElementById('noMeetings').classList.add('hidden');
+      
+      meetings.forEach(meeting => {
+        const row = document.createElement('tr');
+        
+        // Format date nicely
+        const date = new Date(meeting.date);
+        const formattedDate = date.toLocaleDateString('en-US', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric'
+        });
+        
+        // Format time range
+        const startTime = meeting.startTime.substring(0, 5); // Remove seconds
+        const endTime = meeting.endTime.substring(0, 5); // Remove seconds
+        const timeRange = `${startTime} - ${endTime}`;
+        
+        row.innerHTML = `
+          <td>${formattedDate}<br><small style="color: #666;">${meeting.date}</small></td>
+          <td class="meeting-time">${timeRange}</td>
+          <td><span class="meeting-duration">${meeting.duration}</span></td>
+          <td class="meeting-description" title="${meeting.description}">${meeting.description}</td>
+          <td>
+            <a href="#" onclick="selectIssue({id: '${meeting.issueKey.split('-')[0]}', key: '${meeting.issueKey}', summary: '${meeting.issueSummary}'}); return false;" 
+               style="color: #0052cc; text-decoration: none;">
+              ${meeting.issueKey}
+            </a>
+            <br><small style="color: #666;">${meeting.issueSummary.substring(0, 30)}${meeting.issueSummary.length > 30 ? '...' : ''}</small>
+          </td>
+          <td>
+            <button class="button" style="font-size: 12px; padding: 5px 10px;" 
+                    onclick="showMeetingDetails('${meeting.id}')">
+              View Details
+            </button>
+          </td>
+        `;
+        meetingsList.appendChild(row);
+      });
+    }
+    
+    // Render meeting summary
+    function renderMeetingSummary(summary) {
+      const summaryContainer = document.getElementById('meetingSummary');
+      
+      // Format total meeting time
+      const formatTime = (seconds) => {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+      };
+      
+      const totalTime = formatTime(summary.totalMeetingTime || 0);
+      const averageTime = summary.totalMeetings > 0 ? 
+        formatTime(Math.round((summary.totalMeetingTime || 0) / summary.totalMeetings)) : '0m';
+      
+      // Determine source description
+      let sourceDescription = '';
+      switch(summary.source) {
+        case 'calendar':
+          sourceDescription = '📅 From Tempo Calendar';
+          break;
+        case 'schedule':
+          sourceDescription = '⏰ From Tempo Schedule';
+          break;
+        case 'worklog':
+          sourceDescription = '📝 From Meeting Worklogs';
+          break;
+        default:
+          sourceDescription = '🔍 Auto-detected';
+      }
+      
+      summaryContainer.innerHTML = `
+        <h3 style="margin-top: 0; color: #0052cc;">My Meeting Summary (${summary.dateRange?.from} to ${summary.dateRange?.to})</h3>
+        <div style="margin-bottom: 10px; font-size: 14px; color: #666;">
+          ${sourceDescription} • Account: ${summary.accountId || 'Unknown'}
+        </div>
+        <div class="meeting-summary-stats">
+          <div class="stat-item">
+            <div class="stat-value">${summary.totalMeetings || 0}</div>
+            <div class="stat-label">My Meetings</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">${totalTime}</div>
+            <div class="stat-label">Total Time</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">${averageTime}</div>
+            <div class="stat-label">Avg Duration</div>
+          </div>
+          ${summary.totalWorklogs ? `
+          <div class="stat-item">
+            <div class="stat-value">${summary.totalWorklogs}</div>
+            <div class="stat-label">My Worklogs</div>
+          </div>
+          ` : ''}
+        </div>
+      `;
+    }
+    
+    // Filter meetings based on search input
+    function filterMeetings() {
+      const searchTerm = document.getElementById('meetingSearchBox').value.toLowerCase();
+      
+      if (!searchTerm) {
+        renderMeetings(allMeetings);
+        return;
+      }
+      
+      const filteredMeetings = allMeetings.filter(meeting => 
+        meeting.description.toLowerCase().includes(searchTerm) || 
+        meeting.issueKey.toLowerCase().includes(searchTerm) ||
+        meeting.issueSummary.toLowerCase().includes(searchTerm)
+      );
+      
+      renderMeetings(filteredMeetings);
+    }
+    
+    // Show meeting details in a modal
+    async function showMeetingDetails(meetingId) {
+      const meeting = allMeetings.find(m => m.id == meetingId);
+      
+      if (!meeting) {
+        alert('Meeting details not found');
+        return;
+      }
+      
+      // Create a modal to show detailed meeting info
+      const modal = document.createElement('div');
+      modal.className = 'modal';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <span class="close" onclick="this.parentElement.parentElement.remove()">&times;</span>
+          <h3>Meeting Details</h3>
+          <div class="time-tracking-details">
+            <div class="time-section">
+              <h4>Meeting Information</h4>
+              <p><strong>Description:</strong> ${meeting.description}</p>
+              <p><strong>Date:</strong> ${meeting.date}</p>
+              <p><strong>Start Time:</strong> ${meeting.startTime}</p>
+              <p><strong>End Time:</strong> ${meeting.endTime}</p>
+              <p><strong>Duration:</strong> ${meeting.duration}</p>
+            </div>
+            
+            <div class="time-section">
+              <h4>Issue Information</h4>
+              <p><strong>Issue Key:</strong> ${meeting.issueKey}</p>
+              <p><strong>Issue Summary:</strong> ${meeting.issueSummary}</p>
+            </div>
+            
+            <div class="time-section">
+              <h4>Worklog Information</h4>
+              <p><strong>Author:</strong> ${meeting.author}</p>
+              <p><strong>Worklog ID:</strong> ${meeting.id}</p>
+              <p><strong>Created:</strong> ${meeting.created ? new Date(meeting.created).toLocaleString() : 'N/A'}</p>
+              <p><strong>Updated:</strong> ${meeting.updated ? new Date(meeting.updated).toLocaleString() : 'N/A'}</p>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+    }
+    
+    // Function to show detailed time tracking information
+    async function showTimeTrackingDetails(issueKey) {
+      try {
+        const response = await fetch(`/api/issue/${issueKey}/timetracking`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const timeData = await response.json();
+        
+        // Create a modal or popup to show detailed time tracking info
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+          <div class="modal-content">
+            <span class="close" onclick="this.parentElement.parentElement.remove()">&times;</span>
+            <h3>Time Tracking Details for ${issueKey}</h3>
+            <div class="time-tracking-details">
+              <div class="time-section">
+                <h4>Issue Time Tracking</h4>
+                <p><strong>Original Estimate:</strong> ${timeData.originalEstimate || 'Not set'}</p>
+                <p><strong>Time Spent:</strong> ${timeData.timeSpent || 'No time logged'}</p>
+                <p><strong>Remaining Estimate:</strong> ${timeData.remainingEstimate || 'Not set'}</p>
+              </div>
+              
+              ${timeData.aggregateTimeSpent || timeData.aggregateOriginalEstimate ? `
+              <div class="time-section">
+                <h4>Aggregate Time (includes sub-tasks)</h4>
+                <p><strong>Aggregate Original Estimate:</strong> ${timeData.aggregateOriginalEstimate || 'Not set'}</p>
+                <p><strong>Aggregate Time Spent:</strong> ${timeData.aggregateTimeSpent || 'No time logged'}</p>
+                <p><strong>Aggregate Remaining:</strong> ${timeData.aggregateRemainingEstimate || 'Not set'}</p>
+              </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Add some basic styling for the modal
+        if (!document.getElementById('timeTrackingModalStyles')) {
+          const style = document.createElement('style');
+          style.id = 'timeTrackingModalStyles';
+          style.textContent = `
+            .modal {
+              display: block;
+              position: fixed;
+              z-index: 1000;
+              left: 0;
+              top: 0;
+              width: 100%;
+              height: 100%;
+              background-color: rgba(0,0,0,0.5);
+            }
+            .modal-content {
+              background-color: #fefefe;
+              margin: 15% auto;
+              padding: 20px;
+              border: 1px solid #888;
+              border-radius: 8px;
+              width: 80%;
+              max-width: 500px;
+              position: relative;
+            }
+            .close {
+              color: #aaa;
+              float: right;
+              font-size: 28px;
+              font-weight: bold;
+              cursor: pointer;
+              position: absolute;
+              right: 15px;
+              top: 10px;
+            }
+            .close:hover {
+              color: black;
+            }
+            .time-tracking-details {
+              margin-top: 20px;
+            }
+            .time-section {
+              margin-bottom: 20px;
+              padding: 15px;
+              background-color: #f9f9f9;
+              border-radius: 5px;
+            }
+            .time-section h4 {
+              margin-top: 0;
+              color: #333;
+            }
+            .time-section p {
+              margin: 8px 0;
+            }
+          `;
+          document.head.appendChild(style);
+        }
+        
+      } catch (error) {
+        console.error('Error fetching time tracking details:', error);
+        alert('Failed to fetch time tracking details. Please try again.');
+      }
+    }
+
+    // Toggle date range mode
+    function toggleDateRangeMode() {
+      const dateRangeMode = document.getElementById('dateRangeMode').checked;
+      const endDateContainer = document.getElementById('endDateContainer');
+      const workDateLabel = document.querySelector('label[for="workDate"]');
+      
+      if (dateRangeMode) {
+        endDateContainer.classList.remove('hidden');
+        workDateLabel.textContent = 'Start Date:';
+        
+        // Set end date to today if not set
+        const endDateInput = document.getElementById('endDate');
+        if (!endDateInput.value) {
+          const today = new Date().toISOString().split('T')[0];
+          endDateInput.value = today;
+        }
+        
+        // Set minimum end date to start date
+        const startDate = document.getElementById('workDate').value;
+        if (startDate) {
+          endDateInput.min = startDate;
+        }
+        
+        updateDateRangePreview();
+      } else {
+        endDateContainer.classList.add('hidden');
+        workDateLabel.textContent = 'Date:';
+      }
+    }
+    
+    // Update end date minimum when start date changes
+    function updateEndDateMin() {
+      const startDate = document.getElementById('workDate').value;
+      const endDate = document.getElementById('endDate');
+      
+      if (startDate) {
+        endDate.min = startDate;
+        
+        // If end date is before start date, update it
+        if (endDate.value && endDate.value < startDate) {
+          endDate.value = startDate;
+        }
+      }
+      
+      updateDateRangePreview();
+    }
+    
+    // Update date range preview
+    function updateDateRangePreview() {
+      const startDate = document.getElementById('workDate').value;
+      const endDate = document.getElementById('endDate').value;
+      const dateRangeMode = document.getElementById('dateRangeMode').checked;
+      
+      let previewElement = document.getElementById('dateRangePreview');
+      
+      if (!previewElement) {
+        // Create preview element if it doesn't exist
+        previewElement = document.createElement('div');
+        previewElement.id = 'dateRangePreview';
+        previewElement.style.cssText = 'margin-top: 10px; padding: 8px; background-color: #e3f2fd; border-radius: 4px; font-size: 14px; color: #1976d2;';
+        document.getElementById('endDateContainer').appendChild(previewElement);
+      }
+      
+      if (dateRangeMode && startDate && endDate) {
+        const startDateObj = new Date(startDate);
+        const endDateObj = new Date(endDate);
+        const daysDiff = Math.ceil((endDateObj - startDateObj) / (1000 * 60 * 60 * 24)) + 1;
+        
+        if (daysDiff > 1) {
+          previewElement.textContent = `Will log time for ${daysDiff} days (${startDate} to ${endDate})`;
+          previewElement.style.display = 'block';
+        } else {
+          previewElement.textContent = 'Will log time for 1 day';
+          previewElement.style.display = 'block';
+        }
+      } else {
+        previewElement.style.display = 'none';
+      }
+    }
+
+    // ...existing code...
+  </script>
+
+</body>
+</html>

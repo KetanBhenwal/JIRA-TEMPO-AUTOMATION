@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JIRA Tempo Debug Page</title>
+  <style>
+    .navigation {
+      background-color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .navigation a {
+      color: #0052cc;
+      text-decoration: none;
+      margin-right: 20px;
+      font-weight: 500;
+    }
+    .navigation a:hover {
+      text-decoration: underline;
+    }
+    .navigation a.active {
+      color: #0747a6;
+      border-bottom: 2px solid #0052cc;
+      padding-bottom: 2px;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f7fa;
+    }
+    .container {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+    .button {
+      background-color: #0052cc;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .button:hover {
+      background-color: #0747a6;
+    }
+    .success {
+      background-color: #e3fcef;
+      border-left: 4px solid #36b37e;
+      padding: 15px;
+      margin: 15px 0;
+      color: #006644;
+    }
+    .error {
+      background-color: #ffebe6;
+      border-left: 4px solid #ff5630;
+      padding: 15px;
+      margin: 15px 0;
+      color: #ae2a19;
+    }
+    .debug-output {
+      background-color: #f8f9fa;
+      border: 1px solid #e1e4e8;
+      border-radius: 3px;
+      padding: 15px;
+      margin: 15px 0;
+      font-family: monospace;
+      white-space: pre-wrap;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #dfe1e6;
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+    label {
+      font-weight: 500;
+      display: block;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+    <div class="navigation">
+    <a href="index.html">Time Logger</a>
+    <a href="ai-agent.html">AI Agent</a>
+    <a href="debug.html" class="active">Debug</a>
+  </div>
+
+  <h1>🔧 JIRA Tempo Debug Page</h1>
+  
+  <div class="container">
+    <h2>API Connectivity Tests</h2>
+    <button class="button" onclick="testIssuesAPI()">Test Issues API</button>
+    <button class="button" onclick="testSearchAPI()">Test Search API</button>
+    <button class="button" onclick="testWorkAttributesAPI()">Test Work Attributes API</button>
+    <button class="button" onclick="testTimeLoggingAPI()">Test Time Logging API</button>
+    <div id="apiResults" class="debug-output"></div>
+  </div>
+  
+  <div class="container">
+    <h2>Frontend Function Tests</h2>
+    <button class="button" onclick="testJavaScriptFunctions()">Test JavaScript Functions</button>
+    <button class="button" onclick="testEnhancedSearch()">Test Enhanced Search</button>
+    <button class="button" onclick="testWorkAttributesFunctions()">Test Work Attributes Functions</button>
+    <div id="jsResults" class="debug-output"></div>
+  </div>
+  
+  <div class="container">
+    <h2>Manual Time Log Test</h2>
+    <label for="testIssueId">Issue ID:</label>
+    <input type="text" id="testIssueId" value="904371">
+    
+    <label for="testDescription">Description:</label>
+    <textarea id="testDescription">Debug test time log</textarea>
+    
+    <label for="testTimeSpent">Time Spent (hours):</label>
+    <input type="number" id="testTimeSpent" value="0.5" step="0.1">
+    
+    <button class="button" onclick="testManualTimeLog()">Submit Manual Time Log</button>
+    <div id="manualResults" class="debug-output"></div>
+  </div>
+  
+  <div class="container">
+    <h2>Console Log</h2>
+    <button class="button" onclick="clearConsoleLog()">Clear Console</button>
+    <div id="consoleLog" class="debug-output"></div>
+  </div>
+
+  <script>
+    // Capture console logs
+    const originalConsoleLog = console.log;
+    const originalConsoleError = console.error;
+    const originalConsoleWarn = console.warn;
+    
+    const logs = [];
+    
+    function logToDiv(type, ...args) {
+      const timestamp = new Date().toLocaleTimeString();
+      const message = args.map(arg => 
+        typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+      ).join(' ');
+      
+      logs.push(`[${timestamp}] ${type.toUpperCase()}: ${message}`);
+      updateConsoleLog();
+    }
+    
+    console.log = function(...args) {
+      originalConsoleLog.apply(console, args);
+      logToDiv('log', ...args);
+    };
+    
+    console.error = function(...args) {
+      originalConsoleError.apply(console, args);
+      logToDiv('error', ...args);
+    };
+    
+    console.warn = function(...args) {
+      originalConsoleWarn.apply(console, args);
+      logToDiv('warn', ...args);
+    };
+    
+    function updateConsoleLog() {
+      const consoleDiv = document.getElementById('consoleLog');
+      consoleDiv.textContent = logs.slice(-50).join('\n'); // Show last 50 logs
+      consoleDiv.scrollTop = consoleDiv.scrollHeight;
+    }
+    
+    function clearConsoleLog() {
+      logs.length = 0;
+      updateConsoleLog();
+    }
+    
+    function showResult(elementId, content, isError = false) {
+      const element = document.getElementById(elementId);
+      element.innerHTML = '';
+      
+      const div = document.createElement('div');
+      div.className = isError ? 'error' : 'success';
+      div.textContent = content;
+      element.appendChild(div);
+    }
+    
+    // API Tests
+    async function testIssuesAPI() {
+      try {
+        console.log('Testing Issues API...');
+        const response = await fetch('/api/issues');
+        const data = await response.json();
+        
+        if (response.ok) {
+          showResult('apiResults', `Issues API: SUCCESS - Found ${data.length} issues`);
+          console.log('Issues API response:', data.slice(0, 3)); // Show first 3 issues
+        } else {
+          throw new Error(`HTTP ${response.status}: ${data.error || 'Unknown error'}`);
+        }
+      } catch (error) {
+        showResult('apiResults', `Issues API: ERROR - ${error.message}`, true);
+        console.error('Issues API error:', error);
+      }
+    }
+    
+    async function testSearchAPI() {
+      try {
+        console.log('Testing Search API...');
+        const response = await fetch('/api/search-issues?query=CON22');
+        const data = await response.json();
+        
+        if (response.ok) {
+          showResult('apiResults', `Search API: SUCCESS - Found ${data.length} results`);
+          console.log('Search API response:', data.slice(0, 3)); // Show first 3 results
+        } else {
+          throw new Error(`HTTP ${response.status}: ${data.error || 'Unknown error'}`);
+        }
+      } catch (error) {
+        showResult('apiResults', `Search API: ERROR - ${error.message}`, true);
+        console.error('Search API error:', error);
+      }
+    }
+    
+    async function testWorkAttributesAPI() {
+      try {
+        console.log('Testing Work Attributes API...');
+        const response = await fetch('/api/tempo/work-attributes');
+        const data = await response.json();
+        
+        if (response.ok) {
+          const attributeKeys = Object.keys(data);
+          showResult('apiResults', `Work Attributes API: SUCCESS - Found ${attributeKeys.length} attributes: ${attributeKeys.join(', ')}`);
+          console.log('Work Attributes API response keys:', attributeKeys);
+          console.log('Time Category values:', data._TimeCategory_?.values?.length || 'N/A');
+        } else {
+          throw new Error(`HTTP ${response.status}: ${data.error || 'Unknown error'}`);
+        }
+      } catch (error) {
+        showResult('apiResults', `Work Attributes API: ERROR - ${error.message}`, true);
+        console.error('Work Attributes API error:', error);
+      }
+    }
+    
+    async function testTimeLoggingAPI() {
+      try {
+        console.log('Testing Time Logging API...');
+        
+        const payload = {
+          issueId: 904371,
+          timeSpentSeconds: 1800, // 30 minutes
+          description: "Debug test from debug page",
+          startDate: new Date().toISOString().split('T')[0],
+          startTime: "10:00:00",
+          attributes: [
+            {
+              key: "_TimeCategory_",
+              value: "Debugging"
+            }
+          ]
+        };
+        
+        console.log('Time logging payload:', payload);
+        
+        const response = await fetch('/api/log-time', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+        
+        const responseText = await response.text();
+        console.log('Raw time logging response:', responseText);
+        
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          throw new Error(`Invalid JSON response: ${responseText.substring(0, 200)}`);
+        }
+        
+        if (response.ok) {
+          showResult('apiResults', `Time Logging API: SUCCESS - Worklog ID: ${data.worklogId || 'N/A'}`);
+          console.log('Time Logging API response:', data);
+        } else {
+          throw new Error(`HTTP ${response.status}: ${data.error || data.message || 'Unknown error'}`);
+        }
+      } catch (error) {
+        showResult('apiResults', `Time Logging API: ERROR - ${error.message}`, true);
+        console.error('Time Logging API error:', error);
+      }
+    }
+    
+    // JavaScript Function Tests
+    function testJavaScriptFunctions() {
+      try {
+        console.log('Testing JavaScript functions...');
+        
+        const results = [];
+        
+        // Check if enhanced search functions exist
+        if (typeof window.enhancedIssueSearch === 'function') {
+          results.push('✓ enhancedIssueSearch function exists');
+        } else {
+          results.push('✗ enhancedIssueSearch function missing');
+        }
+        
+        // Check if work attributes functions exist
+        if (typeof window.getSelectedWorkAttributes === 'function') {
+          results.push('✓ getSelectedWorkAttributes function exists');
+        } else {
+          results.push('✗ getSelectedWorkAttributes function missing');
+        }
+        
+        if (typeof window.validateWorkAttributes === 'function') {
+          results.push('✓ validateWorkAttributes function exists');
+        } else {
+          results.push('✗ validateWorkAttributes function missing');
+        }
+        
+        // Check if main functions exist
+        if (typeof window.selectIssue === 'function') {
+          results.push('✓ selectIssue function exists');
+        } else {
+          results.push('✗ selectIssue function missing');
+        }
+        
+        showResult('jsResults', results.join('\n'));
+        console.log('JavaScript function test results:', results);
+      } catch (error) {
+        showResult('jsResults', `JavaScript Functions: ERROR - ${error.message}`, true);
+        console.error('JavaScript function test error:', error);
+      }
+    }
+    
+    async function testEnhancedSearch() {
+      try {
+        console.log('Testing enhanced search...');
+        
+        if (typeof window.enhancedIssueSearch !== 'function') {
+          throw new Error('enhancedIssueSearch function not available');
+        }
+        
+        const results = await window.enhancedIssueSearch('CON22');
+        showResult('jsResults', `Enhanced Search: SUCCESS - Found ${results.length} results`);
+        console.log('Enhanced search results:', results.slice(0, 3));
+      } catch (error) {
+        showResult('jsResults', `Enhanced Search: ERROR - ${error.message}`, true);
+        console.error('Enhanced search error:', error);
+      }
+    }
+    
+    function testWorkAttributesFunctions() {
+      try {
+        console.log('Testing work attributes functions...');
+        
+        const results = [];
+        
+        if (typeof window.getSelectedWorkAttributes === 'function') {
+          const attributes = window.getSelectedWorkAttributes();
+          results.push(`✓ getSelectedWorkAttributes returned ${attributes.length} attributes`);
+        } else {
+          results.push('✗ getSelectedWorkAttributes function not available');
+        }
+        
+        if (typeof window.validateWorkAttributes === 'function') {
+          const isValid = window.validateWorkAttributes();
+          results.push(`✓ validateWorkAttributes returned: ${isValid}`);
+        } else {
+          results.push('✗ validateWorkAttributes function not available');
+        }
+        
+        showResult('jsResults', results.join('\n'));
+        console.log('Work attributes function test results:', results);
+      } catch (error) {
+        showResult('jsResults', `Work Attributes Functions: ERROR - ${error.message}`, true);
+        console.error('Work attributes function test error:', error);
+      }
+    }
+    
+    // Manual Time Log Test
+    async function testManualTimeLog() {
+      try {
+        console.log('Testing manual time log...');
+        
+        const issueId = document.getElementById('testIssueId').value;
+        const description = document.getElementById('testDescription').value;
+        const timeSpent = parseFloat(document.getElementById('testTimeSpent').value);
+        
+        if (!issueId || !description || !timeSpent) {
+          throw new Error('Please fill in all fields');
+        }
+        
+        const payload = {
+          issueId: parseInt(issueId),
+          timeSpentSeconds: Math.round(timeSpent * 3600),
+          description,
+          startDate: new Date().toISOString().split('T')[0],
+          startTime: "10:00:00",
+          attributes: [
+            {
+              key: "_TimeCategory_",
+              value: "Debugging"
+            }
+          ]
+        };
+        
+        console.log('Manual time log payload:', payload);
+        
+        const response = await fetch('/api/log-time', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+        
+        const responseText = await response.text();
+        console.log('Manual time log raw response:', responseText);
+        
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          throw new Error(`Invalid JSON response: ${responseText.substring(0, 200)}`);
+        }
+        
+        if (response.ok) {
+          showResult('manualResults', `Manual Time Log: SUCCESS - Worklog ID: ${data.worklogId || 'N/A'}`);
+          console.log('Manual time log response:', data);
+        } else {
+          throw new Error(`HTTP ${response.status}: ${data.error || data.message || 'Unknown error'}`);
+        }
+      } catch (error) {
+        showResult('manualResults', `Manual Time Log: ERROR - ${error.message}`, true);
+        console.error('Manual time log error:', error);
+      }
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Debug page loaded');
+      updateConsoleLog();
+    });
+  </script>
+</body>
+</html>

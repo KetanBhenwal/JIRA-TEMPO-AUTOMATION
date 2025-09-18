@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Time Tracking Agent - Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f7fa;
+    }
+    h1, h2 {
+      color: #0052cc;
+    }
+    .container {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+    .status-card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid #36b37e;
+      background-color: #e3fcef;
+    }
+    .status-card.running {
+      border-left-color: #36b37e;
+      background-color: #e3fcef;
+    }
+    .status-card.stopped {
+      border-left-color: #ff5630;
+      background-color: #ffebe6;
+    }
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #36b37e;
+    }
+    .status-indicator.stopped {
+      background-color: #ff5630;
+    }
+    .status-indicator.running {
+      background-color: #36b37e;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+    .button {
+      background-color: #0052cc;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px 5px 5px 0;
+      transition: background-color 0.2s;
+    }
+    .button:hover {
+      background-color: #0747a6;
+    }
+    .button:disabled {
+      background-color: #b3cdfb;
+      cursor: not-allowed;
+    }
+    .button.danger {
+      background-color: #ff5630;
+    }
+    .button.danger:hover {
+      background-color: #de350b;
+    }
+    .button.success {
+      background-color: #36b37e;
+    }
+    .button.success:hover {
+      background-color: #00875a;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e1e4e8;
+    }
+    th {
+      background-color: #f6f8fa;
+      color: #24292e;
+      font-weight: 600;
+    }
+    tr:hover {
+      background-color: #f6f8fa;
+    }
+    .confidence-bar {
+      width: 100%;
+      height: 8px;
+      background-color: #e1e4e8;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .confidence-fill {
+      height: 100%;
+      background-color: #36b37e;
+      transition: width 0.3s;
+    }
+    .confidence-fill.low {
+      background-color: #ff5630;
+    }
+    .confidence-fill.medium {
+      background-color: #ffab00;
+    }
+    .confidence-fill.high {
+      background-color: #36b37e;
+    }
+    .session-details {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #dfe1e6;
+      margin-bottom: 20px;
+    }
+    .tab-button {
+      padding: 10px 20px;
+      background-color: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 16px;
+      color: #42526e;
+    }
+    .tab-button:hover {
+      color: #0052cc;
+    }
+    .active-tab {
+      color: #0052cc;
+      border-bottom-color: #0052cc;
+    }
+    .tab-content {
+      padding: 10px 0;
+    }
+    .hidden {
+      display: none;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .stat-card {
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid #e1e4e8;
+    }
+    .stat-value {
+      font-size: 32px;
+      font-weight: bold;
+      color: #0052cc;
+      margin-bottom: 5px;
+    }
+    .stat-label {
+      font-size: 14px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .session-actions {
+      display: flex;
+      gap: 5px;
+    }
+    .issue-select {
+      padding: 5px;
+      border: 1px solid #dfe1e6;
+      border-radius: 3px;
+      font-size: 12px;
+      min-width: 120px;
+    }
+    .success-message {
+      background-color: #e3fcef;
+      border-left: 4px solid #36b37e;
+      padding: 15px;
+      margin: 15px 0;
+      color: #006644;
+      border-radius: 3px;
+    }
+    .error-message {
+      background-color: #ffebe6;
+      border-left: 4px solid #ff5630;
+      padding: 15px;
+      margin: 15px 0;
+      color: #ae2a19;
+      border-radius: 3px;
+    }
+    .loading {
+      text-align: center;
+      padding: 40px;
+    }
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #0052cc;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .current-session {
+      background: linear-gradient(90deg, #e3fcef 0%, #f0f7ff 100%);
+      border: 2px solid #36b37e;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+    }
+    .current-session h4 {
+      margin-top: 0;
+      color: #006644;
+    }
+    .navigation {
+      background-color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .navigation a {
+      color: #0052cc;
+      text-decoration: none;
+      margin-right: 20px;
+      font-weight: 500;
+    }
+    .navigation a:hover {
+      text-decoration: underline;
+    }
+    .navigation a.active {
+      color: #0747a6;
+      border-bottom: 2px solid #0052cc;
+      padding-bottom: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="navigation">
+    <a href="index.html">Time Logger</a>
+    <a href="ai-agent.html" class="active">AI Agent</a>
+    <a href="debug.html">Debug</a>
+  </div>
+
+  <h1>🤖 AI Time Tracking Agent Dashboard</h1>
+
+  <!-- Agent Status Section -->
+  <div class="container">
+    <h2>Agent Status</h2>
+    <div id="agentStatus" class="status-card stopped">
+      <div class="status-indicator stopped"></div>
+      <div>
+        <strong>Status:</strong> <span id="statusText">Checking...</span><br>
+        <small id="statusDetails">Loading agent status...</small>
+      </div>
+      <div style="margin-left: auto;">
+        <button id="startAgentBtn" class="button success">Start Agent</button>
+        <button id="stopAgentBtn" class="button danger" disabled>Stop Agent</button>
+        <button id="refreshStatusBtn" class="button">Refresh</button>
+      </div>
+    </div>
+
+    <div id="currentSession" class="current-session hidden">
+      <h4>🎯 Current Work Session</h4>
+      <div id="currentSessionDetails">
+        <!-- Current session info will be populated here -->
+      </div>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="stats-grid" id="statsGrid">
+      <!-- Stats will be populated here -->
+    </div>
+
+    <div id="metricsPanel" class="container" style="background:#ffffff;margin-top:10px;padding:15px;border:1px solid #e1e4e8;border-radius:8px;">
+      <h3 style="margin-top:0;">Diagnostics & Metrics</h3>
+      <div id="metricsContent">Loading metrics...</div>
+      <button class="button" style="margin-top:10px;" onclick="refreshStatus()">Refresh Metrics</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="container">
+    <div class="tabs">
+      <button id="pendingTabBtn" class="tab-button active-tab">Pending Review</button>
+      <button id="historyTabBtn" class="tab-button">Session History</button>
+      <button id="configTabBtn" class="tab-button">Configuration</button>
+      <button id="activitiesTabBtn" class="tab-button">Activities</button>
+    </div>
+
+    <!-- Pending Sessions Tab -->
+    <div id="pendingTab" class="tab-content">
+      <h2>Sessions Pending Review</h2>
+      <div id="pendingSessionsContainer">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading pending sessions...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Session History Tab -->
+    <div id="historyTab" class="tab-content hidden">
+      <h2>Session History</h2>
+      <div style="margin-bottom: 20px;">
+        <label for="historyDays">Show sessions from last:</label>
+        <select id="historyDays" onchange="loadSessionHistory()">
+          <option value="1">1 day</option>
+          <option value="3">3 days</option>
+          <option value="7" selected>7 days</option>
+          <option value="14">14 days</option>
+          <option value="30">30 days</option>
+        </select>
+      </div>
+      <div id="sessionHistoryContainer">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading session history...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuration Tab -->
+    <div id="configTab" class="tab-content hidden">
+      <h2>AI Agent Configuration</h2>
+      <div id="configContainer">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading configuration...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activities Tab -->
+    <div id="activitiesTab" class="tab-content hidden">
+      <h2>Recent Activities (Grouped)</h2>
+      <div style="margin-bottom:10px;">
+        <label for="activitiesDays">Show last:</label>
+        <select id="activitiesDays" onchange="loadActivities()">
+          <option value="0.25">6 hours</option>
+          <option value="0.5">12 hours</option>
+          <option value="1" selected>1 day</option>
+          <option value="3">3 days</option>
+          <option value="7">7 days</option>
+        </select>
+        <button class="button" onclick="loadActivities()">Refresh</button>
+      </div>
+      <div id="activitiesContainer">
+        <div class="loading"><div class="spinner"></div><p>Loading activities...</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="messages"></div>
+
+  <script>
+    // Global variables
+    let assignedIssues = [];
+    let agentStatus = null;
+    let refreshInterval = null;
+
+    // Initialize the dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+      setupEventListeners();
+      loadInitialData();
+      startAutoRefresh();
+    });
+
+    function setupEventListeners() {
+      document.getElementById('startAgentBtn').addEventListener('click', startAgent);
+      document.getElementById('stopAgentBtn').addEventListener('click', stopAgent);
+      document.getElementById('refreshStatusBtn').addEventListener('click', refreshStatus);
+      
+      // Tab navigation
+      document.getElementById('pendingTabBtn').addEventListener('click', () => showTab('pending'));
+      document.getElementById('historyTabBtn').addEventListener('click', () => showTab('history'));
+      document.getElementById('configTabBtn').addEventListener('click', () => showTab('config'));
+      document.getElementById('activitiesTabBtn').addEventListener('click', () => showTab('activities'));
+    }
+
+    async function loadInitialData() {
+      await Promise.all([
+        refreshStatus(),
+        loadAssignedIssues(),
+        loadPendingSessions(),
+        loadConfiguration(),
+        loadActivities()
+      ]);
+    }
+
+    function startAutoRefresh() {
+      // Refresh status every 30 seconds
+      refreshInterval = setInterval(refreshStatus, 30000);
+      // Also refresh activities every 60s
+      setInterval(loadActivities, 60000);
+    }
+
+    async function refreshStatus() {
+      try {
+        const response = await fetch('/api/ai-agent/status');
+        agentStatus = await response.json();
+        
+        updateStatusDisplay();
+        updateStatsDisplay();
+        updateMetricsDisplay();
+      } catch (error) {
+        console.error('Error fetching agent status:', error);
+        showError('Failed to fetch agent status');
+      }
+    }
+
+    function updateStatusDisplay() {
+      const statusCard = document.getElementById('agentStatus');
+      const statusIndicator = statusCard.querySelector('.status-indicator');
+      const statusText = document.getElementById('statusText');
+      const statusDetails = document.getElementById('statusDetails');
+      const startBtn = document.getElementById('startAgentBtn');
+      const stopBtn = document.getElementById('stopAgentBtn');
+      const currentSessionDiv = document.getElementById('currentSession');
+      
+      if (agentStatus.isRunning) {
+        statusCard.className = 'status-card running';
+        statusIndicator.className = 'status-indicator running';
+        statusText.textContent = '🟢 Running';
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        
+        if (agentStatus.currentSession) {
+          currentSessionDiv.classList.remove('hidden');
+          document.getElementById('currentSessionDetails').innerHTML = `
+            <strong>Duration:</strong> ${agentStatus.currentSession.duration}<br>
+            <strong>Detected Issue:</strong> ${agentStatus.currentSession.detectedIssue || 'Analyzing...'}<br>
+            <strong>Confidence:</strong> ${agentStatus.currentSession.confidence}%
+          `;
+        } else {
+          currentSessionDiv.classList.add('hidden');
+        }
+      } else {
+        statusCard.className = 'status-card stopped';
+        statusIndicator.className = 'status-indicator stopped';
+        statusText.textContent = '🔴 Stopped';
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        currentSessionDiv.classList.add('hidden');
+      }
+      
+      statusDetails.textContent = `${agentStatus.totalSessions} total sessions • ${agentStatus.loggedSessions} logged • ${agentStatus.pendingSessions} pending review`;
+    }
+
+    function updateStatsDisplay() {
+      const statsGrid = document.getElementById('statsGrid');
+      statsGrid.innerHTML = `
+        <div class="stat-card">
+          <div class="stat-value">${agentStatus.totalSessions}</div>
+          <div class="stat-label">Total Sessions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${agentStatus.loggedSessions}</div>
+          <div class="stat-label">Auto-Logged</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${agentStatus.pendingSessions}</div>
+          <div class="stat-label">Pending Review</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${agentStatus.assignedIssues}</div>
+          <div class="stat-label">Assigned Issues</div>
+        </div>
+      `;
+    }
+
+    function updateMetricsDisplay() {
+      const el = document.getElementById('metricsContent');
+      if (!agentStatus || !agentStatus.metrics) {
+        el.textContent = 'No metrics available.';
+        return;
+      }
+      const m = agentStatus.metrics;
+      const meetingStats = m.meetings ? `
+        <tr><td>Meeting Sessions</td><td>${m.meetings.sessions}</td></tr>
+        <tr><td>Development Sessions</td><td>${(m.development && m.development.sessions) || 0}</td></tr>
+        <tr><td>Meeting Types</td><td>${Object.entries(m.meetings.byType || {}).map(([k,v])=>`${k}:${v}`).join(', ') || '—'}</td></tr>
+      ` : '';
+      const fallbacks = m.runningAppsFallbacks || {};
+      el.innerHTML = `
+        <table style="width:100%;border-collapse:collapse;">
+          <tbody>
+            <tr><td style="padding:4px 8px;border-bottom:1px solid #eee;">Active App Timeouts</td><td style="padding:4px 8px;border-bottom:1px solid #eee;">${m.activeAppTimeouts}</td></tr>
+            <tr><td style="padding:4px 8px;border-bottom:1px solid #eee;">Running Apps Failures</td><td style="padding:4px 8px;border-bottom:1px solid #eee;">${m.runningAppsFailures}</td></tr>
+            <tr><td style="padding:4px 8px;border-bottom:1px solid #eee;">Backoff (ms)</td><td style="padding:4px 8px;border-bottom:1px solid #eee;">${m.runningAppsBackoffMs}</td></tr>
+            <tr><td style="padding:4px 8px;border-bottom:1px solid #eee;">Consecutive Failures</td><td style="padding:4px 8px;border-bottom:1px solid #eee;">${m.runningAppsConsecutiveFailures}</td></tr>
+            <tr><td style="padding:4px 8px;border-bottom:1px solid #eee;">Last Enum Strategy</td><td style="padding:4px 8px;border-bottom:1px solid #eee;">${fallbacks.lastStrategy || 'n/a'}</td></tr>
+            <tr><td style="padding:4px 8px;border-bottom:1px solid #eee;">lsappinfo Uses</td><td style="padding:4px 8px;border-bottom:1px solid #eee;">${fallbacks.lsappinfo || 0}</td></tr>
+            <tr><td style="padding:4px 8px;border-bottom:1px solid #eee;">AppleScript Variant2 Uses</td><td style="padding:4px 8px;border-bottom:1px solid #eee;">${fallbacks.applescriptVariant2 || 0}</td></tr>
+            <tr><td style="padding:4px 8px;border-bottom:1px solid #eee;">ps Parsing Uses</td><td style="padding:4px 8px;border-bottom:1px solid #eee;">${fallbacks.psParsing || 0}</td></tr>
+            ${meetingStats}
+          </tbody>
+        </table>
+        <small style="color:#666;display:block;margin-top:6px;">Metrics reset hourly; strategies rotate automatically when failures occur.</small>
+      `;
+    }
+
+    async function startAgent() {
+      showMessage('Starting AI agent...', 'info');
+      
+      try {
+        const response = await fetch('/api/ai-agent/start', { method: 'POST' });
+        const result = await response.json();
+        
+        if (result.success) {
+          showMessage('AI agent started successfully!', 'success');
+          await refreshStatus();
+          await loadPendingSessions();
+        } else {
+          showError(result.error || 'Failed to start AI agent');
+        }
+      } catch (error) {
+        showError('Failed to start AI agent: ' + error.message);
+      }
+    }
+
+    async function stopAgent() {
+      showMessage('Stopping AI agent...', 'info');
+      
+      try {
+        const response = await fetch('/api/ai-agent/stop', { method: 'POST' });
+        const result = await response.json();
+        
+        if (result.success) {
+          showMessage('AI agent stopped successfully!', 'success');
+          await refreshStatus();
+        } else {
+          showError(result.error || 'Failed to stop AI agent');
+        }
+      } catch (error) {
+        showError('Failed to stop AI agent: ' + error.message);
+      }
+    }
+
+    async function loadAssignedIssues() {
+      try {
+        const response = await fetch('/api/issues');
+        assignedIssues = await response.json();
+      } catch (error) {
+        console.error('Error loading assigned issues:', error);
+      }
+    }
+
+    async function loadPendingSessions() {
+      const container = document.getElementById('pendingSessionsContainer');
+      container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading pending sessions...</p></div>';
+      
+      try {
+        const response = await fetch('/api/ai-agent/pending');
+        const sessions = await response.json();
+        
+        if (sessions.length === 0) {
+          container.innerHTML = '<p>No sessions pending review. Great job! 🎉</p>';
+          return;
+        }
+        
+        container.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Date/Time</th>
+                <th>Duration</th>
+                <th>Detected Issue</th>
+                <th>Confidence</th>
+                <th>Details</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${sessions.map(session => `
+                <tr>
+                  <td>
+                    ${new Date(session.startTime).toLocaleDateString()}<br>
+                    <small>${new Date(session.startTime).toLocaleTimeString()}</small>
+                  </td>
+                  <td>${session.formattedDuration}</td>
+                  <td>
+                    <select class="issue-select" id="issue-${session.id}">
+                      <option value="${session.detectedIssue || ''}">${session.detectedIssue || 'Select Issue'}</option>
+                      ${assignedIssues.map(issue => 
+                        issue.key === session.detectedIssue ? '' : 
+                        `<option value="${issue.key}">${issue.key} - ${issue.summary.substring(0, 30)}...</option>`
+                      ).join('')}
+                    </select>
+                  </td>
+                  <td>
+                    <div class="confidence-bar">
+                      <div class="confidence-fill ${getConfidenceClass(session.confidence)}" 
+                           style="width: ${session.confidence}%"></div>
+                    </div>
+                    <small>${session.confidence}%</small>
+                  </td>
+                  <td>
+                    <div class="session-details">
+                      <strong>Apps:</strong> ${session.applications.slice(0, 2).join(', ')}<br>
+                      <strong>Branch:</strong> ${session.gitBranches[0] || 'N/A'}
+                    </div>
+                  </td>
+                  <td>
+                    <div class="session-actions">
+                      <button class="button success" onclick="approveSession('${session.id}')">✓ Approve</button>
+                      <button class="button danger" onclick="rejectSession('${session.id}')">✗ Reject</button>
+                    </div>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (error) {
+        console.error('Error loading pending sessions:', error);
+        container.innerHTML = '<div class="error-message">Failed to load pending sessions</div>';
+      }
+    }
+
+    async function loadSessionHistory() {
+      const days = document.getElementById('historyDays').value;
+      const container = document.getElementById('sessionHistoryContainer');
+      container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading session history...</p></div>';
+      
+      try {
+        const response = await fetch(`/api/ai-agent/sessions?days=${days}`);
+        const sessions = await response.json();
+        
+        if (sessions.length === 0) {
+          container.innerHTML = '<p>No sessions found for the selected period.</p>';
+          return;
+        }
+        
+        container.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Date/Time</th>
+                <th>Duration</th>
+                <th>Issue</th>
+                <th>Status</th>
+                <th>Confidence</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${sessions.map(session => `
+                <tr>
+                  <td>
+                    ${new Date(session.startTime).toLocaleDateString()}<br>
+                    <small>${new Date(session.startTime).toLocaleTimeString()}</small>
+                  </td>
+                  <td>${session.formattedDuration}</td>
+                  <td>${session.detectedIssue || 'Unknown'}</td>
+                  <td>
+                    <span style="color: ${session.isLogged ? '#006644' : '#666'}">
+                      ${session.isLogged ? '✅ Logged' : '⏳ Pending'}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="confidence-bar">
+                      <div class="confidence-fill ${getConfidenceClass(session.confidence)}" 
+                           style="width: ${session.confidence}%"></div>
+                    </div>
+                    <small>${session.confidence}%</small>
+                  </td>
+                  <td>
+                    <div class="session-details">
+                      <strong>Apps:</strong> ${session.applications.slice(0, 2).join(', ')}<br>
+                      <strong>Branch:</strong> ${session.gitBranches[0] || 'N/A'}
+                    </div>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (error) {
+        console.error('Error loading session history:', error);
+        container.innerHTML = '<div class="error-message">Failed to load session history</div>';
+      }
+    }
+
+    async function loadConfiguration() {
+      const container = document.getElementById('configContainer');
+      
+      try {
+        const response = await fetch('/api/ai-agent/config');
+        const config = await response.json();
+        
+        container.innerHTML = `
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            <div class="stat-card" style="text-align: left;">
+              <h4>Monitoring Settings</h4>
+              <p><strong>Check Interval:</strong> ${config.monitoringInterval} minutes</p>
+              <p><strong>Min Session Length:</strong> ${config.workSessionThreshold} minutes</p>
+              <p><strong>Auto-log After:</strong> ${config.autoLogThreshold} minutes</p>
+            </div>
+            <div class="stat-card" style="text-align: left;">
+              <h4>Work Hours</h4>
+              <p><strong>Start Time:</strong> ${config.workHoursStart}:00</p>
+              <p><strong>End Time:</strong> ${config.workHoursEnd}:00</p>
+              <p><strong>Max Session:</strong> ${config.maxSessionDuration} minutes</p>
+            </div>
+          </div>
+          <div style="margin-top: 20px; padding: 15px; background-color: #e3f2fd; border-radius: 8px;">
+            <h4>How It Works</h4>
+            <ul>
+              <li>🔍 <strong>Monitors:</strong> Active applications, window titles, Git branches, and file activity</li>
+              <li>🎯 <strong>Detects:</strong> JIRA issue patterns and development work sessions</li>
+              <li>🤖 <strong>Auto-logs:</strong> High-confidence sessions (≥70%) automatically</li>
+              <li>👀 <strong>Reviews:</strong> Medium-confidence sessions (60-69%) await your approval</li>
+              <li>🚫 <strong>Ignores:</strong> Low-confidence or non-work activities</li>
+            </ul>
+          </div>
+        `;
+      } catch (error) {
+        console.error('Error loading configuration:', error);
+        container.innerHTML = '<div class="error-message">Failed to load configuration</div>';
+      }
+    }
+
+    async function approveSession(sessionId) {
+      const issueSelect = document.getElementById(`issue-${sessionId}`);
+      const selectedIssue = issueSelect.value;
+      
+      if (!selectedIssue) {
+        showError('Please select an issue before approving');
+        return;
+      }
+      
+      try {
+        // Update issue if changed
+        if (selectedIssue !== issueSelect.options[0].value) {
+          await fetch(`/api/ai-agent/sessions/${sessionId}/issue`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ issueKey: selectedIssue })
+          });
+        }
+        
+        // Approve session
+        const response = await fetch(`/api/ai-agent/sessions/${sessionId}/approve`, {
+          method: 'POST'
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          showMessage('Session approved and logged successfully!', 'success');
+          await loadPendingSessions();
+          await refreshStatus();
+        } else {
+          showError(result.error || 'Failed to approve session');
+        }
+      } catch (error) {
+        showError('Failed to approve session: ' + error.message);
+      }
+    }
+
+    async function rejectSession(sessionId) {
+      try {
+        const response = await fetch(`/api/ai-agent/sessions/${sessionId}/reject`, {
+          method: 'POST'
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          showMessage('Session rejected', 'success');
+          await loadPendingSessions();
+          await refreshStatus();
+        } else {
+          showError(result.error || 'Failed to reject session');
+        }
+      } catch (error) {
+        showError('Failed to reject session: ' + error.message);
+      }
+    }
+
+    function getConfidenceClass(confidence) {
+      if (confidence >= 80) return 'high';
+      if (confidence >= 60) return 'medium';
+      return 'low';
+    }
+
+    function showTab(tabName) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.add('hidden');
+      });
+      
+      // Remove active class from all tab buttons
+      document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active-tab');
+      });
+      
+      // Show selected tab
+      document.getElementById(`${tabName}Tab`).classList.remove('hidden');
+      document.getElementById(`${tabName}TabBtn`).classList.add('active-tab');
+      
+      // Load data for the selected tab
+      if (tabName === 'pending') {
+        loadPendingSessions();
+      } else if (tabName === 'history') {
+        loadSessionHistory();
+      } else if (tabName === 'config') {
+        loadConfiguration();
+      } else if (tabName === 'activities') {
+        loadActivities();
+      }
+    }
+
+    async function loadActivities() {
+      const container = document.getElementById('activitiesContainer');
+      const daysSel = document.getElementById('activitiesDays');
+      const days = parseFloat(daysSel.value);
+      container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading activities...</p></div>';
+      try {
+        const response = await fetch(`/api/ai-agent/activities?days=${days}`);
+        const activities = await response.json();
+        if (!activities.length) {
+          container.innerHTML = '<p>No recent activities found.</p>';
+          return;
+        }
+        // Build table
+        const rows = activities.map(a => {
+          const typeBadge = a.isMeeting ? `<span style="background:#0747a6;color:#fff;padding:2px 6px;border-radius:4px;font-size:11px;">Meeting</span>` : `<span style="background:#36b37e;color:#fff;padding:2px 6px;border-radius:4px;font-size:11px;">Dev</span>`;
+          return `<tr>
+            <td>${new Date(a.startTime).toLocaleDateString()}<br><small>${new Date(a.startTime).toLocaleTimeString()}</small></td>
+            <td>${a.durationFormatted}</td>
+            <td>${a.issueKey || ''}</td>
+            <td>${typeBadge}</td>
+            <td>${a.activityLabel}</td>
+            <td>${a.confidence}%</td>
+            <td>${a.applications.join(', ')}</td>
+          </tr>`;
+        }).join('');
+        container.innerHTML = `<table><thead><tr>
+          <th>Start</th><th>Duration</th><th>Issue</th><th>Type</th><th>Label</th><th>Confidence</th><th>Apps</th>
+        </tr></thead><tbody>${rows}</tbody></table>`;
+      } catch (err) {
+        console.error('Failed to load activities', err);
+        container.innerHTML = '<div class="error-message">Failed to load activities</div>';
+      }
+    }
+
+    function showMessage(message, type = 'info') {
+      const messages = document.getElementById('messages');
+      const className = type === 'success' ? 'success-message' : 
+                       type === 'error' ? 'error-message' : 'success-message';
+      
+      const messageDiv = document.createElement('div');
+      messageDiv.className = className;
+      messageDiv.textContent = message;
+      
+      messages.appendChild(messageDiv);
+      
+      setTimeout(() => {
+        messageDiv.remove();
+      }, 5000);
+    }
+
+    function showError(message) {
+      showMessage(message, 'error');
+    }
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      if (refreshInterval) {
+        clearInterval(refreshInterval);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,3756 @@
+{
+  "sessions": [
+    {
+      "id": "session_1757700095847",
+      "startTime": 1757700095847,
+      "endTime": 1757700283819,
+      "duration": 187972,
+      "detectedIssue": null,
+      "activities": [
+        {
+          "timestamp": 1757700094831,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700100903,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700106855,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700112840,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700118884,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700124841,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700130828,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700137621,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700143585,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700149514,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700155444,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700161448,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700167433,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700173416,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700179322,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700185334,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700191379,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700197367,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700203347,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700209353,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700215317,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700221161,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700227002,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700232942,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700238917,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700244904,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700250860,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700256796,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700262786,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700268748,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700274678,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700280609,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        }
+      ],
+      "applications": [
+        "Electron",
+        "MSTeams",
+        "Google Chrome"
+      ],
+      "windowTitles": [
+        ""
+      ],
+      "directories": [
+        "/Users/ketan.bhenwal/Desktop/JIRA-Tempo"
+      ],
+      "gitBranches": [],
+      "confidence": 0
+    },
+    {
+      "id": "session_1757700095847",
+      "startTime": 1757700095847,
+      "endTime": 1757700283819,
+      "duration": 187972,
+      "detectedIssue": null,
+      "activities": [
+        {
+          "timestamp": 1757700094831,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700100903,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700106855,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700112840,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700118884,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700124841,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700130828,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700137621,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700143585,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700149514,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700155444,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700161448,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700167433,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700173416,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700179322,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700185334,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700191379,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700197367,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700203347,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700209353,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "http://localhost:3000/ai-agent.html",
+            "title": "AI Time Tracking Agent - Dashboard"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700215317,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700221161,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700227002,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700232942,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700238917,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700244904,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700250860,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700256796,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700262786,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronMSTeamsGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700268748,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700274678,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700280609,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminal"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        }
+      ],
+      "applications": [
+        "Electron",
+        "MSTeams",
+        "Google Chrome"
+      ],
+      "windowTitles": [
+        ""
+      ],
+      "directories": [
+        "/Users/ketan.bhenwal/Desktop/JIRA-Tempo"
+      ],
+      "gitBranches": [],
+      "confidence": 0
+    },
+    {
+      "id": "session_1757700312495",
+      "startTime": 1757700312495,
+      "endTime": 1757700394528,
+      "duration": 82033,
+      "detectedIssue": null,
+      "activities": [
+        {
+          "timestamp": 1757700311575,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700317527,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700323441,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700329459,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700335455,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700341466,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700347450,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700354950,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700360948,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700366896,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700372821,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700378806,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700384777,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700390756,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        }
+      ],
+      "applications": [
+        "Electron",
+        "MSTeams",
+        "Google Chrome"
+      ],
+      "windowTitles": [
+        ""
+      ],
+      "directories": [
+        "/Users/ketan.bhenwal/Desktop/JIRA-Tempo"
+      ],
+      "gitBranches": [],
+      "confidence": 25
+    },
+    {
+      "id": "session_1757700312495",
+      "startTime": 1757700312495,
+      "endTime": 1757700394528,
+      "duration": 82033,
+      "detectedIssue": null,
+      "activities": [
+        {
+          "timestamp": 1757700311575,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700317527,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700323441,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700329459,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700335455,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700341466,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700347450,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700354950,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700360948,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700366896,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700372821,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700378806,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700384777,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757700390756,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "FinderElectronGoogle ChromeNotesTerminalMSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "browser": {
+            "browser": "Google Chrome",
+            "url": "https://lrnorg.atlassian.net/plugins/servlet/ac/io.tempo.jira/tempo-app#!/my-work/week?type=TIME&date=2025-09-09",
+            "title": "Tempo - Jira"
+          },
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        }
+      ],
+      "applications": [
+        "Electron",
+        "MSTeams",
+        "Google Chrome"
+      ],
+      "windowTitles": [
+        ""
+      ],
+      "directories": [
+        "/Users/ketan.bhenwal/Desktop/JIRA-Tempo"
+      ],
+      "gitBranches": [],
+      "confidence": 25
+    },
+    {
+      "id": "session_1757873568644",
+      "startTime": 1757873568644,
+      "endTime": 1757873706569,
+      "duration": 137925,
+      "detectedIssue": null,
+      "activities": [
+        {
+          "timestamp": 1757873567796,
+          "applications": {
+            "active": "unknown",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "Electron",
+              "MSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757873578677,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "Electron",
+              "MSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757873589263,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "Electron",
+              "MSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757873599806,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "Electron",
+              "MSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757873610550,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "Electron",
+              "MSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757873621137,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "Electron",
+              "MSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757873631666,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "Electron",
+              "MSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757873645426,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "Electron",
+              "MSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757873656041,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "Electron",
+              "MSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757873666573,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "Electron",
+              "MSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757873677113,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "Electron",
+              "MSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757873687704,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "Electron",
+              "MSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1757873698335,
+          "applications": {
+            "active": "unknown",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "Electron",
+              "MSTeams"
+            ]
+          },
+          "windowTitles": "",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": null,
+          "openFiles": [],
+          "isWorkingHours": true
+        }
+      ],
+      "applications": [
+        "unknown",
+        "Electron",
+        "MSTeams",
+        "Google Chrome"
+      ],
+      "windowTitles": [
+        ""
+      ],
+      "directories": [
+        "/Users/ketan.bhenwal/Desktop/JIRA-Tempo"
+      ],
+      "gitBranches": [],
+      "confidence": 0,
+      "microEvents": [
+        {
+          "t": 1757873568700,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873574064,
+          "app": "MSTeams",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873579411,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873584800,
+          "app": "MSTeams",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873590161,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873600774,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873600937,
+          "app": "MSTeams",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873606125,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873606157,
+          "app": "MSTeams",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873611339,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873611485,
+          "app": "MSTeams",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873616677,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873616705,
+          "app": "MSTeams",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873621871,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873622010,
+          "app": "MSTeams",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873627186,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873627208,
+          "app": "MSTeams",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873632391,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873632556,
+          "app": "MSTeams",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873637811,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873637812,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873643210,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873648261,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873648454,
+          "app": "MSTeams",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873648460,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873653876,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873658941,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873659337,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873659358,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873659698,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873664547,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873664845,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873669826,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873670268,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873670488,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873670507,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873675112,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873675607,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873675607,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873675896,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873676086,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873676418,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873680441,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873681388,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873681410,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873681526,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873685679,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873686846,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873686847,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873687905,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873687920,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873688118,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873691007,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873691757,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873691760,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873692451,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873692663,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873694058,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873694118,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873695249,
+          "app": "MSTeams",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873695259,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873696625,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873698599,
+          "app": "MSTeams",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873698667,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873699173,
+          "app": "MSTeams",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873699182,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873700489,
+          "app": "MSTeams",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873700489,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873703917,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873703917,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873706510,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1757873706511,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        }
+      ]
+    }
+  ],
+  "loggedSessions": [
+    "session_1757700095847",
+    "session_1757700312495",
+    "session_1757873568644"
+  ],
+  "issueKeywordMap": [
+    [
+      "multiple",
+      [
+        "CON22-4524",
+        "CON22-4560",
+        "CON22-4524",
+        "CON22-4560",
+        "CON22-4524",
+        "CON22-4560"
+      ]
+    ],
+    [
+      "instances",
+      [
+        "CON22-4524",
+        "CON22-4524",
+        "CON22-4524"
+      ]
+    ],
+    [
+      "phishing",
+      [
+        "CON22-4524",
+        "CON22-4524",
+        "CON22-4524"
+      ]
+    ],
+    [
+      "course",
+      [
+        "CON22-4524",
+        "CON22-4560",
+        "CON22-4422",
+        "CON22-4524",
+        "CON22-4560",
+        "CON22-4422",
+        "CON22-4524",
+        "CON22-4560",
+        "CON22-4422"
+      ]
+    ],
+    [
+      "showing",
+      [
+        "CON22-4524",
+        "CON22-4524",
+        "CON22-4524"
+      ]
+    ],
+    [
+      "queue",
+      [
+        "CON22-4524",
+        "CON22-3380",
+        "CON22-4524",
+        "CON22-3380",
+        "CON22-4524",
+        "CON22-3380"
+      ]
+    ],
+    [
+      "spike",
+      [
+        "CON22-4560",
+        "CON22-4560",
+        "CON22-4560"
+      ]
+    ],
+    [
+      "handling",
+      [
+        "CON22-4560",
+        "CON22-1140",
+        "CON22-4560",
+        "CON22-1140",
+        "CON22-4560",
+        "CON22-1140"
+      ]
+    ],
+    [
+      "campaign",
+      [
+        "CON22-4560",
+        "CON22-4560",
+        "CON22-4560"
+      ]
+    ],
+    [
+      "assignment",
+      [
+        "CON22-4560",
+        "CON22-4560",
+        "CON22-4560"
+      ]
+    ],
+    [
+      "dates",
+      [
+        "CON22-4560",
+        "CON22-4560",
+        "CON22-4560"
+      ]
+    ],
+    [
+      "completion",
+      [
+        "CON22-4560",
+        "CON22-4422",
+        "CON22-4560",
+        "CON22-4422",
+        "CON22-4560",
+        "CON22-4422"
+      ]
+    ],
+    [
+      "history",
+      [
+        "CON22-4560",
+        "CON22-4422",
+        "CON22-4560",
+        "CON22-4422",
+        "CON22-4560",
+        "CON22-4422"
+      ]
+    ],
+    [
+      "updated",
+      [
+        "CON22-4515",
+        "CON22-4422",
+        "CON22-3189",
+        "CON22-1892",
+        "CON22-4515",
+        "CON22-4422",
+        "CON22-3189",
+        "CON22-1892",
+        "CON22-4515",
+        "CON22-4422",
+        "CON22-3189",
+        "CON22-1892"
+      ]
+    ],
+    [
+      "thumbnail",
+      [
+        "CON22-4515",
+        "CON22-3238",
+        "CON22-4515",
+        "CON22-3238",
+        "CON22-4515",
+        "CON22-3238"
+      ]
+    ],
+    [
+      "reflecting",
+      [
+        "CON22-4515",
+        "CON22-4515",
+        "CON22-4515"
+      ]
+    ],
+    [
+      "dpp015",
+      [
+        "CON22-4515",
+        "CON22-4515",
+        "CON22-4515"
+      ]
+    ],
+    [
+      "name",
+      [
+        "CON22-4422",
+        "CON22-2598",
+        "CON22-2597",
+        "CON22-4422",
+        "CON22-2598",
+        "CON22-2597",
+        "CON22-4422",
+        "CON22-2598",
+        "CON22-2597"
+      ]
+    ],
+    [
+      "displaying",
+      [
+        "CON22-4422",
+        "CON22-3787",
+        "CON22-3380",
+        "CON22-3381",
+        "CON22-3238",
+        "CON22-2643",
+        "CON22-4422",
+        "CON22-3787",
+        "CON22-3380",
+        "CON22-3381",
+        "CON22-3238",
+        "CON22-2643",
+        "CON22-4422",
+        "CON22-3787",
+        "CON22-3380",
+        "CON22-3381",
+        "CON22-3238",
+        "CON22-2643"
+      ]
+    ],
+    [
+      "when",
+      [
+        "CON22-4485",
+        "CON22-3787",
+        "CON22-3381",
+        "CON22-3189",
+        "CON22-2643",
+        "CON22-1894",
+        "CON22-4485",
+        "CON22-3787",
+        "CON22-3381",
+        "CON22-3189",
+        "CON22-2643",
+        "CON22-1894",
+        "CON22-4485",
+        "CON22-3787",
+        "CON22-3381",
+        "CON22-3189",
+        "CON22-2643",
+        "CON22-1894"
+      ]
+    ],
+    [
+      "admin",
+      [
+        "CON22-4485",
+        "CON22-3381",
+        "CON22-3189",
+        "CON22-4485",
+        "CON22-3381",
+        "CON22-3189",
+        "CON22-4485",
+        "CON22-3381",
+        "CON22-3189"
+      ]
+    ],
+    [
+      "removes",
+      [
+        "CON22-4485",
+        "CON22-4485",
+        "CON22-4485"
+      ]
+    ],
+    [
+      "instrucrtion",
+      [
+        "CON22-4485",
+        "CON22-4485",
+        "CON22-4485"
+      ]
+    ],
+    [
+      "customized",
+      [
+        "CON22-4485",
+        "CON22-4485",
+        "CON22-4485"
+      ]
+    ],
+    [
+      "languages,it",
+      [
+        "CON22-4485",
+        "CON22-4485",
+        "CON22-4485"
+      ]
+    ],
+    [
+      "should",
+      [
+        "CON22-4485",
+        "CON22-3189",
+        "CON22-4485",
+        "CON22-3189",
+        "CON22-4485",
+        "CON22-3189"
+      ]
+    ],
+    [
+      "display",
+      [
+        "CON22-4485",
+        "CON22-4485",
+        "CON22-4485"
+      ]
+    ],
+    [
+      "english",
+      [
+        "CON22-4485",
+        "CON22-4485",
+        "CON22-4485"
+      ]
+    ],
+    [
+      "instruction",
+      [
+        "CON22-4485",
+        "CON22-4485",
+        "CON22-4485"
+      ]
+    ],
+    [
+      "home",
+      [
+        "CON22-2583",
+        "CON22-2594",
+        "CON22-2583",
+        "CON22-2594",
+        "CON22-2583",
+        "CON22-2594"
+      ]
+    ],
+    [
+      "android",
+      [
+        "CON22-2583",
+        "CON22-2594",
+        "CON22-2582",
+        "CON22-2598",
+        "CON22-2597",
+        "CON22-2583",
+        "CON22-2594",
+        "CON22-2582",
+        "CON22-2598",
+        "CON22-2597",
+        "CON22-2583",
+        "CON22-2594",
+        "CON22-2582",
+        "CON22-2598",
+        "CON22-2597"
+      ]
+    ],
+    [
+      "content",
+      [
+        "CON22-2583",
+        "CON22-2594",
+        "CON22-2546",
+        "CON22-2643",
+        "CON22-2583",
+        "CON22-2594",
+        "CON22-2546",
+        "CON22-2643",
+        "CON22-2583",
+        "CON22-2594",
+        "CON22-2546",
+        "CON22-2643"
+      ]
+    ],
+    [
+      "gets",
+      [
+        "CON22-2583",
+        "CON22-2583",
+        "CON22-2583"
+      ]
+    ],
+    [
+      "obscured",
+      [
+        "CON22-2583",
+        "CON22-2583",
+        "CON22-2583"
+      ]
+    ],
+    [
+      "behind",
+      [
+        "CON22-2583",
+        "CON22-2583",
+        "CON22-2583"
+      ]
+    ],
+    [
+      "expanded",
+      [
+        "CON22-2583",
+        "CON22-2583",
+        "CON22-2583"
+      ]
+    ],
+    [
+      "hidden",
+      [
+        "CON22-2594",
+        "CON22-2546",
+        "CON22-2594",
+        "CON22-2546",
+        "CON22-2594",
+        "CON22-2546"
+      ]
+    ],
+    [
+      "rendered",
+      [
+        "CON22-2594",
+        "CON22-2546",
+        "CON22-2594",
+        "CON22-2546",
+        "CON22-2594",
+        "CON22-2546"
+      ]
+    ],
+    [
+      "screen",
+      [
+        "CON22-2594",
+        "CON22-2546",
+        "CON22-2594",
+        "CON22-2546",
+        "CON22-2594",
+        "CON22-2546"
+      ]
+    ],
+    [
+      "reader",
+      [
+        "CON22-2594",
+        "CON22-2546",
+        "CON22-2594",
+        "CON22-2546",
+        "CON22-2594",
+        "CON22-2546"
+      ]
+    ],
+    [
+      "demand",
+      [
+        "CON22-2582",
+        "CON22-2582",
+        "CON22-2582"
+      ]
+    ],
+    [
+      "disclosure",
+      [
+        "CON22-2582",
+        "CON22-2582",
+        "CON22-2582"
+      ]
+    ],
+    [
+      "missing",
+      [
+        "CON22-2582",
+        "CON22-2582",
+        "CON22-2582"
+      ]
+    ],
+    [
+      "keyboard",
+      [
+        "CON22-2582",
+        "CON22-2582",
+        "CON22-2582"
+      ]
+    ],
+    [
+      "support",
+      [
+        "CON22-2582",
+        "CON22-2582",
+        "CON22-2582"
+      ]
+    ],
+    [
+      "role,",
+      [
+        "CON22-2582",
+        "CON22-2582",
+        "CON22-2582"
+      ]
+    ],
+    [
+      "state",
+      [
+        "CON22-2582",
+        "CON22-2582",
+        "CON22-2582"
+      ]
+    ],
+    [
+      "information",
+      [
+        "CON22-2582",
+        "CON22-2582",
+        "CON22-2582"
+      ]
+    ],
+    [
+      "error",
+      [
+        "CON22-3787",
+        "CON22-1140",
+        "CON22-3787",
+        "CON22-1140",
+        "CON22-3787",
+        "CON22-1140"
+      ]
+    ],
+    [
+      "message",
+      [
+        "CON22-3787",
+        "CON22-3787",
+        "CON22-3787"
+      ]
+    ],
+    [
+      "user",
+      [
+        "CON22-3787",
+        "CON22-1894",
+        "CON22-1892",
+        "CON22-3787",
+        "CON22-1894",
+        "CON22-1892",
+        "CON22-3787",
+        "CON22-1894",
+        "CON22-1892"
+      ]
+    ],
+    [
+      "enters",
+      [
+        "CON22-3787",
+        "CON22-3787",
+        "CON22-3787"
+      ]
+    ],
+    [
+      "different",
+      [
+        "CON22-3787",
+        "CON22-1894",
+        "CON22-3787",
+        "CON22-1894",
+        "CON22-3787",
+        "CON22-1894"
+      ]
+    ],
+    [
+      "domain",
+      [
+        "CON22-3787",
+        "CON22-3787",
+        "CON22-3787"
+      ]
+    ],
+    [
+      "self",
+      [
+        "CON22-3787",
+        "CON22-3787",
+        "CON22-3787"
+      ]
+    ],
+    [
+      "registration",
+      [
+        "CON22-3787",
+        "CON22-3787",
+        "CON22-3787"
+      ]
+    ],
+    [
+      "policies",
+      [
+        "CON22-2598",
+        "CON22-2598",
+        "CON22-2598"
+      ]
+    ],
+    [
+      "inappropriate",
+      [
+        "CON22-2598",
+        "CON22-2597",
+        "CON22-3587",
+        "CON22-2598",
+        "CON22-2597",
+        "CON22-3587",
+        "CON22-2598",
+        "CON22-2597",
+        "CON22-3587"
+      ]
+    ],
+    [
+      "accessible",
+      [
+        "CON22-2598",
+        "CON22-2597",
+        "CON22-2598",
+        "CON22-2597",
+        "CON22-2598",
+        "CON22-2597"
+      ]
+    ],
+    [
+      "code",
+      [
+        "CON22-2597",
+        "CON22-2597",
+        "CON22-2597"
+      ]
+    ],
+    [
+      "conduct",
+      [
+        "CON22-2597",
+        "CON22-2597",
+        "CON22-2597"
+      ]
+    ],
+    [
+      "known",
+      [
+        "CON22-3587",
+        "CON22-3587",
+        "CON22-3587"
+      ]
+    ],
+    [
+      "issue",
+      [
+        "CON22-3587",
+        "CON22-3587",
+        "CON22-3587"
+      ]
+    ],
+    [
+      "queue:",
+      [
+        "CON22-3587",
+        "CON22-3587",
+        "CON22-3587"
+      ]
+    ],
+    [
+      "grouping",
+      [
+        "CON22-3587",
+        "CON22-3587",
+        "CON22-3587"
+      ]
+    ],
+    [
+      "elements",
+      [
+        "CON22-3587",
+        "CON22-3587",
+        "CON22-3587"
+      ]
+    ],
+    [
+      "ui:blank",
+      [
+        "CON22-3380",
+        "CON22-3380",
+        "CON22-3380"
+      ]
+    ],
+    [
+      "space",
+      [
+        "CON22-3380",
+        "CON22-3380",
+        "CON22-3380"
+      ]
+    ],
+    [
+      "below",
+      [
+        "CON22-3380",
+        "CON22-3380",
+        "CON22-3380"
+      ]
+    ],
+    [
+      "courses",
+      [
+        "CON22-3380",
+        "CON22-3380",
+        "CON22-3380"
+      ]
+    ],
+    [
+      "scroll",
+      [
+        "CON22-3381",
+        "CON22-3381",
+        "CON22-3381"
+      ]
+    ],
+    [
+      "catalog",
+      [
+        "CON22-3381",
+        "CON22-3381",
+        "CON22-3381"
+      ]
+    ],
+    [
+      "page",
+      [
+        "CON22-3381",
+        "CON22-1894",
+        "CON22-3381",
+        "CON22-1894",
+        "CON22-3381",
+        "CON22-1894"
+      ]
+    ],
+    [
+      "expands",
+      [
+        "CON22-3381",
+        "CON22-3381",
+        "CON22-3381"
+      ]
+    ],
+    [
+      "dropdown",
+      [
+        "CON22-3381",
+        "CON22-3381",
+        "CON22-3381"
+      ]
+    ],
+    [
+      "view",
+      [
+        "CON22-3381",
+        "CON22-3238",
+        "CON22-3381",
+        "CON22-3238",
+        "CON22-3381",
+        "CON22-3238"
+      ]
+    ],
+    [
+      "ui:footer",
+      [
+        "CON22-3238",
+        "CON22-3238",
+        "CON22-3238"
+      ]
+    ],
+    [
+      "properly",
+      [
+        "CON22-3238",
+        "CON22-2643",
+        "CON22-3238",
+        "CON22-2643",
+        "CON22-3238",
+        "CON22-2643"
+      ]
+    ],
+    [
+      "verify",
+      [
+        "CON22-3189",
+        "CON22-3189",
+        "CON22-3189"
+      ]
+    ],
+    [
+      "hide",
+      [
+        "CON22-3189",
+        "CON22-3189",
+        "CON22-3189"
+      ]
+    ],
+    [
+      "unhide",
+      [
+        "CON22-3189",
+        "CON22-3189",
+        "CON22-3189"
+      ]
+    ],
+    [
+      "primary",
+      [
+        "CON22-3189",
+        "CON22-3189",
+        "CON22-3189"
+      ]
+    ],
+    [
+      "logo",
+      [
+        "CON22-3189",
+        "CON22-3189",
+        "CON22-3189"
+      ]
+    ],
+    [
+      "specific",
+      [
+        "CON22-3189",
+        "CON22-3189",
+        "CON22-3189"
+      ]
+    ],
+    [
+      "language,",
+      [
+        "CON22-3189",
+        "CON22-3189",
+        "CON22-3189"
+      ]
+    ],
+    [
+      "activity",
+      [
+        "CON22-3189",
+        "CON22-3189",
+        "CON22-3189"
+      ]
+    ],
+    [
+      "more",
+      [
+        "CON22-2643",
+        "CON22-2643",
+        "CON22-2643"
+      ]
+    ],
+    [
+      "than",
+      [
+        "CON22-2643",
+        "CON22-2643",
+        "CON22-2643"
+      ]
+    ],
+    [
+      "five",
+      [
+        "CON22-2643",
+        "CON22-2643",
+        "CON22-2643"
+      ]
+    ],
+    [
+      "lines,",
+      [
+        "CON22-2643",
+        "CON22-2643",
+        "CON22-2643"
+      ]
+    ],
+    [
+      "mobile",
+      [
+        "CON22-2643",
+        "CON22-2643",
+        "CON22-2643"
+      ]
+    ],
+    [
+      "devices",
+      [
+        "CON22-2643",
+        "CON22-2643",
+        "CON22-2643"
+      ]
+    ],
+    [
+      "incorrect",
+      [
+        "CON22-1894",
+        "CON22-1894",
+        "CON22-1894"
+      ]
+    ],
+    [
+      "social",
+      [
+        "CON22-1894",
+        "CON22-1894",
+        "CON22-1894"
+      ]
+    ],
+    [
+      "media",
+      [
+        "CON22-1894",
+        "CON22-1894",
+        "CON22-1894"
+      ]
+    ],
+    [
+      "links",
+      [
+        "CON22-1894",
+        "CON22-1892",
+        "CON22-1894",
+        "CON22-1892",
+        "CON22-1894",
+        "CON22-1892"
+      ]
+    ],
+    [
+      "count",
+      [
+        "CON22-1894",
+        "CON22-1894",
+        "CON22-1894"
+      ]
+    ],
+    [
+      "footer",
+      [
+        "CON22-1894",
+        "CON22-1892",
+        "CON22-1894",
+        "CON22-1892",
+        "CON22-1894",
+        "CON22-1892"
+      ]
+    ],
+    [
+      "section",
+      [
+        "CON22-1894",
+        "CON22-1894",
+        "CON22-1894"
+      ]
+    ],
+    [
+      "login",
+      [
+        "CON22-1894",
+        "CON22-1894",
+        "CON22-1894"
+      ]
+    ],
+    [
+      "selected",
+      [
+        "CON22-1894",
+        "CON22-1892",
+        "CON22-1894",
+        "CON22-1892",
+        "CON22-1894",
+        "CON22-1892"
+      ]
+    ],
+    [
+      "language",
+      [
+        "CON22-1894",
+        "CON22-1892",
+        "CON22-1894",
+        "CON22-1892",
+        "CON22-1894",
+        "CON22-1892"
+      ]
+    ],
+    [
+      "mode",
+      [
+        "CON22-1892",
+        "CON22-1892",
+        "CON22-1892"
+      ]
+    ],
+    [
+      "technical",
+      [
+        "CON22-1140",
+        "CON22-1140",
+        "CON22-1140"
+      ]
+    ],
+    [
+      "task",
+      [
+        "CON22-1140",
+        "CON22-1140",
+        "CON22-1140"
+      ]
+    ],
+    [
+      "query",
+      [
+        "CON22-1140",
+        "CON22-1140",
+        "CON22-1140"
+      ]
+    ],
+    [
+      "timeout",
+      [
+        "CON22-1140",
+        "CON22-1140",
+        "CON22-1140"
+      ]
+    ]
+  ],
+  "lastSaved": "2025-09-14T18:15:06.571Z",
+  "isTestMode": true,
+  "isDryRun": false
+}

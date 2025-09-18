@@ -1,0 +1,31 @@
+{
+  "name": "jira-tempo-automation",
+  "version": "1.0.0",
+  "description": "Automate JIRA Tempo filling process with AI agent",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "node server.js",
+    "ai-agent": "node ai-agent-daemon.js start",
+    "ai-status": "node ai-agent-daemon.js status",
+    "agent:test": "cross-env AI_AGENT_TEST_MODE=true AI_AGENT_DRY_RUN=true node ai-agent-daemon.js start",
+    "agent:prod": "cross-env AI_AGENT_TEST_MODE=false node ai-agent-daemon.js start",
+    "setup": "node scripts/launcher.js",
+    "init": "node scripts/init.js",
+    "reset": "AI_AGENT_RESET=true node scripts/init.js"
+  },
+  "optionalDependencies": {
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  },
+  "dependencies": {
+    "axios": "^1.10.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "express": "^4.18.2",
+    "node-cron": "^3.0.3",
+    "node-fetch": "^3.3.2",
+    "openai": "^4.0.0"
+  }
+}

@@ -1,0 +1,246 @@
+# JIRA Tempo Time Logger with AI Agent
+
+A web application and AI-powered background agent to help you log work time for JIRA issues automatically.
+
+## ✨ NEW: AI Time Tracking Agent
+
+🤖 **Automated Time Tracking**: The AI agent runs in the background, monitors your work activity, and automatically logs time to JIRA Tempo!
+
+### AI Agent Features
+
+- 🔍 **Smart Detection**: Monitors active applications, window titles, Git branches, and development activity
+- 🎯 **Issue Recognition**: Automatically detects which JIRA issues you're working on
+- ⚡ **Auto-Logging**: High-confidence work sessions are logged automatically
+- 👀 **Manual Review**: Medium-confidence sessions await your approval via web interface
+- 📊 **Dashboard**: Beautiful web dashboard to monitor, approve, and manage tracked sessions
+- 🛡️ **Privacy-First**: All monitoring happens locally on your machine
+
+## Features
+
+- View all JIRA issues assigned to you
+- Search and filter your issues
+- Display issues where you were mentioned in comments as "Adhoc Tasks"
+- Log time with description, date, and start time
+- Dynamic fetching of required custom fields from Tempo API
+- Support for required custom fields in your Tempo configuration
+- User-friendly interface
+- **NEW: AI-powered background time tracking**
+- **NEW: Automatic JIRA issue detection**
+- **NEW: Smart work session management**
+
+## New in Latest Version
+- 🤖 **AI Time Tracking Agent** - Automatically monitors and logs your work
+- 📊 **AI Agent Dashboard** - Web interface to manage auto-tracked sessions
+- 🎯 **Smart Issue Detection** - Recognizes JIRA issues from window titles and Git branches
+- ⚡ **Auto-Logging** - High-confidence sessions logged automatically
+- 👀 **Review Interface** - Approve or reject detected work sessions
+- 📈 **Session Analytics** - Track your work patterns and productivity
+- Added support for fetching work attributes from Tempo Core API
+- Dynamic dropdowns for Time Type and Technology Time Type fields
+- Added "Adhoc Tasks" section for issues where you were mentioned in comments but not assigned
+- Fixed issues with invalid attribute values
+
+## Prerequisites
+
+- Node.js (v14 or higher)
+- JIRA account with API token
+- Tempo account with API token
+
+## Setup (macOS / Linux Quick Start)
+
+1. **Install dependencies:**
+   ```sh
+   npm install
+   ```
+
+   If you pulled an updated version of the repository that added new scripts (e.g. cross‑platform init launcher), run `npm install` again to ensure `cross-env` and any new dev dependencies are installed.
+
+2. **Configure environment variables:**
+   - Create a `.env` file with the following content:
+     - `JIRA_BASE_URL` (e.g., https://yourcompany.atlassian.net/)
+     - `TEMPO_BASE_URL` (should be https://api.tempo.io/4)
+     - `JIRA_EMAIL` (your Atlassian email)
+     - `JIRA_API_TOKEN` (from https://id.atlassian.com/manage-profile/security/api-tokens)
+     - `TEMPO_API_TOKEN` (from Tempo settings)
+     - `TEMPO_ACCOUNT_ID` (your Atlassian account ID)
+     - `PORT` (optional, defaults to 3000)
+
+3. **Start the application (interactive menu, cross‑platform):**
+
+   **Recommended (Node launcher – works on Windows/macOS/Linux)**
+   ```sh
+   npm run setup
+   ```
+   (Falls back to legacy shell script on macOS/Linux if you prefer: `./start-ai-agent.sh`)
+
+   **Option 2: Web Server + Manual AI Control**
+   ```sh
+   npm start
+   ```
+   Then navigate to the AI Agent dashboard to start/stop the agent.
+
+   **Option 3: AI Agent Only (Background)**
+   ```sh
+   npm run ai-agent
+   ```
+
+   **Option 4: Fast Test Mode (auto intervals + dry run)**
+   ```sh
+   npm run agent:test
+   ```
+
+4. **Access the interfaces:**
+   - **Main Time Logger:** `http://localhost:3000`
+   - **AI Agent Dashboard:** `http://localhost:3000/ai-agent.html`
+
+## Windows Users 🪟
+
+You now have native scripts:
+
+| Purpose | Command |
+|---------|---------|
+| Interactive menu | `npm run setup` or double‑click `start-ai-agent.bat` |
+| PowerShell advanced | `./start-ai-agent.ps1 -Test -DryRun` |
+| Start agent (prod) | `npm run agent:prod` |
+| Start test mode | `npm run agent:test` |
+| Status | `npm run ai-status` |
+
+Notes:
+1. Browser URL + active window detection is currently macOS‑optimized. Windows implementation provides foreground window title and process via PowerShell (sufficient for issue key detection in editors/terminals). Browser URL introspection for Edge/Chrome is a future enhancement (would require enabling remote debugging protocol).
+2. Meeting detection still works using window title / process name heuristics (Teams/Zoom). If you run into edge cases, set `AI_AGENT_VERBOSE_LOG=true` to collect a sample and open an issue.
+3. All paths use `path` module so backslashes are handled automatically.
+
+## Scaling & Performance ⚙️
+
+Recent improvements (this version):
+* Concurrency & rate‑limited child process execution (`limitedExec`) prevents spawn storms.
+* Cached activity type classification (5s window) reduces repeated regex scans for each API request.
+* Optional verbose logging (`AI_AGENT_VERBOSE_LOG=true`) to cut I/O overhead in normal mode.
+* Windows + Linux fallbacks for active app & window enumeration (best effort where OS APIs differ).
+* Reduced synchronous shell usage (removed `pwd`, consolidated enumeration logic).
+
+Environment knobs (override in `.env` or runtime config endpoints):
+| Variable | Purpose |
+|----------|---------|
+| `AI_AGENT_TEST_MODE` | Fast test intervals (see test config) |
+| `AI_AGENT_DRY_RUN` | Prevents actual Tempo logging |
+| `AI_AGENT_VERBOSE_LOG` | Force detailed logs (default off in prod) |
+| `AI_AGENT_RUNNING_APPS_REFRESH_MS` | Override refresh cadence for running app enumeration |
+| `AI_AGENT_MEETING_SCORE_THRESHOLD` | Tune meeting classification threshold (default 7) |
+| `AI_AGENT_LEGACY_MEETING_DETECTION` | Force legacy simpler meeting detection |
+
+Runtime adjustments (no restart): PATCH `/api/ai-agent/runtime-config` with fields like `monitoringInterval`, `workSessionThreshold`, etc. (values in ms or minutes auto‑converted if <1000).
+
+Optimization tips:
+1. Increase `monitoringInterval` if machine is resource constrained (e.g., from 5m to 7m) – sampler still gives fine‑grained context.
+2. If you experience high CPU from PowerShell enumeration on Windows, set `AI_AGENT_VERBOSE_LOG=false` and lengthen `AI_AGENT_RUNNING_APPS_REFRESH_MS` (e.g., 600000 for 10m).
+3. Use dry run test mode before rolling changes to production accounts.
+
+## Fresh Setup & Reset ♻️
+
+On first run (`npm run setup`) the project will:
+* Copy `.env.example` to `.env` if missing.
+* Remove any stale data/log files.
+* Create a sentinel `.initialized` file.
+
+To force a clean slate later:
+```sh
+npm run reset
+```
+This sets `AI_AGENT_RESET=true`, deletes agent data/logs, and preserves your `.env`.
+
+Manual one-off initialization (non-interactive):
+```sh
+npm run init
+```
+
+If you need to regenerate `.env`, delete it and re-run `npm run init` (your credentials will need to be re-entered).
+
+## 🤖 AI Agent Usage
+
+### Quick Start
+1. Run `./start-ai-agent.sh` and choose option 1
+2. Open the AI Agent dashboard at `http://localhost:3000/ai-agent.html`
+3. Click "Start Agent" to begin monitoring
+4. Work on your JIRA issues as usual
+5. Review and approve detected sessions in the dashboard
+
+### How the AI Agent Works
+
+1. **Monitoring**: Continuously monitors your:
+   - Active applications (VS Code, Terminal, browsers, etc.)
+   - Window titles (looking for JIRA keys and project names)
+   - Git branches and repositories
+   - Work hours (9 AM - 6 PM on weekdays)
+
+2. **Detection**: Uses multiple strategies to identify work sessions:
+   - JIRA key patterns in window titles (e.g., "PROJ-123")
+   - Development tool usage (VS Code, Terminal, IDEs)
+   - Git branch analysis
+   - Keyword matching with assigned issues
+
+3. **Auto-Logging**: 
+   - **High confidence (≥70%)**: Automatically logs to Tempo
+   - **Medium confidence (60-69%)**: Awaits your approval
+   - **Low confidence (<60%)**: Ignored
+
+4. **Review**: Use the web dashboard to:
+   - View detected sessions
+   - Approve/reject pending sessions
+   - Correct issue assignments
+   - Monitor auto-logged time
+
+### AI Agent Commands
+
+```sh
+# Start the AI agent in background
+npm run ai-agent
+
+# Check agent status
+npm run ai-status
+
+# Interactive setup menu
+./start-ai-agent.sh
+```
+
+## Manual Time Logging (Web Interface)
+
+1. When you open the web interface, it will automatically fetch and display:
+   - Your assigned JIRA issues
+   - Issues where you were mentioned in comments but not assigned (under "Adhoc Tasks")
+2. You can use the search boxes to filter issues by key, summary, or status
+3. Click the "Log Time" button next to any issue to select it for time logging
+4. Fill in the required details:
+   - Time spent (in hours)
+   - Work description
+   - Date
+   - Start Time (HH:MM:SS format)
+   - Time Type (required custom field)
+   - Task Type (required custom field)
+   - Technology Time Type (required custom field)
+5. Click "Submit Time Log" to record your work time
+6. You'll see a success message with the worklog ID when the time is successfully logged
+
+## Security
+
+This application stores your JIRA and Tempo API tokens in the `.env` file, which should never be committed to version control.
+
+## Note
+
+Legacy command-line scripts have been moved to the `/unused` directory for reference. The web application is now the recommended way to log time.
+
+1. **JIRA API Token Issues:**
+   - Generate a new token at https://id.atlassian.com/manage-profile/security/api-tokens
+   - Update your .env file
+
+2. **Tempo API Issues:**
+   - Verify your Tempo API token in Tempo settings
+   - Make sure your account has Tempo access
+
+3. **Issue ID vs Key:**
+   - Tempo API v4 requires numeric issue IDs, not issue keys
+   - Use `tempo-logger-id.js` for most reliable results
+
+## Security
+- Do not commit your `.env` file to version control.
+- Your API tokens and account IDs are sensitive information.
