@@ -16,7 +16,7 @@ When the AI agent detects development work on any story:
 When the AI agent detects Microsoft Teams calls or meetings:
 - **Time Category**: `MeetingCollaboration`
 - **Technology Time Type**: `CapitalizableTechnicalDiscussion`
-- **Target**: `CON22-2208` (configurable via `AI_AGENT_CONFIG.defaultMeetingIssue`)
+- **Target**: value of `AI_AGENT_DEFAULT_MEETING_ISSUE` env (configurable via `AI_AGENT_CONFIG.defaultMeetingIssue`)
 - **Description**: Includes meeting details and applications used
 
 ## Enhanced Detection Logic
@@ -77,7 +77,7 @@ attributes: [
 ### Default Meeting Issue
 The default issue for logging meeting time can be configured:
 ```javascript
-AI_AGENT_CONFIG.defaultMeetingIssue = 'CON22-2208'
+AI_AGENT_CONFIG.defaultMeetingIssue = process.env.AI_AGENT_DEFAULT_MEETING_ISSUE
 ```
 
 ### Auto-Logging Behavior
@@ -105,7 +105,7 @@ Description: Development work using Visual Studio Code, Terminal. Working on bra
 
 ### Microsoft Teams Call
 ```
-✅ Auto-logged 45m to CON22-2208 (Meeting/Collaboration) - Worklog ID: 12346
+✅ Auto-logged 45m to MEETING-ISSUE (Meeting/Collaboration) - Worklog ID: 12346
 Description: Meeting/collaboration using Microsoft Teams. Activity: Meeting/Collaboration. Time: 14:00:00 - 14:45:00. (Auto-tracked with 70% confidence)
 ```
 

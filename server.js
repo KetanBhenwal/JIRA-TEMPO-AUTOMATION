@@ -89,7 +89,8 @@ app.get('/api/ai-agent/activities', async (req, res) => {
     const activities = sessions.map(s => {
       const activityType = aiAgent.detectActivityType(s);
       const isMeeting = activityType.isMeetingActivity;
-      const issueKey = isMeeting ? process.env.AI_AGENT_DEFAULT_MEETING_ISSUE || 'CON22-2208' : (s.detectedIssue || null);
+  const defaultMeetingIssue = (process.env.AI_AGENT_DEFAULT_MEETING_ISSUE || '').trim() || null;
+  const issueKey = isMeeting ? defaultMeetingIssue : (s.detectedIssue || null);
       return {
         id: s.id,
         startTime: s.startTime,

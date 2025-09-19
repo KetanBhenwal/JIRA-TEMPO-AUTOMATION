@@ -140,7 +140,7 @@ test_connection() {
           startTime: Date.now() - 2 * 60 * 1000, // 2 minutes ago
           endTime: Date.now(),
           duration: 2 * 60 * 1000, // 2 minutes
-          detectedIssue: agent.assignedIssues[0]?.key || 'CON22-2208',
+          detectedIssue: agent.assignedIssues[0]?.key || process.env.AI_AGENT_DEFAULT_MEETING_ISSUE || null,
           confidence: 85,
           activities: [{
             timestamp: Date.now(),

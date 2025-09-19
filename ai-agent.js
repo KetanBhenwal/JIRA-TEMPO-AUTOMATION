@@ -20,6 +20,13 @@ const TEMPO_BASE_URL = process.env.TEMPO_BASE_URL;
 const TEMPO_API_TOKEN = process.env.TEMPO_API_TOKEN;
 const TEMPO_ACCOUNT_ID = process.env.TEMPO_ACCOUNT_ID;
 
+// Helper to resolve default meeting issue (single source of truth)
+function getDefaultMeetingIssue() {
+  return process.env.AI_AGENT_DEFAULT_MEETING_ISSUE && process.env.AI_AGENT_DEFAULT_MEETING_ISSUE.trim()
+    ? process.env.AI_AGENT_DEFAULT_MEETING_ISSUE.trim()
+    : null; // Intentionally no fallback hardcode; caller must handle null
+}
+
 // AI Agent configuration
 const AI_AGENT_CONFIG = {
   monitoringInterval: 5 * 60 * 1000, // 5 minutes
@@ -30,7 +37,8 @@ const AI_AGENT_CONFIG = {
   logFile: path.join(__dirname, 'ai-agent.log'),
   workHoursStart: 11, // 11 AM
   workHoursEnd: 20, // 8 PM
-  defaultMeetingIssue: 'CON22-2208', // Default issue for Microsoft Teams calls and adhoc meetings
+  // Read from environment only (no hardcoded default). Validation later.
+  defaultMeetingIssue: getDefaultMeetingIssue(), // Default issue for Microsoft Teams calls and adhoc meetings
   activeWindowSamplingInterval: 60/2 * 1000, // 30s lightweight foreground window sampling
   enableActiveWindowSampler: true, // Feature flag for new sampler
   runningAppsRefreshInterval: 5 * 60 * 1000, // cache running visible apps for 5m
@@ -59,7 +67,7 @@ const AI_AGENT_TEST_CONFIG = {
   logFile: path.join(__dirname, 'ai-agent-test.log'),
   workHoursStart: 0, // Accept any hour in test mode
   workHoursEnd: 24,
-  defaultMeetingIssue: 'CON22-2208',
+  defaultMeetingIssue: getDefaultMeetingIssue(),
   activeWindowSamplingInterval: 5 * 1000, // 5s sampler (was 15s, prod 30s)
   enableActiveWindowSampler: true,
   runningAppsRefreshInterval: 30 * 1000, // 30s (was 60s, prod 5m)
@@ -230,9 +238,10 @@ class AITimeTrackingAgent {
     this._execTimer = null;
     // New: micro event buffer for high-frequency window samples (only kept in-memory per session)
     this.activeWindowSamplerTimer = null;
-  // Hourly slicing tracking
-  this._sliceMetrics = { slicesLogged: 0 };
-    
+
+    // Hourly slicing tracking
+    this._sliceMetrics = { slicesLogged: 0 };
+
     // Initialize logging
     this.setupLogging();
     // Reconciliation tracking
@@ -249,6 +258,18 @@ class AITimeTrackingAgent {
     // Dynamic Tempo work attribute maps (populated lazily)
     this._tempoAttributeMap = null; // full map keyed by attribute key
     this._techTypeNameToValue = null; // display/name -> value
+  }
+
+  static validateConfig() {
+    if (!AI_AGENT_CONFIG.defaultMeetingIssue) {
+      console.warn('⚠️  AI_AGENT_DEFAULT_MEETING_ISSUE is not set. Meeting sessions will not be logged until it is configured in your environment (.env).');
+    }
+  }
+
+  get defaultMeetingIssue() {
+    // Allow runtime override via RUNTIME_OVERRIDES if supplied
+    const effective = this._effectiveConfig?.defaultMeetingIssue || AI_AGENT_CONFIG.defaultMeetingIssue;
+    return (effective && typeof effective === 'string' && effective.trim()) ? effective.trim() : null;
   }
 
   async setupLogging() {
@@ -1466,7 +1487,7 @@ class AITimeTrackingAgent {
     await this.log(`🤖 Evaluating current session for auto-logging: ${this.currentSession.id}`);
     const activityType = this.detectActivityType(this.currentSession);
     
-    // For meeting activities, always log to CON22-2208 regardless of detected issue
+  // For meeting activities, always log to configured default meeting issue regardless of detected issue
     // For story development, require detected issue and confidence >= 70%
     const shouldLog = activityType.isMeetingActivity || 
                      (this.currentSession.detectedIssue && this.currentSession.confidence >= 70);
@@ -1557,7 +1578,10 @@ class AITimeTrackingAgent {
       
       // Determine issue key and ID based on activity type
       if (activityType.isMeetingActivity) {
-        targetIssueKey = CONFIG.defaultMeetingIssue;
+        targetIssueKey = this.defaultMeetingIssue;
+        if (!targetIssueKey) {
+          throw new Error('Meeting activity detected but AI_AGENT_DEFAULT_MEETING_ISSUE is not configured');
+        }
       }
       
       // Validate that we have a target issue key
@@ -2354,6 +2378,7 @@ class AITimeTrackingAgent {
 }
 
 // Export for use as a module
+AITimeTrackingAgent.validateConfig();
 module.exports = AITimeTrackingAgent;
 
 // If running directly, start the agent

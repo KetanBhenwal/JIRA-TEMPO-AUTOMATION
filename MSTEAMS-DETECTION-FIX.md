@@ -86,7 +86,7 @@ const workApps = [
 When Microsoft Teams (reported as "MSTeams") is detected:
 
 1. **Activity Type**: `Meeting/Collaboration` ✅
-2. **Target Issue**: `CON22-2208` (Default Meeting Issue) ✅
+2. **Target Issue**: value of `AI_AGENT_DEFAULT_MEETING_ISSUE` (Default Meeting Issue) ✅
 3. **Work Attributes**:
    - `_TimeCategory_`: `MeetingCollaboration` ✅
    - `_TechnologyTimeType_`: `CapitalizableTechnicalDiscussion` ✅
@@ -100,12 +100,12 @@ Activity Type Detection Results:
 - Is Meeting Activity: true
 - Is Story Development: false
 - Description: Meeting/Collaboration
-Target Issue: CON22-2208 (Default Meeting Issue)
+Target Issue: $AI_AGENT_DEFAULT_MEETING_ISSUE (Default Meeting Issue)
 ```
 
 ## Impact
 
-- ✅ **Microsoft Teams meetings** will now be automatically logged to `CON22-2208`
+- ✅ **Microsoft Teams meetings** will now be automatically logged to the configured default meeting issue (`AI_AGENT_DEFAULT_MEETING_ISSUE`)
 - ✅ **Correct work attributes** will be applied for meeting activities
 - ✅ **Improved detection accuracy** for Teams-based collaboration
 - ✅ **Better separation** between development work and meeting activities
