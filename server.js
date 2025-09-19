@@ -5,8 +5,8 @@ const path = require('path');
 const cors = require('cors');
 const AITimeTrackingAgent = require('./ai-agent');
 
-// Configuration
-const JIRA_BASE_URL = process.env.JIRA_BASE_URL;
+// Configuration (normalize trailing slash to avoid double // in requests)
+const JIRA_BASE_URL = (process.env.JIRA_BASE_URL || '').replace(/\/+$/,'');
 const JIRA_EMAIL = process.env.JIRA_EMAIL;
 const JIRA_API_TOKEN = process.env.JIRA_API_TOKEN;
 const TEMPO_BASE_URL = process.env.TEMPO_BASE_URL;
@@ -35,7 +35,18 @@ const jiraApi = axios.create({
     Authorization: `Basic ${Buffer.from(`${JIRA_EMAIL}:${JIRA_API_TOKEN}`).toString('base64')}`,
     'Accept': 'application/json',
     'Content-Type': 'application/json'
+  },
+  timeout: 15000
+});
+
+// Optional low-noise interceptor to surface auth failures once
+let _jiraAuthWarned = false;
+jiraApi.interceptors.response.use(r=>r, err => {
+  if (err.response && err.response.status === 401 && !_jiraAuthWarned) {
+    _jiraAuthWarned = true;
+    console.warn('[JIRA AUTH] 401 Unauthorized from JIRA. Check JIRA_EMAIL, JIRA_API_TOKEN, and that the token has not been revoked.');
   }
+  return Promise.reject(err);
 });
 
 const tempoApi = axios.create({
@@ -61,6 +72,70 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // API Routes
+
+// JIRA current user info
+app.get('/api/jira/me', async (req, res) => {
+  try {
+    const userResp = await jiraApi.get('/rest/api/3/myself');
+    // Try fetching groups (separate endpoint) - may require proper scopes
+    let groups = [];
+    try {
+      const groupsResp = await jiraApi.get('/rest/api/3/group/browse', { params: { maxResults: 50 } });
+      groups = (groupsResp.data?.groups || []).map(g => g.name).slice(0,50);
+    } catch (e) {
+      // Non-fatal; log silently if verbose
+      if (process.env.AI_AGENT_VERBOSE_LOG === 'true') {
+        console.warn('[jira:groups] fetch failed:', e.response?.status || e.message);
+      }
+    }
+    const d = userResp.data || {};
+    const safe = {
+      accountId: d.accountId || d.account?.accountId || null,
+      displayName: d.displayName || null,
+      emailAddress: d.emailAddress || null, // may be null if privacy settings restrict
+      timeZone: d.timeZone || null,
+      locale: d.locale || null,
+      groups,
+      rawAvatarUrls: d.avatarUrls || null
+    };
+    res.json(safe);
+  } catch (error) {
+    const status = error.response?.status || 500;
+    const detailsRaw = error.response?.data?.errorMessages || error.response?.data || undefined;
+    const details = typeof detailsRaw === 'string' ? detailsRaw : detailsRaw?.errorMessages || detailsRaw;
+    if (process.env.AI_AGENT_VERBOSE_LOG === 'true') {
+      console.warn('[jira:me] failure', { status, details: detailsRaw });
+    }
+    res.status(status).json({
+      error: 'Failed to fetch JIRA user',
+      status,
+      message: error.message,
+      details,
+      hint: status === 401 ? 'Verify JIRA_BASE_URL (no trailing slash), JIRA_EMAIL, JIRA_API_TOKEN. Create new token at id.atlassian.com if uncertain.' : undefined
+    });
+  }
+});
+
+// Simple health/status probe
+app.get('/api/health', async (req, res) => {
+  const started = !!aiAgent;
+  let jiraAuth = 'unknown';
+  if (process.env.DISABLE_JIRA_HEALTH !== 'true') {
+    try {
+      await jiraApi.get('/rest/api/3/myself');
+      jiraAuth = 'ok';
+    } catch (e) {
+      jiraAuth = 'fail';
+    }
+  }
+  res.json({
+    status: 'ok',
+    serverPort: PORT,
+    jiraBase: JIRA_BASE_URL,
+    jiraAuth,
+    aiAgentRunning: isAiAgentRunning
+  });
+});
 
 // AI Agent status & metrics
 app.get('/api/ai-agent/status', (req, res) => {

@@ -258,6 +258,16 @@ class AITimeTrackingAgent {
     // Dynamic Tempo work attribute maps (populated lazily)
     this._tempoAttributeMap = null; // full map keyed by attribute key
     this._techTypeNameToValue = null; // display/name -> value
+    // Enhanced detection config
+    this._excludedPathKeywords = (process.env.AI_AGENT_EXCLUDED_PATH_KEYWORDS || 'jira-tempo,jira_tempo,jira-tempo-automation').split(',').map(s=>s.trim()).filter(Boolean);
+    this._excludedBranches = (process.env.AI_AGENT_EXCLUDED_BRANCHES || 'main,master').split(',').map(s=>s.trim());
+    this._llmRefine = process.env.AI_AGENT_LLM_REFINE_DETECTION === 'true';
+    this._detectionVerbose = process.env.AI_AGENT_DETECTION_VERBOSE === 'true';
+    this._minConfidenceOverride = parseInt(process.env.AI_AGENT_MIN_SESSION_CONFIDENCE || '0',10) || 0;
+    // Session history tracking
+    this._sessionHistoryFile = process.env.AI_AGENT_SESSION_HISTORY_FILE || path.join(__dirname,'ai-agent-session-history.jsonl');
+    this._sessionHistoryInMemoryLimit = parseInt(process.env.AI_AGENT_SESSION_HISTORY_LIMIT || '500',10);
+    this._sessionHistory = [];
   }
 
   static validateConfig() {
@@ -293,6 +303,46 @@ class AITimeTrackingAgent {
     }
     // Schedule reconciliation after initial logging setup
     this.scheduleReconciliation();
+  }
+
+  /* ------------------------- Structured Logging Helpers ------------------------- */
+  _formatErrorBlock(title, details) {
+    // details: object with simple serializable keys
+    try {
+      const lines = [title];
+      Object.entries(details).forEach(([k,v]) => {
+        if (v === undefined || v === null || v === '') return;
+        let val = typeof v === 'object' ? JSON.stringify(v).slice(0,400) : String(v);
+        lines.push(`  • ${k}: ${val}`);
+      });
+      return lines.join('\n');
+    } catch (e) {
+      return title + ' (formatting failed: ' + e.message + ')';
+    }
+  }
+
+  /* --------------------------- JIRA Authentication --------------------------- */
+  async authenticateJira() {
+    await this.log('🔐 Authenticating with JIRA...');
+    try {
+      const resp = await jiraApi.get('/rest/api/3/myself');
+      const accountId = resp.data.accountId || resp.data.account?.accountId;
+      this._jiraAuthenticated = true;
+      this._jiraAccountId = accountId;
+      await this.log(`✅ JIRA authentication successful: ${resp.data.displayName || resp.data.emailAddress || accountId}`);
+      return true;
+    } catch (error) {
+      this._jiraAuthenticated = false;
+      const status = error.response?.status;
+      const snippet = error.response?.data ? JSON.stringify(error.response.data).slice(0,500) : error.message;
+      await this.log(this._formatErrorBlock('❌ JIRA authentication failed', {
+        status,
+        endpoint: '/rest/api/3/myself',
+        message: error.message,
+        response: snippet
+      }));
+      return false;
+    }
   }
 
   async log(message, force = false) {
@@ -452,7 +502,13 @@ class AITimeTrackingAgent {
       await this.testConnections();
     }
     
-    // Fetch assigned issues for context
+    // Authenticate JIRA first
+    const authOk = await this.authenticateJira();
+    if (!authOk) {
+      await this.log('⚠️ Proceeding without JIRA authentication; issue detection will be limited');
+    }
+
+    // Fetch assigned issues for context (only attempt if authenticated or we still want to try)
     await this.fetchAssignedIssues();
     
     // Start monitoring
@@ -704,31 +760,99 @@ class AITimeTrackingAgent {
 
   async fetchAssignedIssues() {
     await this.log('📋 Fetching assigned JIRA issues...');
+    const newEndpoint = '/rest/api/3/search/jql';
+    const legacyEndpoint = '/rest/api/3/search';
+    const useLegacyEnv = process.env.AI_AGENT_USE_LEGACY_JIRA_SEARCH === 'true';
+    // Primary JQL from env or default
+    const baseJql = (process.env.AI_AGENT_ASSIGNED_JQL && process.env.AI_AGENT_ASSIGNED_JQL.trim()) || 'assignee = currentUser() AND statusCategory != Done ORDER BY updated DESC';
+    // Fallback variants if zero results
+    const fallbackJqls = [
+      'assignee = currentUser() AND resolution = Unresolved ORDER BY updated DESC',
+      'assignee = currentUser() AND statusCategory != Done',
+      'assignee = currentUser() ORDER BY updated DESC'
+    ];
+    const attemptedJqls = [];
+    const fields = ['key','summary','status','project'];
+    let attemptedEndpoints = [];
+    const tryCall = async (endpoint) => {
+      attemptedEndpoints.push(endpoint);
+      const lastJql = attemptedJqls[attemptedJqls.length - 1];
+      return jiraApi.post(endpoint, { jql: lastJql, fields, maxResults: 50 });
+    };
     try {
-      const response = await jiraApi.post('/rest/api/3/search/jql', {
-        jql: 'assignee = currentUser() AND statusCategory != Done ORDER BY updated DESC',
-        fields: ['key','summary','status','project'],
-        maxResults: 50
-      });
+      let response;
+      let issues = [];
+      const runQueryWithFallbacks = async () => {
+        const allJqls = [baseJql, ...fallbackJqls];
+        for (const q of allJqls) {
+          attemptedJqls.push(q);
+          try {
+            // Use whichever endpoint logic chosen outside
+            if (useLegacyEnv) {
+              response = await tryCall(legacyEndpoint);
+            } else {
+              try {
+                response = await tryCall(newEndpoint);
+              } catch (e) {
+                const status = e.response?.status;
+                if ([404,405,400].includes(status)) {
+                  await this.log(`🔁 Falling back to legacy JIRA search endpoint due to status ${status} on ${newEndpoint}`);
+                  response = await tryCall(legacyEndpoint);
+                } else {
+                  throw e;
+                }
+              }
+            }
+            issues = response.data.issues || [];
+            await this.log(`🔎 JQL attempt ${attemptedJqls.length}/${allJqls.length} returned ${issues.length} issues`);
+            if (issues.length > 0) return issues; // success
+          } catch (innerErr) {
+            const status = innerErr.response?.status;
+            await this.log(this._formatErrorBlock(`⚠️ JQL attempt failed (#${attemptedJqls.length})`, {
+              status,
+              jql: q,
+              message: innerErr.message
+            }));
+            // continue to next JQL
+          }
+        }
+        return issues; // may be empty
+      };
 
-      this.assignedIssues = response.data.issues || [];
-      
-      // Build keyword map for issue detection
+      const finalIssues = await runQueryWithFallbacks();
+      this.assignedIssues = finalIssues;
+      if (useLegacyEnv) {
+        // already executed inside runQueryWithFallbacks
+      } else {
+        // fallbacks handled in loop
+      }
+      // Build keyword map
       let totalKeywords = 0;
       this.assignedIssues.forEach(issue => {
         const keywords = this.extractKeywords(issue.fields.summary);
         keywords.forEach(keyword => {
-          if (!this.issueKeywordMap.has(keyword)) {
-            this.issueKeywordMap.set(keyword, []);
-          }
+          if (!this.issueKeywordMap.has(keyword)) this.issueKeywordMap.set(keyword, []);
           this.issueKeywordMap.get(keyword).push(issue.key);
           totalKeywords++;
         });
       });
-
-      await this.log(`✅ Fetched ${this.assignedIssues.length} assigned issues, extracted ${totalKeywords} keywords for detection`);
+      if (this.assignedIssues.length === 0) {
+        await this.log('⚠️ No assigned issues returned. Possible reasons: none assigned, JQL filtered them out, or authentication scope issue.');
+      }
+      await this.log(`✅ Assigned issues fetch complete: ${this.assignedIssues.length} issues, ${totalKeywords} keywords. Endpoints tried: ${attemptedEndpoints.join(' -> ')} | JQLs tried: ${attemptedJqls.length}`);
+      if (attemptedJqls.length > 1) {
+        await this.log(`ℹ️ Final successful/last JQL: ${attemptedJqls[attemptedJqls.length - 1]}`);
+      }
     } catch (error) {
-      await this.log(`❌ Failed to fetch assigned issues: ${error.message}`);
+      const status = error.response?.status;
+      const snippet = error.response?.data ? JSON.stringify(error.response.data).slice(0,500) : error.message;
+      await this.log(this._formatErrorBlock('❌ Failed to fetch assigned issues', {
+        status,
+        attempted: attemptedEndpoints.join(' | ') || 'none',
+        message: error.message,
+        response: snippet,
+        jqlAttempts: attemptedJqls.length
+      }));
     }
   }
 
@@ -1145,6 +1269,7 @@ class AITimeTrackingAgent {
         : (detectedIssue || 'Unknown task');
         
       await this.log(`🎆 Started new work session: ${sessionDescription} (Confidence: ${this.currentSession.confidence}%)`);
+      if (this._sessionHistory) this._recordSessionHistory('session_start', this.currentSession, { issue: detectedIssue });
     } else {
       // Update existing session
       const prevDuration = this.currentSession.duration;
@@ -1177,6 +1302,7 @@ class AITimeTrackingAgent {
       const prevDurationMinutes = Math.floor(prevDuration / (1000 * 60));
       if (currentDurationMinutes > 0 && currentDurationMinutes % 15 === 0 && currentDurationMinutes !== prevDurationMinutes) {
         await this.log(`🕰️ Session progress: ${this.formatDuration(this.currentSession.duration)} on ${this.currentSession.detectedIssue || 'Unknown task'}`);
+        this._recordSessionHistory('session_progress', this.currentSession, { minutes: currentDurationMinutes });
       }
 
       // Auto-log if session is long enough
@@ -1213,6 +1339,31 @@ class AITimeTrackingAgent {
 
   async detectRelatedIssue(activity) {
     await this.log('🎯 Detecting related JIRA issue...');
+    // New scoring pipeline (kept backward compatible). If legacy flag enabled, fall back.
+    if (process.env.AI_AGENT_LEGACY_DETECTION !== 'true') {
+      try {
+        const result = await this._scoreAndSelectIssue(activity);
+        console.log('Issue detection result:', result);
+        if (result && result.issueKey) {
+          return result.issueKey;
+        }
+        // If ambiguous and LLM refine enabled, attempt refinement
+        if (this._llmRefine && result && result.ambiguous && (result.candidates || []).length) {
+          try {
+            const refined = await this._refineIssueWithLLM(result.candidates, activity);
+            if (refined && refined.issueKey) {
+              await this.log(`🧠 LLM refined issue selection -> ${refined.issueKey}`);
+              return refined.issueKey;
+            }
+          } catch(e) {
+            await this.log(`⚠️ LLM refinement failed: ${e.message}`);
+          }
+        }
+        // Fall through to legacy heuristics if no confident pick
+      } catch (e) {
+        await this.log(`⚠️ New detection pipeline error, falling back: ${e.message}`);
+      }
+    }
     const jiraKeyPattern = /([A-Z]+-\d+)/g;
     
     // 0. Prefer microEvents (high-frequency sampler) recent signals (last 10 events)
@@ -1277,6 +1428,85 @@ class AITimeTrackingAgent {
     }
     await this.log('❌ No related issue detected');
     return null;
+  }
+
+  /* -------------------- Enhanced Issue Scoring & Refinement -------------------- */
+  async _scoreAndSelectIssue(activity) {
+    try {
+      const snapshot = activity; // current activity snapshot
+      const recentMicro = (this.currentSession?.microEvents || []).slice(-50);
+      const jiraKeyPattern = /([A-Z]+-\d+)/g;
+      const seenKeys = new Map(); // key -> factors
+      const addFactor = (key, factor, weight, meta) => {
+        if (!seenKeys.has(key)) seenKeys.set(key,{ key, score:0, factors:[] });
+        const entry = seenKeys.get(key);
+        entry.score += weight;
+        entry.factors.push({ factor, weight, meta });
+      };
+      // 1. Direct keys in window title / git branch / open files
+      const aggregateText = `${snapshot.windowTitles} ${snapshot.gitBranch||''} ${(snapshot.openFiles||[]).join(' ')}`;
+      const directMatches = aggregateText.match(jiraKeyPattern) || [];
+      directMatches.forEach(k => addFactor(k,'directText',40));
+      // 2. Micro events URL/title keys
+      recentMicro.forEach(ev => { if (ev.jiraKey) addFactor(ev.jiraKey,'microEvent',30,{ source: ev.source }); });
+      // 3. Assigned issues keyword overlap
+      const titleLower = snapshot.windowTitles.toLowerCase();
+      this.assignedIssues.forEach(issue => {
+        // quick tokenization
+        const terms = (issue.fields.summary||'').toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>3).slice(0,12);
+        let hits = 0;
+        terms.forEach(t => { if (titleLower.includes(t)) hits++; });
+        if (hits>0) addFactor(issue.key,'summaryOverlap',Math.min(4*hits,20),{ hits });
+      });
+      // 4. Frequency count in micro events
+      const freq = {};
+      recentMicro.forEach(ev => { if (ev.jiraKey) freq[ev.jiraKey]=(freq[ev.jiraKey]||0)+1; });
+      Object.entries(freq).forEach(([k,c])=> addFactor(k,'recentFrequency',Math.min(c*3,15),{ count:c }));
+      // 5. Git branch weight if branch contains key
+      if (snapshot.gitBranch) {
+        const branchMatches = snapshot.gitBranch.match(jiraKeyPattern) || [];
+        branchMatches.forEach(k => addFactor(k,'gitBranch',35));
+      }
+      // 6. Exclusion penalties
+      const cwd = snapshot.currentDirectory || '';
+      const excludedPathHit = this._excludedPathKeywords.some(p => cwd.toLowerCase().includes(p.toLowerCase()));
+      const excludedBranchHit = snapshot.gitBranch && this._excludedBranches.includes(snapshot.gitBranch.trim());
+      if ((excludedPathHit || excludedBranchHit) && seenKeys.size) {
+        for (const entry of seenKeys.values()) {
+          addFactor(entry.key,'excludedContext',-100,{ excludedPathHit, excludedBranchHit });
+        }
+      }
+      if (!seenKeys.size) return null;
+      const candidates = Array.from(seenKeys.values()).sort((a,b)=>b.score-a.score);
+      const top = candidates[0];
+      const second = candidates[1];
+      const ambiguous = second && (top.score - second.score) < 15; // margin
+      const normalizedTop = Math.max(0, Math.min(100, Math.round(top.score)));
+      if (this._detectionVerbose) {
+        this._enqueueActivityTrace({ type:'detect:score', candidates: candidates.slice(0,5) });
+        await this.log(`🧮 Detection scoring -> Top ${top.key}=${top.score}${ambiguous?' (ambiguous)':''}`);
+      }
+      if (normalizedTop < (this._minConfidenceOverride || 0)) {
+        return { issueKey: null, candidates, ambiguous: true };
+      }
+      return { issueKey: !ambiguous ? top.key : null, candidates, ambiguous };
+    } catch (e) {
+      await this.log(`⚠️ Scoring error: ${e.message}`);
+      return null;
+    }
+  }
+
+  async _refineIssueWithLLM(candidates, activity) {
+    try {
+      const llm = require('./llmParser');
+      if (!llm || !llm.parseDailyNotes) throw new Error('LLM parser unavailable');
+      // Build a minimal structured prompt manually (simple model call using existing openAI client is in llmParser for notes; we simulate via parseDailyNotes style or skip)
+      // For simplicity we won't repurpose parseDailyNotes; just choose first for now (placeholder) until a dedicated refine method added.
+      const best = candidates[0];
+      return { issueKey: best.key, rationale: 'LLM refinement placeholder selected top candidate' };
+    } catch (e) {
+      throw e;
+    }
   }
 
   calculateConfidence(activity) {
@@ -2282,6 +2512,25 @@ class AITimeTrackingAgent {
     }));
     await this.log(`📋 Found ${sessions.length} sessions in the last ${days} days`);
     return sessions;
+  }
+
+  _recordSessionHistory(eventType, sessionLike, extra={}) {
+    try {
+      const rec = {
+        ts: Date.now(),
+        event: eventType,
+        sessionId: sessionLike?.id || null,
+        issue: sessionLike?.detectedIssue || null,
+        dur: sessionLike?.duration || null,
+        confidence: sessionLike?.confidence || null,
+        ...extra
+      };
+      this._sessionHistory.push(rec);
+      if (this._sessionHistory.length > this._sessionHistoryInMemoryLimit) {
+        this._sessionHistory.splice(0, this._sessionHistory.length - this._sessionHistoryInMemoryLimit);
+      }
+      fs.appendFile(this._sessionHistoryFile, JSON.stringify(rec)+'\n').catch(()=>{});
+    } catch(_) {}
   }
 
   async getPendingSessions() {

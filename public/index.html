@@ -445,6 +445,16 @@
     
     <div id="issuesTab" class="tab-content">
       <h2>Your Assigned Issues</h2>
+      <div id="currentUserCard" class="user-card hidden" style="margin:15px 0; padding:15px; border:1px solid #e1e4e8; border-radius:6px; background:#f8fafc; display:flex; gap:15px; align-items:center;">
+        <div id="currentUserAvatar" style="width:48px; height:48px; border-radius:4px; background:#dfe1e6; flex-shrink:0;"></div>
+        <div style="flex:1;">
+          <div style="font-weight:600; font-size:16px;" id="currentUserName">Loading user...</div>
+          <div style="color:#555; font-size:13px; margin-top:2px;" id="currentUserEmail"></div>
+          <div style="color:#6b778c; font-size:12px; margin-top:4px;" id="currentUserMeta"></div>
+          <div style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px;" id="currentUserGroups"></div>
+        </div>
+        <div id="currentUserStatus" style="font-size:12px; color:#6b778c;"></div>
+      </div>
       <input type="text" id="searchBox" class="search-box" placeholder="Search issues..." onkeyup="filterIssues()">
       
       <div id="loadingIssues" class="loading">
@@ -645,6 +655,67 @@
     
     // Set today's date as default
     document.addEventListener('DOMContentLoaded', function() {
+      // Fetch current JIRA user info
+      (async function loadCurrentUser(){
+        const card = document.getElementById('currentUserCard');
+        if (!card) return;
+        try {
+          const resp = await fetch('/api/jira/me');
+          const ctype = resp.headers.get('content-type') || '';
+          if (!resp.ok) {
+            let bodySnippet = '';
+            try { bodySnippet = await resp.text(); } catch(_) {}
+            throw new Error(`HTTP ${resp.status} ${bodySnippet.slice(0,80)}`);
+          }
+          let data;
+          if (ctype.includes('application/json')) {
+            data = await resp.json();
+          } else {
+            const raw = await resp.text();
+            throw new Error('Non-JSON response: '+ raw.slice(0,120));
+          }
+          card.classList.remove('hidden');
+          const nameEl = document.getElementById('currentUserName');
+          const emailEl = document.getElementById('currentUserEmail');
+          const metaEl = document.getElementById('currentUserMeta');
+          const groupsEl = document.getElementById('currentUserGroups');
+          const avatarEl = document.getElementById('currentUserAvatar');
+          const statusEl = document.getElementById('currentUserStatus');
+          nameEl.textContent = data.displayName || 'Unknown User';
+          emailEl.textContent = data.emailAddress || '';
+          metaEl.textContent = [data.accountId, data.timeZone, data.locale].filter(Boolean).join(' • ');
+          groupsEl.innerHTML = '';
+          (data.groups || []).slice(0,10).forEach(g => {
+            const span = document.createElement('span');
+            span.textContent = g;
+            span.style.cssText = 'background:#e9f2ff;color:#0747a6;font-size:11px;padding:2px 6px;border-radius:3px;';
+            groupsEl.appendChild(span);
+          });
+          // Avatar selection (prefer 48x48 then any)
+          const avatars = data.rawAvatarUrls || {};
+          const avatarUrl = avatars['48x48'] || Object.values(avatars)[0];
+          if (avatarUrl) {
+            avatarEl.style.background = `url(${avatarUrl}) center/cover no-repeat`;
+          } else {
+            avatarEl.textContent = (data.displayName || '?').split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
+            avatarEl.style.display='flex';
+            avatarEl.style.alignItems='center';
+            avatarEl.style.justifyContent='center';
+            avatarEl.style.fontWeight='600';
+            avatarEl.style.color='#172b4d';
+          }
+          statusEl.textContent = 'Profile loaded';
+        } catch (e) {
+          const card = document.getElementById('currentUserCard');
+          if (card) {
+            card.classList.remove('hidden');
+            document.getElementById('currentUserName').textContent = 'User profile unavailable';
+            document.getElementById('currentUserEmail').textContent = '';
+            document.getElementById('currentUserMeta').textContent = e.message;
+            document.getElementById('currentUserStatus').textContent = 'Error';
+          }
+        }
+      })();
       const today = new Date();
       const formattedDate = today.toISOString().split('T')[0];
       document.getElementById('workDate').value = formattedDate;

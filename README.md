@@ -40,6 +40,9 @@ A web application and AI-powered background agent to help you log work time for 
 - Added "Adhoc Tasks" section for issues where you were mentioned in comments but not assigned
 - Fixed issues with invalid attribute values
 
+### JIRA User Endpoint
+Added endpoint `GET /api/jira/me` returning current authenticated JIRA user profile (accountId, displayName, emailAddress (if permitted), timeZone, locale, groups, avatar URLs). See "API: JIRA Current User" section below.
+
 ## Prerequisites
 
 - Node.js (v14 or higher)
@@ -161,6 +164,55 @@ npm run init
 
 If you need to regenerate `.env`, delete it and re-run `npm run init` (your credentials will need to be re-entered).
 
+## API: JIRA Current User
+
+Endpoint:
+
+```
+GET /api/jira/me
+```
+
+Sample curl:
+
+```sh
+curl -s http://localhost:3000/api/jira/me | jq
+```
+
+Sample JSON response:
+```json
+{
+   "accountId": "557058:abcd1234-ef56-7890-abcd-112233445566",
+   "displayName": "Jane Developer",
+   "emailAddress": "jane.dev@example.com",
+   "timeZone": "America/New_York",
+   "locale": "en_US",
+   "groups": ["jira-software-users", "engineering"],
+   "rawAvatarUrls": {
+      "48x48": "https://avatar-cdn.atlassian.com/jira-avatar-48.png"
+   }
+}
+```
+
+Notes:
+1. `emailAddress` may be `null` if Atlassian privacy settings restrict it for API tokens.
+2. `groups` retrieval may fail silently (non-fatal) if the API token lacks permission; the endpoint will still return other fields.
+3. No secrets are returned; only what JIRA exposes for the authenticated account.
+4. If you need custom fields (e.g., application roles), extend the route in `server.js` inside `/api/jira/me`.
+
+Errors:
+```json
+{
+   "error": "Failed to fetch JIRA user",
+   "status": 401,
+   "message": "Request failed with status code 401"
+}
+```
+
+Troubleshooting:
+- 401/403: Verify `JIRA_EMAIL` + `JIRA_API_TOKEN` pair and that the token wasn't revoked.
+- Empty groups: Ensure the token user has permission to browse groups, or ignore if not needed.
+- CORS: Server already enables CORS globally; frontend can call directly from `public` pages.
+
 ## 🤖 AI Agent Usage
 
 ### Quick Start
@@ -209,6 +261,48 @@ npm run ai-status
 ```
 
 ## 🧠 LLM / OpenAI Integration
+### Enhanced Issue Detection & Exclusions
+
+The agent now employs a weighted evidence scoring pipeline (instead of single-hit heuristics) to choose the most likely JIRA issue. Each potential issue key accumulates score contributions from factors:
+
+| Factor | Weight (default) | Notes |
+|--------|------------------|-------|
+| Direct key in window title / open file / branch | +40 | First occurrence per snapshot |
+| Git branch contains key | +35 | Applied once per activity cycle |
+| Micro-event (URL/title) key | +30 | High-frequency sampler events |
+| Issue summary keyword overlaps | up to +20 | 4 per matching keyword (cap) |
+| Recent frequency (last 50 micro events) | up to +15 | 3 per repeat (cap) |
+| Excluded path/branch penalty | -100 | Effectively disqualifies workspace |
+
+Top candidate wins unless the margin to the second candidate < 15 points (ambiguous). Ambiguous sessions optionally invoke an LLM refinement step (placeholder baseline currently returns the top candidate; can be expanded).
+
+### Exclusion Rules
+Exclude noise sessions (e.g., time spent working on this tracking tool itself) by path or branch:
+
+Environment variables:
+```dotenv
+AI_AGENT_EXCLUDED_PATH_KEYWORDS=jira-tempo,jira_tempo,jira-tempo-automation
+AI_AGENT_EXCLUDED_BRANCHES=main,master
+AI_AGENT_MIN_SESSION_CONFIDENCE=0        # Minimum normalized score to accept (0–100)
+AI_AGENT_DETECTION_VERBOSE=false         # Set true for detailed detection logs
+AI_AGENT_LLM_REFINE_DETECTION=false      # Enable LLM refinement on ambiguous candidates
+```
+
+If a current directory contains any excluded keyword OR the git branch exactly matches an excluded branch, all candidate issue scores receive a -100 penalty. Meeting detection still functions independently.
+
+### Structured Detection Logs
+When `AI_AGENT_DETECTION_VERBOSE=true`, activity trace and log lines include:
+```
+🧮 Detection scoring -> Top PROJ-123=72 (ambiguous)
+```
+and an internal trace record `detect:score` with the top factor breakdown (in `ai-agent-activity-trace.log` if activity tracing enabled).
+
+### LLM Refinement (Experimental)
+Set `AI_AGENT_LLM_REFINE_DETECTION=true` to enable an extra refinement pass for ambiguous cases. Current implementation is a placeholder; future iterations can send a condensed context prompt to the configured LLM provider to adjudicate between close candidates.
+
+### Migration & Backward Compatibility
+Set `AI_AGENT_LEGACY_DETECTION=true` to revert to prior heuristic behavior. Leave unset (default) to use the scoring pipeline.
+
 
 The project supports two interchangeable LLM providers for parsing Daily Notes into structured time blocks:
 
