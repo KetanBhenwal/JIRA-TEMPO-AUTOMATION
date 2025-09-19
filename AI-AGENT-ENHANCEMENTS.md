@@ -175,7 +175,27 @@ Detection order now prioritizes (highest certainty first):
 1. Recent microEvents with a JIRA key belonging to an assigned issue
 2. Current window title / git branch pattern match
 3. Browser URL JIRA key (if last event marks it as JIRA)
-4. Keyword fallback against assigned issue summaries
+
+Removed: The previous keyword fallback against assigned issue summaries has been disabled to avoid low-confidence misclassifications. Only explicit keys (title, branch, microEvents, browser URL) are considered now. Future ML-based semantic ranking may reintroduce a safer form of content similarity.
+
+### Embedding Similarity Disambiguation (Optional)
+When `AI_AGENT_EMBEDDING_SIMILARITY=true`, issue summaries are embedded once each fetch. During an ambiguous detection:
+1. Context (window title + last micro-event titles + branch) is embedded.
+2. Cosine similarity computed against candidate issue vectors.
+3. If best similarity >= `AI_AGENT_EMBEDDING_MIN_SIM` (default 0.80–0.82 recommended) that issue is selected immediately.
+
+Environment flags:
+```dotenv
+AI_AGENT_EMBEDDING_SIMILARITY=true
+AI_AGENT_EMBEDDING_MODEL=text-embedding-3-small
+AI_AGENT_EMBEDDING_MIN_SIM=0.82
+```
+
+### LLM Refinement (Post-Embedding)
+If still ambiguous after embeddings and `AI_AGENT_LLM_REFINE_DETECTION=true`, a JSON-only LLM prompt adjudicates candidates and returns `{ issueKey, reason }` or `null`.
+
+### Detection Transparency API
+`GET /api/ai/detection/candidates` returns the most recent detection trace including phase, candidate scores, embedding similarity (when used), and refinement rationale.
 
 ### Confidence Model Changes
 | Signal | Previous | New |

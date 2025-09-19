@@ -665,7 +665,7 @@
           "devKeywordHits": []
         }
       },
-      "_cachedActivityTypeAt": 1758196045935
+      "_cachedActivityTypeAt": 1758288122140
     },
     {
       "id": "session_1757590458585",
@@ -4625,7 +4625,7 @@
           "devKeywordHits": []
         }
       },
-      "_cachedActivityTypeAt": 1758196045934,
+      "_cachedActivityTypeAt": 1758288122140,
       "microEvents": [
         {
           "t": 1758191723907,
@@ -5499,6 +5499,754 @@
       "loggedUntil": 1758191723799,
       "logStatus": "skipped",
       "logReason": "no-issue-detected"
+    },
+    {
+      "id": "session_1758287335343",
+      "startTime": 1758287335343,
+      "endTime": 1758289037217,
+      "duration": 1701874,
+      "detectedIssue": null,
+      "activities": [
+        {
+          "timestamp": 1758287334899,
+          "applications": {
+            "active": "Google Chrome",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "Electron",
+              "MSTeams",
+              "Microsoft Outlook",
+              "Notes",
+              "Terminal",
+              "Electron"
+            ]
+          },
+          "windowTitles": "AI Time Tracking Agent - Dashboard - Google Chrome",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": "main",
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1758287635483,
+          "applications": {
+            "active": "MSTeams",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "Electron",
+              "MSTeams",
+              "Microsoft Outlook",
+              "Notes",
+              "Terminal",
+              "Electron"
+            ]
+          },
+          "windowTitles": "Chat | CAB Huddle | Microsoft Teams",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": "main",
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1758287936400,
+          "applications": {
+            "active": "unknown",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "Electron",
+              "MSTeams",
+              "Microsoft Outlook",
+              "Notes",
+              "Terminal",
+              "Electron"
+            ]
+          },
+          "windowTitles": "LRN Console - Google Chrome (Incognito)",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": "main",
+          "openFiles": [],
+          "isWorkingHours": true
+        }
+      ],
+      "applications": [
+        "Google Chrome",
+        "MSTeams",
+        "unknown"
+      ],
+      "windowTitles": [
+        "AI Time Tracking Agent - Dashboard - Google Chrome",
+        "Chat | CAB Huddle | Microsoft Teams",
+        "LRN Console - Google Chrome (Incognito)"
+      ],
+      "directories": [
+        "/Users/ketan.bhenwal/Desktop/JIRA-Tempo"
+      ],
+      "gitBranches": [
+        "main"
+      ],
+      "confidence": 20,
+      "_cachedActivityType": {
+        "isMeetingActivity": false,
+        "isStoryDevelopment": null,
+        "meetingType": null,
+        "description": "Story Development",
+        "debug": {
+          "score": 0,
+          "threshold": 7,
+          "appTriggers": [],
+          "strongKeywordHits": [],
+          "weakKeywordHits": [],
+          "devAppHits": [],
+          "devKeywordHits": []
+        }
+      },
+      "_cachedActivityTypeAt": 1758287335372,
+      "microEvents": [
+        {
+          "t": 1758287365286,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287395755,
+          "app": "Google Chrome",
+          "title": "YouTube - Google Chrome",
+          "browser": {
+            "host": "www.youtube.com",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287426095,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287486620,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287486763,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287516906,
+          "app": "unknown",
+          "title": "AI Time Tracking Agent - Dashboard - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287517205,
+          "app": "Google Chrome",
+          "title": "AI Time Tracking Agent - Dashboard - Google Chrome",
+          "browser": {
+            "host": "localhost:3000",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287547307,
+          "app": "MSTeams",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287577782,
+          "app": "unknown",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287577960,
+          "app": "MSTeams",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287608051,
+          "app": "unknown",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287608448,
+          "app": "MSTeams",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287638518,
+          "app": "unknown",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287638987,
+          "app": "MSTeams",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287668802,
+          "app": "unknown",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287669176,
+          "app": "MSTeams",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287669186,
+          "app": "unknown",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287669671,
+          "app": "MSTeams",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287699138,
+          "app": "unknown",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287699505,
+          "app": "MSTeams",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287699641,
+          "app": "unknown",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287699854,
+          "app": "MSTeams",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287699864,
+          "app": "unknown",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287700711,
+          "app": "MSTeams",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287729396,
+          "app": "unknown",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287729981,
+          "app": "MSTeams",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287730164,
+          "app": "unknown",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287730786,
+          "app": "MSTeams",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287730922,
+          "app": "unknown",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287731950,
+          "app": "MSTeams",
+          "title": "Chat | CAB Huddle | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287759755,
+          "app": "unknown",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287760352,
+          "app": "Google Chrome",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": {
+            "host": "localhost:3000",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287760366,
+          "app": "unknown",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287761185,
+          "app": "Google Chrome",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": {
+            "host": "localhost:3000",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287761219,
+          "app": "unknown",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287763228,
+          "app": "Google Chrome",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": {
+            "host": "localhost:3000",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287763252,
+          "app": "unknown",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287765125,
+          "app": "Google Chrome",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": {
+            "host": "localhost:3000",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287790006,
+          "app": "unknown",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287790807,
+          "app": "Google Chrome",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": {
+            "host": "localhost:3000",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287790848,
+          "app": "unknown",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287792320,
+          "app": "Google Chrome",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": {
+            "host": "localhost:3000",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287792326,
+          "app": "unknown",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287794496,
+          "app": "Google Chrome",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": {
+            "host": "localhost:3000",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287794571,
+          "app": "unknown",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287820703,
+          "app": "Google Chrome",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": {
+            "host": "localhost:3000",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287820708,
+          "app": "unknown",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287822666,
+          "app": "Google Chrome",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": {
+            "host": "localhost:3000",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287822716,
+          "app": "unknown",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287826337,
+          "app": "Google Chrome",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": {
+            "host": "localhost:3000",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287826341,
+          "app": "unknown",
+          "title": "JIRA Tempo Debug Page - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287879922,
+          "app": "unknown",
+          "title": "Chat | Divya Tiwari | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287880113,
+          "app": "Google Chrome",
+          "title": "Chat | Divya Tiwari | Microsoft Teams",
+          "browser": {
+            "host": "localhost:3000",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758287880130,
+          "app": "unknown",
+          "title": "Chat | Divya Tiwari | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288000146,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288001645,
+          "app": "MSTeams",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288001845,
+          "app": "unknown",
+          "title": "Sign In - LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288002303,
+          "app": "unknown",
+          "title": "New Incognito tab - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288002741,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288006457,
+          "app": "unknown",
+          "title": "LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288192117,
+          "app": "unknown",
+          "title": "Inbox • ketan.bhenwal@lrn.com",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288241560,
+          "app": "unknown",
+          "title": "LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288242652,
+          "app": "Electron",
+          "title": "LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288242655,
+          "app": "unknown",
+          "title": "LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288301931,
+          "app": "unknown",
+          "title": "Chat | Divya Tiwari | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288662902,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288723264,
+          "app": "unknown",
+          "title": "Tempo - Jira - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288723484,
+          "app": "Google Chrome",
+          "title": "Tempo - Jira - Google Chrome",
+          "browser": {
+            "host": "lrnorg.atlassian.net",
+            "isJira": true,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288723525,
+          "app": "unknown",
+          "title": "Tempo - Jira - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288726151,
+          "app": "unknown",
+          "title": "YouTube - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288728020,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288791866,
+          "app": "unknown",
+          "title": "YouTube - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758288792544,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        }
+      ],
+      "loggedUntil": 1758287335343
     }
   ],
   "loggedSessions": [
@@ -5550,6 +6298,7 @@
         "CON22-4524",
         "CON22-4560",
         "CON22-4524",
+        "CON22-4524",
         "CON22-4524"
       ]
     ],
@@ -5576,12 +6325,14 @@
         "CON22-4524",
         "CON22-4524",
         "CON22-4524",
+        "CON22-4524",
         "CON22-4524"
       ]
     ],
     [
       "phishing",
       [
+        "CON22-4524",
         "CON22-4524",
         "CON22-4524",
         "CON22-4524",
@@ -5668,6 +6419,8 @@
         "CON22-4524",
         "CON22-4422",
         "CON22-4524",
+        "CON22-4422",
+        "CON22-4524",
         "CON22-4422"
       ]
     ],
@@ -5694,12 +6447,15 @@
         "CON22-4524",
         "CON22-4524",
         "CON22-4524",
+        "CON22-4524",
         "CON22-4524"
       ]
     ],
     [
       "queue",
       [
+        "CON22-4524",
+        "CON22-3380",
         "CON22-4524",
         "CON22-3380",
         "CON22-4524",
@@ -5844,6 +6600,9 @@
         "CON22-1892",
         "CON22-3787",
         "CON22-1894",
+        "CON22-1892",
+        "CON22-3787",
+        "CON22-1894",
         "CON22-1892"
       ]
     ],
@@ -5905,6 +6664,7 @@
         "CON22-3189",
         "CON22-3189",
         "CON22-3189",
+        "CON22-3189",
         "CON22-3189"
       ]
     ],
@@ -5946,12 +6706,17 @@
         "CON22-3189",
         "CON22-3189",
         "CON22-3189",
+        "CON22-3189",
         "CON22-3189"
       ]
     ],
     [
       "updated",
       [
+        "CON22-4515",
+        "CON22-4422",
+        "CON22-3189",
+        "CON22-1892",
         "CON22-4515",
         "CON22-4422",
         "CON22-3189",
@@ -6082,12 +6847,15 @@
         "CON22-4515",
         "CON22-3238",
         "CON22-4515",
+        "CON22-3238",
+        "CON22-4515",
         "CON22-3238"
       ]
     ],
     [
       "reflecting",
       [
+        "CON22-4515",
         "CON22-4515",
         "CON22-4515",
         "CON22-4515",
@@ -6134,12 +6902,16 @@
         "CON22-4515",
         "CON22-4515",
         "CON22-4515",
+        "CON22-4515",
         "CON22-4515"
       ]
     ],
     [
       "name",
       [
+        "CON22-4422",
+        "CON22-2598",
+        "CON22-2597",
         "CON22-4422",
         "CON22-2598",
         "CON22-2597",
@@ -6333,6 +7105,12 @@
         "CON22-3380",
         "CON22-3381",
         "CON22-3238",
+        "CON22-2643",
+        "CON22-4422",
+        "CON22-3787",
+        "CON22-3380",
+        "CON22-3381",
+        "CON22-3238",
         "CON22-2643"
       ]
     ],
@@ -6377,6 +7155,7 @@
         "CON22-4560",
         "CON22-4422",
         "CON22-4560",
+        "CON22-4422",
         "CON22-4422",
         "CON22-4422"
       ]
@@ -6423,12 +7202,19 @@
         "CON22-4422",
         "CON22-4560",
         "CON22-4422",
+        "CON22-4422",
         "CON22-4422"
       ]
     ],
     [
       "when",
       [
+        "CON22-4485",
+        "CON22-3787",
+        "CON22-3381",
+        "CON22-3189",
+        "CON22-2643",
+        "CON22-1894",
         "CON22-4485",
         "CON22-3787",
         "CON22-3381",
@@ -6622,12 +7408,16 @@
         "CON22-3189",
         "CON22-4485",
         "CON22-3381",
+        "CON22-3189",
+        "CON22-4485",
+        "CON22-3381",
         "CON22-3189"
       ]
     ],
     [
       "removes",
       [
+        "CON22-4485",
         "CON22-4485",
         "CON22-4485",
         "CON22-4485",
@@ -6674,6 +7464,7 @@
         "CON22-4485",
         "CON22-4485",
         "CON22-4485",
+        "CON22-4485",
         "CON22-4485"
       ]
     ],
@@ -6700,12 +7491,14 @@
         "CON22-4485",
         "CON22-4485",
         "CON22-4485",
+        "CON22-4485",
         "CON22-4485"
       ]
     ],
     [
       "languages,it",
       [
+        "CON22-4485",
         "CON22-4485",
         "CON22-4485",
         "CON22-4485",
@@ -6773,12 +7566,15 @@
         "CON22-4485",
         "CON22-3189",
         "CON22-4485",
+        "CON22-3189",
+        "CON22-4485",
         "CON22-3189"
       ]
     ],
     [
       "display",
       [
+        "CON22-4485",
         "CON22-4485",
         "CON22-4485",
         "CON22-4485",
@@ -6825,12 +7621,14 @@
         "CON22-4485",
         "CON22-4485",
         "CON22-4485",
+        "CON22-4485",
         "CON22-4485"
       ]
     ],
     [
       "instruction",
       [
+        "CON22-4485",
         "CON22-4485",
         "CON22-4485",
         "CON22-4485",
@@ -6898,12 +7696,19 @@
         "CON22-2583",
         "CON22-2594",
         "CON22-2583",
+        "CON22-2594",
+        "CON22-2583",
         "CON22-2594"
       ]
     ],
     [
       "android",
       [
+        "CON22-2583",
+        "CON22-2594",
+        "CON22-2582",
+        "CON22-2598",
+        "CON22-2597",
         "CON22-2583",
         "CON22-2594",
         "CON22-2582",
@@ -7097,12 +7902,17 @@
         "CON22-2583",
         "CON22-2594",
         "CON22-2546",
+        "CON22-2643",
+        "CON22-2583",
+        "CON22-2594",
+        "CON22-2546",
         "CON22-2643"
       ]
     ],
     [
       "gets",
       [
+        "CON22-2583",
         "CON22-2583",
         "CON22-2583",
         "CON22-2583",
@@ -7149,12 +7959,14 @@
         "CON22-2583",
         "CON22-2583",
         "CON22-2583",
+        "CON22-2583",
         "CON22-2583"
       ]
     ],
     [
       "behind",
       [
+        "CON22-2583",
         "CON22-2583",
         "CON22-2583",
         "CON22-2583",
@@ -7201,12 +8013,15 @@
         "CON22-2583",
         "CON22-2583",
         "CON22-2583",
+        "CON22-2583",
         "CON22-2583"
       ]
     ],
     [
       "hidden",
       [
+        "CON22-2594",
+        "CON22-2546",
         "CON22-2594",
         "CON22-2546",
         "CON22-2594",
@@ -7295,12 +8110,16 @@
         "CON22-2594",
         "CON22-2546",
         "CON22-2594",
+        "CON22-2546",
+        "CON22-2594",
         "CON22-2546"
       ]
     ],
     [
       "screen",
       [
+        "CON22-2594",
+        "CON22-2546",
         "CON22-2594",
         "CON22-2546",
         "CON22-2594",
@@ -7389,12 +8208,15 @@
         "CON22-2594",
         "CON22-2546",
         "CON22-2594",
+        "CON22-2546",
+        "CON22-2594",
         "CON22-2546"
       ]
     ],
     [
       "demand",
       [
+        "CON22-2582",
         "CON22-2582",
         "CON22-2582",
         "CON22-2582",
@@ -7441,12 +8263,14 @@
         "CON22-2582",
         "CON22-2582",
         "CON22-2582",
+        "CON22-2582",
         "CON22-2582"
       ]
     ],
     [
       "missing",
       [
+        "CON22-2582",
         "CON22-2582",
         "CON22-2582",
         "CON22-2582",
@@ -7493,12 +8317,14 @@
         "CON22-2582",
         "CON22-2582",
         "CON22-2582",
+        "CON22-2582",
         "CON22-2582"
       ]
     ],
     [
       "support",
       [
+        "CON22-2582",
         "CON22-2582",
         "CON22-2582",
         "CON22-2582",
@@ -7545,6 +8371,7 @@
         "CON22-2582",
         "CON22-2582",
         "CON22-2582",
+        "CON22-2582",
         "CON22-2582"
       ]
     ],
@@ -7571,12 +8398,14 @@
         "CON22-2582",
         "CON22-2582",
         "CON22-2582",
+        "CON22-2582",
         "CON22-2582"
       ]
     ],
     [
       "information",
       [
+        "CON22-2582",
         "CON22-2582",
         "CON22-2582",
         "CON22-2582",
@@ -7644,6 +8473,8 @@
         "CON22-3787",
         "CON22-1140",
         "CON22-3787",
+        "CON22-1140",
+        "CON22-3787",
         "CON22-1140"
       ]
     ],
@@ -7670,12 +8501,14 @@
         "CON22-3787",
         "CON22-3787",
         "CON22-3787",
+        "CON22-3787",
         "CON22-3787"
       ]
     ],
     [
       "enters",
       [
+        "CON22-3787",
         "CON22-3787",
         "CON22-3787",
         "CON22-3787",
@@ -7743,12 +8576,15 @@
         "CON22-3787",
         "CON22-1894",
         "CON22-3787",
+        "CON22-1894",
+        "CON22-3787",
         "CON22-1894"
       ]
     ],
     [
       "domain",
       [
+        "CON22-3787",
         "CON22-3787",
         "CON22-3787",
         "CON22-3787",
@@ -7795,12 +8631,14 @@
         "CON22-3787",
         "CON22-3787",
         "CON22-3787",
+        "CON22-3787",
         "CON22-3787"
       ]
     ],
     [
       "registration",
       [
+        "CON22-3787",
         "CON22-3787",
         "CON22-3787",
         "CON22-3787",
@@ -7847,12 +8685,16 @@
         "CON22-2598",
         "CON22-2598",
         "CON22-2598",
+        "CON22-2598",
         "CON22-2598"
       ]
     ],
     [
       "inappropriate",
       [
+        "CON22-2598",
+        "CON22-2597",
+        "CON22-3587",
         "CON22-2598",
         "CON22-2597",
         "CON22-3587",
@@ -7962,12 +8804,15 @@
         "CON22-2598",
         "CON22-2597",
         "CON22-2598",
+        "CON22-2597",
+        "CON22-2598",
         "CON22-2597"
       ]
     ],
     [
       "code",
       [
+        "CON22-2597",
         "CON22-2597",
         "CON22-2597",
         "CON22-2597",
@@ -8014,12 +8859,14 @@
         "CON22-2597",
         "CON22-2597",
         "CON22-2597",
+        "CON22-2597",
         "CON22-2597"
       ]
     ],
     [
       "known",
       [
+        "CON22-3587",
         "CON22-3587",
         "CON22-3587",
         "CON22-3587",
@@ -8066,12 +8913,14 @@
         "CON22-3587",
         "CON22-3587",
         "CON22-3587",
+        "CON22-3587",
         "CON22-3587"
       ]
     ],
     [
       "queue:",
       [
+        "CON22-3587",
         "CON22-3587",
         "CON22-3587",
         "CON22-3587",
@@ -8118,12 +8967,14 @@
         "CON22-3587",
         "CON22-3587",
         "CON22-3587",
+        "CON22-3587",
         "CON22-3587"
       ]
     ],
     [
       "elements",
       [
+        "CON22-3587",
         "CON22-3587",
         "CON22-3587",
         "CON22-3587",
@@ -8170,6 +9021,7 @@
         "CON22-3380",
         "CON22-3380",
         "CON22-3380",
+        "CON22-3380",
         "CON22-3380"
       ]
     ],
@@ -8196,12 +9048,14 @@
         "CON22-3380",
         "CON22-3380",
         "CON22-3380",
+        "CON22-3380",
         "CON22-3380"
       ]
     ],
     [
       "below",
       [
+        "CON22-3380",
         "CON22-3380",
         "CON22-3380",
         "CON22-3380",
@@ -8249,12 +9103,15 @@
         "CON22-3380",
         "CON22-3380",
         "CON22-4556",
+        "CON22-3380",
+        "CON22-4556",
         "CON22-3380"
       ]
     ],
     [
       "scroll",
       [
+        "CON22-3381",
         "CON22-3381",
         "CON22-3381",
         "CON22-3381",
@@ -8302,12 +9159,16 @@
         "CON22-3381",
         "CON22-3381",
         "CON22-4556",
+        "CON22-3381",
+        "CON22-4556",
         "CON22-3381"
       ]
     ],
     [
       "page",
       [
+        "CON22-3381",
+        "CON22-1894",
         "CON22-3381",
         "CON22-1894",
         "CON22-3381",
@@ -8375,12 +9236,14 @@
         "CON22-3381",
         "CON22-3381",
         "CON22-3381",
+        "CON22-3381",
         "CON22-3381"
       ]
     ],
     [
       "dropdown",
       [
+        "CON22-3381",
         "CON22-3381",
         "CON22-3381",
         "CON22-3381",
@@ -8448,12 +9311,15 @@
         "CON22-3381",
         "CON22-3238",
         "CON22-3381",
+        "CON22-3238",
+        "CON22-3381",
         "CON22-3238"
       ]
     ],
     [
       "ui:footer",
       [
+        "CON22-3238",
         "CON22-3238",
         "CON22-3238",
         "CON22-3238",
@@ -8521,12 +9387,15 @@
         "CON22-3238",
         "CON22-2643",
         "CON22-3238",
+        "CON22-2643",
+        "CON22-3238",
         "CON22-2643"
       ]
     ],
     [
       "verify",
       [
+        "CON22-3189",
         "CON22-3189",
         "CON22-3189",
         "CON22-3189",
@@ -8573,12 +9442,14 @@
         "CON22-3189",
         "CON22-3189",
         "CON22-3189",
+        "CON22-3189",
         "CON22-3189"
       ]
     ],
     [
       "primary",
       [
+        "CON22-3189",
         "CON22-3189",
         "CON22-3189",
         "CON22-3189",
@@ -8625,12 +9496,14 @@
         "CON22-3189",
         "CON22-3189",
         "CON22-3189",
+        "CON22-3189",
         "CON22-3189"
       ]
     ],
     [
       "language,",
       [
+        "CON22-3189",
         "CON22-3189",
         "CON22-3189",
         "CON22-3189",
@@ -8677,12 +9550,14 @@
         "CON22-3189",
         "CON22-3189",
         "CON22-3189",
+        "CON22-3189",
         "CON22-3189"
       ]
     ],
     [
       "more",
       [
+        "CON22-2643",
         "CON22-2643",
         "CON22-2643",
         "CON22-2643",
@@ -8729,12 +9604,14 @@
         "CON22-2643",
         "CON22-2643",
         "CON22-2643",
+        "CON22-2643",
         "CON22-2643"
       ]
     ],
     [
       "five",
       [
+        "CON22-2643",
         "CON22-2643",
         "CON22-2643",
         "CON22-2643",
@@ -8781,12 +9658,14 @@
         "CON22-2643",
         "CON22-2643",
         "CON22-2643",
+        "CON22-2643",
         "CON22-2643"
       ]
     ],
     [
       "mobile",
       [
+        "CON22-2643",
         "CON22-2643",
         "CON22-2643",
         "CON22-2643",
@@ -8833,12 +9712,14 @@
         "CON22-2643",
         "CON22-2643",
         "CON22-2643",
+        "CON22-2643",
         "CON22-2643"
       ]
     ],
     [
       "incorrect",
       [
+        "CON22-1894",
         "CON22-1894",
         "CON22-1894",
         "CON22-1894",
@@ -8885,12 +9766,14 @@
         "CON22-1894",
         "CON22-1894",
         "CON22-1894",
+        "CON22-1894",
         "CON22-1894"
       ]
     ],
     [
       "media",
       [
+        "CON22-1894",
         "CON22-1894",
         "CON22-1894",
         "CON22-1894",
@@ -8958,12 +9841,15 @@
         "CON22-1894",
         "CON22-1892",
         "CON22-1894",
+        "CON22-1892",
+        "CON22-1894",
         "CON22-1892"
       ]
     ],
     [
       "count",
       [
+        "CON22-1894",
         "CON22-1894",
         "CON22-1894",
         "CON22-1894",
@@ -9031,12 +9917,15 @@
         "CON22-1894",
         "CON22-1892",
         "CON22-1894",
+        "CON22-1892",
+        "CON22-1894",
         "CON22-1892"
       ]
     ],
     [
       "section",
       [
+        "CON22-1894",
         "CON22-1894",
         "CON22-1894",
         "CON22-1894",
@@ -9083,12 +9972,15 @@
         "CON22-1894",
         "CON22-1894",
         "CON22-1894",
+        "CON22-1894",
         "CON22-1894"
       ]
     ],
     [
       "selected",
       [
+        "CON22-1894",
+        "CON22-1892",
         "CON22-1894",
         "CON22-1892",
         "CON22-1894",
@@ -9177,12 +10069,15 @@
         "CON22-1894",
         "CON22-1892",
         "CON22-1894",
+        "CON22-1892",
+        "CON22-1894",
         "CON22-1892"
       ]
     ],
     [
       "mode",
       [
+        "CON22-1892",
         "CON22-1892",
         "CON22-1892",
         "CON22-1892",
@@ -9229,12 +10124,14 @@
         "CON22-1140",
         "CON22-1140",
         "CON22-1140",
+        "CON22-1140",
         "CON22-1140"
       ]
     ],
     [
       "task",
       [
+        "CON22-1140",
         "CON22-1140",
         "CON22-1140",
         "CON22-1140",
@@ -9281,12 +10178,14 @@
         "CON22-1140",
         "CON22-1140",
         "CON22-1140",
+        "CON22-1140",
         "CON22-1140"
       ]
     ],
     [
       "timeout",
       [
+        "CON22-1140",
         "CON22-1140",
         "CON22-1140",
         "CON22-1140",
@@ -9351,6 +10250,7 @@
         "CON22-4560",
         "CON22-1140",
         "CON22-4560",
+        "CON22-1140",
         "CON22-1140",
         "CON22-1140"
       ]
@@ -9454,47 +10354,54 @@
     [
       "massmutual",
       [
+        "CON22-4556",
         "CON22-4556"
       ]
     ],
     [
       "ability",
       [
+        "CON22-4556",
         "CON22-4556"
       ]
     ],
     [
       "enable/disable",
       [
+        "CON22-4556",
         "CON22-4556"
       ]
     ],
     [
       "individually",
       [
+        "CON22-4556",
         "CON22-4556"
       ]
     ],
     [
       "parent",
       [
+        "CON22-4556",
         "CON22-4556"
       ]
     ],
     [
       "child",
       [
+        "CON22-4556",
         "CON22-4556"
       ]
     ],
     [
       "sites",
       [
+        "CON22-4556",
         "CON22-4556"
       ]
     ]
   ],
-  "lastSaved": "2025-09-18T11:52:25.996Z",
+  "lastSaved": "2025-09-19T13:37:17.218Z",
   "isTestMode": false,
   "isDryRun": false
 }

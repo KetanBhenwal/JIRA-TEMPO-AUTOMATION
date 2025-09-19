@@ -268,6 +268,12 @@ class AITimeTrackingAgent {
     this._sessionHistoryFile = process.env.AI_AGENT_SESSION_HISTORY_FILE || path.join(__dirname,'ai-agent-session-history.jsonl');
     this._sessionHistoryInMemoryLimit = parseInt(process.env.AI_AGENT_SESSION_HISTORY_LIMIT || '500',10);
     this._sessionHistory = [];
+    // Embedding similarity configuration
+    this._embeddingEnabled = process.env.AI_AGENT_EMBEDDING_SIMILARITY === 'true';
+    this._embeddingModel = process.env.AI_AGENT_EMBEDDING_MODEL || 'text-embedding-3-small';
+    this._embeddingMinSim = parseFloat(process.env.AI_AGENT_EMBEDDING_MIN_SIM || '0.80');
+    this._issueEmbeddings = new Map(); // key -> { vector, summary }
+    this._lastDetectionTrace = null; // for API transparency
   }
 
   static validateConfig() {
@@ -826,6 +832,15 @@ class AITimeTrackingAgent {
       } else {
         // fallbacks handled in loop
       }
+      // Precompute embeddings if enabled
+      if (this._embeddingEnabled && this.assignedIssues.length) {
+        try {
+          await this._computeIssueEmbeddings();
+          await this.log(`🧬 Computed embeddings for ${this._issueEmbeddings.size} issues (model: ${this._embeddingModel})`);
+        } catch(e) {
+          await this.log(`⚠️ Issue embedding computation failed: ${e.message}`);
+        }
+      }
       // Build keyword map
       let totalKeywords = 0;
       this.assignedIssues.forEach(issue => {
@@ -1345,12 +1360,29 @@ class AITimeTrackingAgent {
         const result = await this._scoreAndSelectIssue(activity);
         console.log('Issue detection result:', result);
         if (result && result.issueKey) {
+          this._lastDetectionTrace = { phase: 'scoring', result };
           return result.issueKey;
         }
         // If ambiguous and LLM refine enabled, attempt refinement
         if (this._llmRefine && result && result.ambiguous && (result.candidates || []).length) {
           try {
-            const refined = await this._refineIssueWithLLM(result.candidates, activity);
+            let refined = null;
+            // Optional embedding similarity disambiguation first
+            if (this._embeddingEnabled) {
+              try {
+                const embPick = await this._embeddingDisambiguate(activity, result.candidates);
+                if (embPick && embPick.issueKey) {
+                  refined = { issueKey: embPick.issueKey, rationale: 'embedding-similarity' };
+                  this._lastDetectionTrace = { phase: 'embedding', embPick };
+                }
+              } catch(e) {
+                await this.log(`⚠️ Embedding disambiguation failed: ${e.message}`);
+              }
+            }
+            if (!refined) {
+              refined = await this._refineIssueWithLLM(result.candidates, activity);
+              this._lastDetectionTrace = { phase: 'llm-refine', refined, base: result };
+            }
             if (refined && refined.issueKey) {
               await this.log(`🧠 LLM refined issue selection -> ${refined.issueKey}`);
               return refined.issueKey;
@@ -1360,6 +1392,7 @@ class AITimeTrackingAgent {
           }
         }
         // Fall through to legacy heuristics if no confident pick
+        this._lastDetectionTrace = { phase: 'none', base: result };
       } catch (e) {
         await this.log(`⚠️ New detection pipeline error, falling back: ${e.message}`);
       }
@@ -1400,34 +1433,82 @@ class AITimeTrackingAgent {
         return lastEv.jiraKey;
       }
     }
-
-    // 3. Keyword-based fallback
-    const activityKeywords = this.extractKeywords(searchText + ' ' + browserRecentText);
-    const matchedIssues = [];
-    if (activityKeywords.length) {
-      this.log(`🔎 Keyword detection attempt with: ${activityKeywords.slice(0,12).join(', ')}`);
-    }
-    activityKeywords.forEach(keyword => {
-      if (this.issueKeywordMap.has(keyword)) {
-        const issues = this.issueKeywordMap.get(keyword);
-        issues.forEach(issueKey => {
-          const match = matchedIssues.find(m => m.issueKey === issueKey);
-          if (match) {
-            match.score++;
-          } else {
-            matchedIssues.push({ issueKey, score: 1 });
-          }
-        });
-      }
-    });
-    if (matchedIssues.length > 0) {
-      matchedIssues.sort((a, b) => b.score - a.score);
-      const bestMatch = matchedIssues[0];
-      await this.log(`✅ Detected issue via keyword fallback: ${bestMatch.issueKey} (score: ${bestMatch.score})`);
-      return bestMatch.issueKey;
-    }
-    await this.log('❌ No related issue detected');
+    // Keyword fallback removed to prevent low-confidence misclassification.
+    await this.log('❌ No related issue detected (keyword fallback disabled)');
     return null;
+  }
+
+  /* ---------------- Embedding Similarity Helpers ---------------- */
+  async _getEmbeddingClient() {
+    if (!this._embeddingEnabled) throw new Error('Embedding similarity disabled');
+    const provider = (process.env.LLM_PROVIDER || (process.env.OPENAI_API_KEY ? 'openai' : 'ollama')).toLowerCase();
+    if (provider === 'openai') {
+      let OpenAI = null; try { OpenAI = require('openai').OpenAI || require('openai'); } catch(_) {}
+      if (!OpenAI) throw new Error('openai package not installed');
+      if (!process.env.OPENAI_API_KEY) throw new Error('OPENAI_API_KEY missing for embeddings');
+      if (!this._openaiEmbClient) this._openaiEmbClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+      return { provider, client: this._openaiEmbClient };
+    }
+    // For ollama or others we could implement local embedding models; placeholder returns null.
+    return { provider: 'none', client: null };
+  }
+
+  async _embedTexts(texts) {
+    const { provider, client } = await this._getEmbeddingClient();
+    if (provider === 'openai') {
+      const resp = await client.embeddings.create({ model: this._embeddingModel, input: texts });
+      return resp.data.map(d => d.embedding);
+    }
+    throw new Error('Embedding provider not supported');
+  }
+
+  _cosineSim(a,b) {
+    if (!a || !b || a.length !== b.length) return 0;
+    let dot=0, na=0, nb=0;
+    for (let i=0;i<a.length;i++){ const x=a[i], y=b[i]; dot+=x*y; na+=x*x; nb+=y*y; }
+    return dot / (Math.sqrt(na)*Math.sqrt(nb) || 1);
+  }
+
+  async _computeIssueEmbeddings() {
+    if (!this._embeddingEnabled) return;
+    const missing = this.assignedIssues.filter(i => !this._issueEmbeddings.has(i.key));
+    if (!missing.length) return;
+    const summaries = missing.map(i => `${i.key}: ${i.fields.summary}`);
+    const vectors = await this._embedTexts(summaries);
+    vectors.forEach((vec, idx) => {
+      const issue = missing[idx];
+      this._issueEmbeddings.set(issue.key, { vector: vec, summary: issue.fields.summary });
+    });
+  }
+
+  async _embeddingDisambiguate(activity, candidates) {
+    if (!this._embeddingEnabled) return null;
+    // Build context text from activity (window title + last micro events titles)
+    const micro = (this.currentSession?.microEvents || []).slice(-20).map(ev => ev.title).join(' ');
+    const context = [activity.windowTitles, activity.gitBranch || '', micro].join(' ').trim();
+    if (!context) return null;
+    let contextVec;
+    try {
+      [contextVec] = await this._embedTexts([context]);
+    } catch(e) {
+      await this.log('⚠️ Embedding context generation failed: '+e.message);
+      return null;
+    }
+    let best = null;
+    for (const cand of candidates) {
+      const emb = this._issueEmbeddings.get(cand.key || cand.issueKey);
+      if (!emb) continue;
+      const sim = this._cosineSim(contextVec, emb.vector);
+      cand.embeddingSim = sim;
+      if (sim >= this._embeddingMinSim && (!best || sim > best.embeddingSim)) {
+        best = { issueKey: cand.key || cand.issueKey, embeddingSim: sim };
+      }
+    }
+    if (best) {
+      await this.log(`🧬 Embedding disambiguation chose ${best.issueKey} (sim=${best.embeddingSim.toFixed(3)})`);
+    }
+    this._lastDetectionTrace = { phase: 'embedding-only', contextPreview: context.slice(0,120), candidates: candidates.slice(0,5), picked: best };
+    return best;
   }
 
   /* -------------------- Enhanced Issue Scoring & Refinement -------------------- */
@@ -1498,12 +1579,51 @@ class AITimeTrackingAgent {
 
   async _refineIssueWithLLM(candidates, activity) {
     try {
-      const llm = require('./llmParser');
-      if (!llm || !llm.parseDailyNotes) throw new Error('LLM parser unavailable');
-      // Build a minimal structured prompt manually (simple model call using existing openAI client is in llmParser for notes; we simulate via parseDailyNotes style or skip)
-      // For simplicity we won't repurpose parseDailyNotes; just choose first for now (placeholder) until a dedicated refine method added.
-      const best = candidates[0];
-      return { issueKey: best.key, rationale: 'LLM refinement placeholder selected top candidate' };
+      const provider = (process.env.LLM_PROVIDER || (process.env.OPENAI_API_KEY ? 'openai' : 'ollama')).toLowerCase();
+      const model = process.env.LLM_REFINE_MODEL || process.env.LLM_MODEL || (provider === 'openai' ? 'gpt-4o-mini' : (process.env.OLLAMA_MODEL || 'qwen2.5:7b'));
+      const contextPieces = [];
+      contextPieces.push('WINDOW_TITLE: ' + (activity.windowTitles||''));
+      if (activity.gitBranch) contextPieces.push('GIT_BRANCH: ' + activity.gitBranch);
+      if (this.currentSession && this.currentSession.microEvents) {
+        const recentMicro = this.currentSession.microEvents.slice(-10).map(ev => ev.title).filter(Boolean).slice(0,5);
+        if (recentMicro.length) contextPieces.push('RECENT_TITLES: '+ recentMicro.join(' | '));
+      }
+      const contextText = contextPieces.join('\n');
+      const candList = candidates.map(c => `{"key":"${c.key||c.issueKey}","score":${c.score||c.embeddingSim||0},"factors":${JSON.stringify(c.factors||[]).slice(0,200)}}`).join(',');
+      const system = 'You are a precise selector that picks the SINGLE best JIRA issue key for a developer session. Return ONLY JSON.';
+      const user = `CONTEXT:\n${contextText}\nCANDIDATES:[${candList}]\nRULES:\n1. Prefer keys explicitly appearing in titles/branch (factor directText/gitBranch/microEvent).\n2. If multiple similar, compare semantic relevance of summary (assume candidates list order is descending base score).\n3. Only output a key if reasonably confident; else return null.\nJSON SCHEMA:{"issueKey": "ABC-123"|null, "reason":"string"}`;
+      let content;
+      if (provider === 'openai') {
+        let OpenAI=null; try { OpenAI = require('openai').OpenAI || require('openai'); } catch(_) {}
+        if (!OpenAI) throw new Error('openai library missing');
+        if (!process.env.OPENAI_API_KEY) throw new Error('OPENAI_API_KEY missing');
+        if (!this._openaiRefineClient) this._openaiRefineClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+        const completion = await this._openaiRefineClient.chat.completions.create({
+          model,
+          temperature: 0.0,
+          messages: [ { role:'system', content: system }, { role:'user', content: user } ],
+          response_format: { type: 'json_object' }
+        });
+        content = completion.choices[0].message.content;
+      } else if (provider === 'ollama') {
+        const fetchFn = global.fetch ? global.fetch.bind(global) : (await import('node-fetch')).default;
+        const ollamaUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
+        const body = { model, stream:false, prompt: `${system}\n${user}` };
+        const resp = await fetchFn(`${ollamaUrl}/api/generate`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+        if (!resp.ok) throw new Error(`ollama refine failed ${resp.status}`);
+        const json = await resp.json();
+        content = json.response;
+      } else {
+        // Fallback: just pick first
+        const best = candidates[0];
+        return { issueKey: best.key||best.issueKey, rationale: 'fallback-first-provider-unsupported' };
+      }
+      let parsed;
+      try { parsed = JSON.parse(content); } catch(_) { return { issueKey: null, rationale: 'non-json-llm-output' }; }
+      if (parsed && parsed.issueKey) {
+        return { issueKey: parsed.issueKey, rationale: parsed.reason || 'llm-refine' };
+      }
+      return { issueKey: null, rationale: parsed?.reason || 'llm-declined' };
     } catch (e) {
       throw e;
     }
@@ -2623,6 +2743,10 @@ class AITimeTrackingAgent {
         runningAppsFallbacks: this._metrics.runningAppsFallbacks
       }
     };
+  }
+
+  getLastDetectionTrace() {
+    return this._lastDetectionTrace || null;
   }
 }
 

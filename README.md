@@ -276,6 +276,23 @@ The agent now employs a weighted evidence scoring pipeline (instead of single-hi
 
 Top candidate wins unless the margin to the second candidate < 15 points (ambiguous). Ambiguous sessions optionally invoke an LLM refinement step (placeholder baseline currently returns the top candidate; can be expanded).
 
+### Embedding Similarity (Optional Disambiguation)
+Enable semantic ranking to break ties when scoring pipeline is ambiguous:
+
+```dotenv
+AI_AGENT_EMBEDDING_SIMILARITY=true
+AI_AGENT_EMBEDDING_MODEL=text-embedding-3-small   # OpenAI embedding model
+AI_AGENT_EMBEDDING_MIN_SIM=0.82                   # Cosine similarity threshold (0–1)
+```
+
+Behavior:
+1. On `fetchAssignedIssues` the agent embeds each issue summary (cached in-memory).
+2. For an ambiguous detection, it embeds the current context (window title + recent micro-event titles + branch) and computes cosine similarity against candidate issues.
+3. If the best candidate exceeds `AI_AGENT_EMBEDDING_MIN_SIM`, it is selected before any LLM refinement.
+4. Trace stored in `_lastDetectionTrace` with phase `embedding` or `embedding-only`.
+
+If embeddings fail (network / quota), detection silently falls back to the next step.
+
 ### Exclusion Rules
 Exclude noise sessions (e.g., time spent working on this tracking tool itself) by path or branch:
 
@@ -298,7 +315,33 @@ When `AI_AGENT_DETECTION_VERBOSE=true`, activity trace and log lines include:
 and an internal trace record `detect:score` with the top factor breakdown (in `ai-agent-activity-trace.log` if activity tracing enabled).
 
 ### LLM Refinement (Experimental)
-Set `AI_AGENT_LLM_REFINE_DETECTION=true` to enable an extra refinement pass for ambiguous cases. Current implementation is a placeholder; future iterations can send a condensed context prompt to the configured LLM provider to adjudicate between close candidates.
+Set `AI_AGENT_LLM_REFINE_DETECTION=true` to enable an extra refinement pass for ambiguous cases. The agent now crafts a structured JSON-only prompt containing:
+* Context: window title, branch, recent micro-event titles
+* Candidate list with partial factor data
+The model must return `{ "issueKey": "ABC-123" | null, "reason": "..." }`. If it declines or output is invalid JSON, detection returns null (leaving session unassigned until clearer signals appear). For unsupported providers it falls back to the top-scored candidate.
+
+Refinement order when ambiguous:
+1. (If enabled) Embedding disambiguation
+2. (If still unresolved) LLM refinement prompt
+3. Fallback: no issue assigned
+
+### Detection Transparency Endpoint
+You can introspect the last detection attempt:
+```
+GET /api/ai/detection/candidates
+```
+Response includes:
+```json
+{
+   "trace": {
+      "phase": "scoring|embedding|llm-refine|none|embedding-only",
+      "...": "implementation-specific details"
+   },
+   "embedding": { "enabled": true, "model": "text-embedding-3-small", "minSim": "0.82" },
+   "llmRefine": true
+}
+```
+Use this for UI tooling or debugging wrongly attributed sessions.
 
 ### Migration & Backward Compatibility
 Set `AI_AGENT_LEGACY_DETECTION=true` to revert to prior heuristic behavior. Leave unset (default) to use the scoring pipeline.

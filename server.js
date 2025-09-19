@@ -1538,6 +1538,25 @@ app.get('/api/ai-agent/config', (req, res) => {
   });
 });
 
+// Detection transparency endpoint
+app.get('/api/ai/detection/candidates', (req, res) => {
+  try {
+    if (!isAiAgentRunning) return res.status(400).json({ error: 'AI agent not running' });
+    const trace = aiAgent.getLastDetectionTrace();
+    res.json({
+      trace: trace || null,
+      embedding: {
+        enabled: process.env.AI_AGENT_EMBEDDING_SIMILARITY === 'true',
+        model: process.env.AI_AGENT_EMBEDDING_MODEL || null,
+        minSim: process.env.AI_AGENT_EMBEDDING_MIN_SIM || null
+      },
+      llmRefine: aiAgent._llmRefine
+    });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to retrieve detection trace', details: e.message });
+  }
+});
+
 // Runtime config endpoints
 app.get('/api/ai-agent/runtime-config', (req,res)=>{
   res.json({ overrides: require('fs').existsSync('user-config.json') ? JSON.parse(require('fs').readFileSync('user-config.json','utf-8')) : {}, effective: aiAgent.effectiveConfig });
