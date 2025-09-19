@@ -1444,14 +1444,21 @@ app.post('/api/ai/log-daily-notes', async (req, res) => {
 // Get AI agent configuration
 app.get('/api/ai-agent/config', (req, res) => {
   const cfg = aiAgent.effectiveConfig;
+  // Frontend expects minute values under keys WITHOUT the Ms suffix. Provide both for backward compatibility.
+  const toMinutes = (ms) => Math.round(ms / 60000);
   res.json({
+    // New preferred keys (minutes)
+    monitoringInterval: toMinutes(cfg.monitoringInterval),
+    workSessionThreshold: toMinutes(cfg.workSessionThreshold),
+    autoLogThreshold: toMinutes(cfg.autoLogThreshold),
+    maxSessionDuration: toMinutes(cfg.maxSessionDuration),
+    workHoursStart: cfg.workHoursStart,
+    workHoursEnd: cfg.workHoursEnd,
+    // Legacy keys (raw ms) kept in case any consumer still references them
     monitoringIntervalMs: cfg.monitoringInterval,
     workSessionThresholdMs: cfg.workSessionThreshold,
     autoLogThresholdMs: cfg.autoLogThreshold,
-    maxSessionDurationMs: cfg.maxSessionDuration,
-    workHoursStart: cfg.workHoursStart,
-    workHoursEnd: cfg.workHoursEnd,
-    overrides: cfg === cfg ? undefined : null
+    maxSessionDurationMs: cfg.maxSessionDuration
   });
 });
 

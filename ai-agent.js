@@ -246,6 +246,9 @@ class AITimeTrackingAgent {
     this._activityTraceFile = process.env.AI_AGENT_ACTIVITY_TRACE_FILE || path.join(__dirname, 'ai-agent-activity-trace.log');
     this._activityTraceQueue = [];
     this._activityTraceFlushTimer = null;
+    // Dynamic Tempo work attribute maps (populated lazily)
+    this._tempoAttributeMap = null; // full map keyed by attribute key
+    this._techTypeNameToValue = null; // display/name -> value
   }
 
   async setupLogging() {
@@ -1590,6 +1593,29 @@ class AITimeTrackingAgent {
         return a;
       });
 
+      // Attempt dynamic mapping from display -> internal Tempo value
+      try {
+        await this._ensureTempoAttributesLoaded();
+        if (this._techTypeNameToValue) {
+          attributes = attributes.map(a => {
+            if (a.key === '_TechnologyTimeType_' && a.value) {
+              const trimmed = a.value.replace(/\s+/g,' ').trim();
+              const direct = this._techTypeNameToValue[trimmed] || this._techTypeNameToValue[trimmed.replace(/ /g,'')];
+              if (direct) {
+                if (direct !== a.value) {
+                  this.log(`🔄 Mapped TechnologyTimeType '${a.value}' -> '${direct}'`);
+                  a.value = direct;
+                }
+              }
+            }
+            return a;
+          });
+        }
+      } catch (e) {
+        // Non-fatal; continue with existing attributes
+        this.log(`⚠️ Attribute mapping skip: ${e.message}`);
+      }
+
       // Handle date (optionally use local date to avoid UTC rollover issues)
       const useLocal = process.env.USE_LOCAL_DATE_FOR_TEMPO === 'true';
       const startDateObj = new Date(session.startTime);
@@ -2021,6 +2047,43 @@ class AITimeTrackingAgent {
     }
     // apply monitoring interval change by restarting loop timer indirectly (next tick uses new value)
     return this.effectiveConfig;
+  }
+
+  // --- Tempo Work Attribute Helpers ---------------------------------------
+  async _ensureTempoAttributesLoaded() {
+    if (this._tempoAttributeMap && this._techTypeNameToValue) return;
+    try {
+      const resp = await tempoApi.get('/work-attributes');
+      const results = resp.data?.results || resp.data || [];
+      this._tempoAttributeMap = {};
+      this._techTypeNameToValue = {};
+      for (const attr of results) {
+        this._tempoAttributeMap[attr.key] = attr;
+        if (attr.key === '_TechnologyTimeType_') {
+          // Accept both shapes: values + names map OR staticListValues
+            if (Array.isArray(attr.values)) {
+              // attr.names may map internal value -> display name
+              for (const v of attr.values) {
+                const display = (attr.names && attr.names[v]) || v;
+                this._techTypeNameToValue[display] = v;
+                this._techTypeNameToValue[v] = v; // identity
+              }
+            } else if (Array.isArray(attr.staticListValues)) {
+              for (const v of attr.staticListValues) {
+                const display = v.name || v.value;
+                const internal = v.value || v.name;
+                this._techTypeNameToValue[display] = internal;
+                this._techTypeNameToValue[internal] = internal;
+              }
+            }
+        }
+      }
+      if (Object.keys(this._techTypeNameToValue).length) {
+        await this.log(`🧩 Loaded ${Object.keys(this._techTypeNameToValue).length} TechnologyTimeType variants from Tempo`);
+      }
+    } catch (e) {
+      await this.log(`⚠️ Failed to load Tempo work attributes for mapping: ${e.message}`);
+    }
   }
 
   clearRuntimeConfig() {

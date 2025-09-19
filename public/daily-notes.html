@@ -34,12 +34,7 @@
 </style>
 </head>
 <body>
-  <div class="navigation">
-    <a href="index.html">Time Logger</a>
-    <a href="ai-agent.html">AI Agent</a>
-    <a href="debug.html">Debug</a>
-    <a href="daily-notes.html" class="active">Daily Notes (AI)</a>
-  </div>
+  <!-- navigation injected by nav.js -->
   <div class="container">
     <div class="flex-between">
       <h1>Daily Notes → AI Time Blocks</h1>
@@ -75,6 +70,7 @@
       <pre class="json" id="rawJson"></pre>
     </div>
   </div>
+<script src="nav.js"></script>
 <script>
 function fmt(t){return t==null?'':t}
 const dateInput = document.getElementById('date');

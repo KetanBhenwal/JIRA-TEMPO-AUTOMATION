@@ -64,6 +64,11 @@ A web application and AI-powered background agent to help you log work time for 
      - `TEMPO_API_TOKEN` (from Tempo settings)
      - `TEMPO_ACCOUNT_ID` (your Atlassian account ID)
      - `PORT` (optional, defaults to 3000)
+   - `LLM_PROVIDER` (optional: `openai` or `ollama`; auto-detects `openai` if OPENAI_API_KEY present, else `ollama`)
+   - `LLM_MODEL` (e.g. `gpt-4o-mini`, `gpt-4o`, `mistral:latest`, or local Ollama model like `qwen2.5:7b`)
+   - `OPENAI_API_KEY` (required only when using OpenAI provider)
+   - `OLLAMA_BASE_URL` (optional, default `http://localhost:11434`)
+   - `LLM_MAX_MINUTES_PER_DAY` (cap for parsed AI daily notes, default 720)
 
 3. **Start the application (interactive menu, cross‑platform):**
 
@@ -202,6 +207,59 @@ npm run ai-status
 # Interactive setup menu
 ./start-ai-agent.sh
 ```
+
+## 🧠 LLM / OpenAI Integration
+
+The project supports two interchangeable LLM providers for parsing Daily Notes into structured time blocks:
+
+| Provider | Set `LLM_PROVIDER` | Key Env Vars | Typical Model | When to Use |
+|----------|-------------------|--------------|---------------|-------------|
+| OpenAI   | `openai`          | `OPENAI_API_KEY`, `LLM_MODEL` | `gpt-4o-mini` / `gpt-4o` | Highest quality / reasoning |
+| Ollama (local) | `ollama` (default if no OpenAI key) | `OLLAMA_BASE_URL`, `LLM_MODEL` | `qwen2.5:7b`, `mistral:latest` | Offline / cost control |
+
+### Switching Providers
+1. Add to `.env` for OpenAI:
+   ```dotenv
+   LLM_PROVIDER=openai
+   OPENAI_API_KEY=sk-...your key...
+   LLM_MODEL=gpt-4o-mini
+   ```
+2. Or for local Ollama:
+   ```dotenv
+   LLM_PROVIDER=ollama
+   OLLAMA_BASE_URL=http://localhost:11434
+   LLM_MODEL=qwen2.5:7b
+   ```
+3. Restart the server (or let Node auto-reload if you use a watcher). The parser auto-selects based on `LLM_PROVIDER` (falls back to `openai` if key present and provider unset).
+
+### Daily Notes Parsing Flow
+`/api/ai/log-daily-notes` → `llmParser.parseDailyNotes()` → provider-specific call (OpenAI Chat Completions w/ JSON mode OR Ollama `/api/generate`).
+
+### Error Handling
+- Missing `OPENAI_API_KEY` with `LLM_PROVIDER=openai` throws fast with clear error.
+- Non‑JSON responses raise `LLM returned non-JSON content` so you can inspect logs and adjust prompt or model.
+
+### Cost & Safety Controls
+- `LLM_MAX_MINUTES_PER_DAY` enforces an upper bound on parsed total minutes (default 720) adding a warning if exceeded.
+- Temperature fixed low (0.1) for deterministic parsing.
+
+### Recommended OpenAI Models
+| Use Case | Model |
+|----------|-------|
+| Fast / cost‑efficient | `gpt-4o-mini` |
+| Higher context / reasoning | `gpt-4o` |
+
+If using a different JSON-capable model ensure it supports `response_format: { type: 'json_object' }`.
+
+### Troubleshooting
+| Symptom | Likely Cause | Fix |
+|---------|--------------|-----|
+| "LLM_PROVIDER=openai but OPENAI_API_KEY missing" | Key not set or typo | Add valid key to `.env` |
+| "LLM returned non-JSON content" | Model ignored instructions | Retry; ensure JSON mode supported; lower temperature |
+| Long latency | Large model or cold start | Switch to mini model or local Ollama |
+| Empty `blocks` array | Notes too vague | Provide clearer time annotations (e.g., "CON22-123 2h backend refactor") |
+
+---
 
 ## Manual Time Logging (Web Interface)
 

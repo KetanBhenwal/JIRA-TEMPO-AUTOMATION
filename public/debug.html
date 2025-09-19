@@ -96,11 +96,7 @@
   </style>
 </head>
 <body>
-    <div class="navigation">
-    <a href="index.html">Time Logger</a>
-    <a href="ai-agent.html">AI Agent</a>
-    <a href="debug.html" class="active">Debug</a>
-  </div>
+  <!-- navigation injected by nav.js -->
 
   <h1>🔧 JIRA Tempo Debug Page</h1>
   
@@ -142,6 +138,7 @@
     <div id="consoleLog" class="debug-output"></div>
   </div>
 
+  <script src="nav.js"></script>
   <script>
     // Capture console logs
     const originalConsoleLog = console.log;

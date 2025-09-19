@@ -649,7 +649,23 @@
         "/Users/ketan.bhenwal/Desktop/JIRA-Tempo"
       ],
       "gitBranches": [],
-      "confidence": 0
+      "confidence": 0,
+      "_cachedActivityType": {
+        "isMeetingActivity": false,
+        "isStoryDevelopment": null,
+        "meetingType": null,
+        "description": "Story Development",
+        "debug": {
+          "score": 0,
+          "threshold": 7,
+          "appTriggers": [],
+          "strongKeywordHits": [],
+          "weakKeywordHits": [],
+          "devAppHits": [],
+          "devKeywordHits": []
+        }
+      },
+      "_cachedActivityTypeAt": 1758196045935
     },
     {
       "id": "session_1757590458585",
@@ -4493,6 +4509,996 @@
           "source": null
         }
       ]
+    },
+    {
+      "id": "session_1758191723799",
+      "startTime": 1758191723799,
+      "endTime": 1758196345996,
+      "duration": 4622197,
+      "detectedIssue": null,
+      "activities": [
+        {
+          "timestamp": 1758191723315,
+          "applications": {
+            "active": "unknown",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "MSTeams",
+              "Microsoft Outlook",
+              "Electron",
+              "Terminal"
+            ]
+          },
+          "windowTitles": "AI Time Tracking Agent - Dashboard - Google Chrome",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": "main",
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1758192023929,
+          "applications": {
+            "active": "Electron",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "MSTeams",
+              "Microsoft Outlook",
+              "Electron",
+              "Terminal"
+            ]
+          },
+          "windowTitles": "",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": "main",
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1758192325290,
+          "applications": {
+            "active": "unknown",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "MSTeams",
+              "Microsoft Outlook",
+              "Electron",
+              "Terminal"
+            ]
+          },
+          "windowTitles": "Catalog Admin - LRN Console - Google Chrome (Incognito)",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": "main",
+          "openFiles": [],
+          "isWorkingHours": true
+        },
+        {
+          "timestamp": 1758193624987,
+          "applications": {
+            "active": "unknown",
+            "running": [
+              "Finder",
+              "Google Chrome",
+              "MSTeams",
+              "Microsoft Outlook",
+              "Electron",
+              "Terminal"
+            ]
+          },
+          "windowTitles": "",
+          "currentDirectory": "/Users/ketan.bhenwal/Desktop/JIRA-Tempo",
+          "gitBranch": "main",
+          "openFiles": [],
+          "isWorkingHours": true
+        }
+      ],
+      "applications": [
+        "unknown",
+        "Electron"
+      ],
+      "windowTitles": [
+        "AI Time Tracking Agent - Dashboard - Google Chrome",
+        "",
+        "Catalog Admin - LRN Console - Google Chrome (Incognito)"
+      ],
+      "directories": [
+        "/Users/ketan.bhenwal/Desktop/JIRA-Tempo"
+      ],
+      "gitBranches": [
+        "main"
+      ],
+      "confidence": 20,
+      "_cachedActivityType": {
+        "isMeetingActivity": false,
+        "isStoryDevelopment": null,
+        "meetingType": null,
+        "description": "Story Development",
+        "debug": {
+          "score": 0,
+          "threshold": 7,
+          "appTriggers": [],
+          "strongKeywordHits": [],
+          "weakKeywordHits": [],
+          "devAppHits": [],
+          "devKeywordHits": []
+        }
+      },
+      "_cachedActivityTypeAt": 1758196045934,
+      "microEvents": [
+        {
+          "t": 1758191723907,
+          "app": "Google Chrome",
+          "title": "AI Time Tracking Agent - Dashboard - Google Chrome",
+          "browser": {
+            "host": "localhost:3000",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191754480,
+          "app": "Google Chrome",
+          "title": "AI Agent Config - Google Chrome",
+          "browser": {
+            "host": "localhost:3000",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191815335,
+          "app": "unknown",
+          "title": "AI Time Tracking Agent - Dashboard - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191815710,
+          "app": "Google Chrome",
+          "title": "AI Time Tracking Agent - Dashboard - Google Chrome",
+          "browser": {
+            "host": "localhost:3000",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191845875,
+          "app": "Google Chrome",
+          "title": "Sign In - LRN Console - Google Chrome (Incognito)",
+          "browser": {
+            "host": "localhost:4200",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191876486,
+          "app": "Google Chrome",
+          "title": "Catalog - LRN Console - Google Chrome (Incognito)",
+          "browser": {
+            "host": "localhost:4200",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191876490,
+          "app": "unknown",
+          "title": "Catalog - LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191876714,
+          "app": "Google Chrome",
+          "title": "Catalog - LRN Console - Google Chrome (Incognito)",
+          "browser": {
+            "host": "localhost:4200",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191906744,
+          "app": "unknown",
+          "title": "Catalog Admin - LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191907026,
+          "app": "Google Chrome",
+          "title": "Catalog Admin - LRN Console - Google Chrome (Incognito)",
+          "browser": {
+            "host": "qatracking06child02-console.qa7.lrn.com",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191937059,
+          "app": "unknown",
+          "title": "Catalog Admin - LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191937355,
+          "app": "Google Chrome",
+          "title": "Catalog Admin - LRN Console - Google Chrome (Incognito)",
+          "browser": {
+            "host": "qatracking06child02-console.qa7.lrn.com",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191937595,
+          "app": "Google Chrome",
+          "title": "Catalog Admin - LRN Console - Google Chrome (Incognito)",
+          "browser": {
+            "host": "qatracking06child02-console.qa7.lrn.com",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191967345,
+          "app": "unknown",
+          "title": "DevTools - localhost:4200/catalog (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191968020,
+          "app": "Google Chrome",
+          "title": "DevTools - localhost:4200/catalog (Incognito)",
+          "browser": {
+            "host": "teams.microsoft.com",
+            "isJira": false,
+            "hasKey": true
+          },
+          "jiraKey": "BC-0248",
+          "source": "url"
+        },
+        {
+          "t": 1758191997756,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191997926,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191998102,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191998105,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191998590,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758191998652,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192028006,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192028391,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192028555,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192028558,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192028773,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192029144,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192058356,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192058780,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192058996,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192059194,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192059197,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192059775,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192059778,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192089200,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192089203,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192090273,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192090490,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192090919,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192090923,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192119462,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192119633,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192120247,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192120250,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192121688,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192121692,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192122715,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192149153,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192149727,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192149848,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192150373,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192150545,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192151724,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192151890,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192154151,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192154154,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192155953,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192179515,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192179956,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192180168,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192180824,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192180827,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192183071,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192183216,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192211945,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192212115,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192222005,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192222008,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192274434,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758192274625,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193205724,
+          "app": "Electron",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193205949,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193271474,
+          "app": "unknown",
+          "title": "Catalog - LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193321666,
+          "app": "unknown",
+          "title": "Catalog Admin - LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193326161,
+          "app": "unknown",
+          "title": "New Incognito tab - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193326352,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193382230,
+          "app": "unknown",
+          "title": "Chat | AI Collab Conference | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193383876,
+          "app": "unknown",
+          "title": "Chat | Lavitha Varghese | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193389626,
+          "app": "unknown",
+          "title": "Chat | Jira Cloud | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193390858,
+          "app": "unknown",
+          "title": "Chat | CAB meeting | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193391639,
+          "app": "unknown",
+          "title": "Chat | Jira Cloud | Microsoft Teams",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193391829,
+          "app": "unknown",
+          "title": "LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193442402,
+          "app": "unknown",
+          "title": "Catalog Admin - LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193443050,
+          "app": "unknown",
+          "title": "New Incognito tab - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193443428,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193444355,
+          "app": "unknown",
+          "title": "LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193445301,
+          "app": "Electron",
+          "title": "LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193445495,
+          "app": "unknown",
+          "title": "LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193508642,
+          "app": "unknown",
+          "title": "Catalog Admin - LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193512643,
+          "app": "unknown",
+          "title": "lrndemo3-lcec.course.qa.lrn.com/rev2509180314/course/templates/ajax/FluidX/start.html?aicc_sid=b543450479c2b300e0b2ff45b8133943&aicc_url=/app/aicc/track2a&sid=66656&lang=enIE&cpath",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193514611,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193562913,
+          "app": "unknown",
+          "title": "qatracking06-lcec.course.qa7.lrn.com/rev2509180314/course/templates/ajax/FluidX/start.html?aicc_sid=472905249d6cbbff4404559d7338cd8d&aicc_url=/app/aicc/track2a&sid=42873&lang=en&cp",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193565003,
+          "app": "unknown",
+          "title": "Redirecting - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193566156,
+          "app": "unknown",
+          "title": "qatracking06-lcec.course.qa7.lrn.com/rev2509180314/course/templates/ajax/FluidX/FluidX2.0/app_min/index.html?aicc_sid=472905249d6cbbff4404559d7338cd8d&aicc_url=/app/aicc/track2a&si",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193623321,
+          "app": "unknown",
+          "title": "Catalog Admin - LRN Console - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193626053,
+          "app": "unknown",
+          "title": "Insider Trading: Avoiding Risky Behavior, What Maggie and Ted Did - Google Chrome (Incognito)",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193683751,
+          "app": "unknown",
+          "title": "JIRA-Tempo — osascript ◂ start-ai-agent.sh — 80×24",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193687105,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193693846,
+          "app": "unknown",
+          "title": "JIRA-Tempo — osascript ◂ start-ai-agent.sh — 80×24",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193743946,
+          "app": "unknown",
+          "title": "Console_Rewrite [Jenkins] - Google Chrome",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758193747479,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758194810932,
+          "app": "Google Chrome",
+          "title": "",
+          "browser": {
+            "host": "10.112.5.69:3205",
+            "isJira": false,
+            "hasKey": false
+          },
+          "jiraKey": null,
+          "source": null
+        },
+        {
+          "t": 1758194810956,
+          "app": "unknown",
+          "title": "",
+          "browser": null,
+          "jiraKey": null,
+          "source": null
+        }
+      ],
+      "loggedUntil": 1758191723799,
+      "logStatus": "skipped",
+      "logReason": "no-issue-detected"
     }
   ],
   "loggedSessions": [
@@ -4543,6 +5549,7 @@
         "CON22-4560",
         "CON22-4524",
         "CON22-4560",
+        "CON22-4524",
         "CON22-4524"
       ]
     ],
@@ -4568,12 +5575,14 @@
         "CON22-4524",
         "CON22-4524",
         "CON22-4524",
+        "CON22-4524",
         "CON22-4524"
       ]
     ],
     [
       "phishing",
       [
+        "CON22-4524",
         "CON22-4524",
         "CON22-4524",
         "CON22-4524",
@@ -4657,6 +5666,8 @@
         "CON22-4422",
         "CON22-4560",
         "CON22-4524",
+        "CON22-4422",
+        "CON22-4524",
         "CON22-4422"
       ]
     ],
@@ -4682,12 +5693,15 @@
         "CON22-4524",
         "CON22-4524",
         "CON22-4524",
+        "CON22-4524",
         "CON22-4524"
       ]
     ],
     [
       "queue",
       [
+        "CON22-4524",
+        "CON22-3380",
         "CON22-4524",
         "CON22-3380",
         "CON22-4524",
@@ -4827,6 +5841,9 @@
         "CON22-1892",
         "CON22-3787",
         "CON22-1894",
+        "CON22-1892",
+        "CON22-3787",
+        "CON22-1894",
         "CON22-1892"
       ]
     ],
@@ -4887,6 +5904,7 @@
         "CON22-3189",
         "CON22-3189",
         "CON22-3189",
+        "CON22-3189",
         "CON22-3189"
       ]
     ],
@@ -4927,12 +5945,17 @@
         "CON22-3189",
         "CON22-3189",
         "CON22-3189",
+        "CON22-3189",
         "CON22-3189"
       ]
     ],
     [
       "updated",
       [
+        "CON22-4515",
+        "CON22-4422",
+        "CON22-3189",
+        "CON22-1892",
         "CON22-4515",
         "CON22-4422",
         "CON22-3189",
@@ -5057,12 +6080,15 @@
         "CON22-4515",
         "CON22-3238",
         "CON22-4515",
+        "CON22-3238",
+        "CON22-4515",
         "CON22-3238"
       ]
     ],
     [
       "reflecting",
       [
+        "CON22-4515",
         "CON22-4515",
         "CON22-4515",
         "CON22-4515",
@@ -5107,12 +6133,16 @@
         "CON22-4515",
         "CON22-4515",
         "CON22-4515",
+        "CON22-4515",
         "CON22-4515"
       ]
     ],
     [
       "name",
       [
+        "CON22-4422",
+        "CON22-2598",
+        "CON22-2597",
         "CON22-4422",
         "CON22-2598",
         "CON22-2597",
@@ -5297,6 +6327,12 @@
         "CON22-3380",
         "CON22-3381",
         "CON22-3238",
+        "CON22-2643",
+        "CON22-4422",
+        "CON22-3787",
+        "CON22-3380",
+        "CON22-3381",
+        "CON22-3238",
         "CON22-2643"
       ]
     ],
@@ -5341,6 +6377,7 @@
         "CON22-4560",
         "CON22-4422",
         "CON22-4560",
+        "CON22-4422",
         "CON22-4422"
       ]
     ],
@@ -5385,12 +6422,19 @@
         "CON22-4560",
         "CON22-4422",
         "CON22-4560",
+        "CON22-4422",
         "CON22-4422"
       ]
     ],
     [
       "when",
       [
+        "CON22-4485",
+        "CON22-3787",
+        "CON22-3381",
+        "CON22-3189",
+        "CON22-2643",
+        "CON22-1894",
         "CON22-4485",
         "CON22-3787",
         "CON22-3381",
@@ -5575,12 +6619,16 @@
         "CON22-3189",
         "CON22-4485",
         "CON22-3381",
+        "CON22-3189",
+        "CON22-4485",
+        "CON22-3381",
         "CON22-3189"
       ]
     ],
     [
       "removes",
       [
+        "CON22-4485",
         "CON22-4485",
         "CON22-4485",
         "CON22-4485",
@@ -5625,6 +6673,7 @@
         "CON22-4485",
         "CON22-4485",
         "CON22-4485",
+        "CON22-4485",
         "CON22-4485"
       ]
     ],
@@ -5650,12 +6699,14 @@
         "CON22-4485",
         "CON22-4485",
         "CON22-4485",
+        "CON22-4485",
         "CON22-4485"
       ]
     ],
     [
       "languages,it",
       [
+        "CON22-4485",
         "CON22-4485",
         "CON22-4485",
         "CON22-4485",
@@ -5720,12 +6771,15 @@
         "CON22-4485",
         "CON22-3189",
         "CON22-4485",
+        "CON22-3189",
+        "CON22-4485",
         "CON22-3189"
       ]
     ],
     [
       "display",
       [
+        "CON22-4485",
         "CON22-4485",
         "CON22-4485",
         "CON22-4485",
@@ -5770,12 +6824,14 @@
         "CON22-4485",
         "CON22-4485",
         "CON22-4485",
+        "CON22-4485",
         "CON22-4485"
       ]
     ],
     [
       "instruction",
       [
+        "CON22-4485",
         "CON22-4485",
         "CON22-4485",
         "CON22-4485",
@@ -5840,12 +6896,19 @@
         "CON22-2583",
         "CON22-2594",
         "CON22-2583",
+        "CON22-2594",
+        "CON22-2583",
         "CON22-2594"
       ]
     ],
     [
       "android",
       [
+        "CON22-2583",
+        "CON22-2594",
+        "CON22-2582",
+        "CON22-2598",
+        "CON22-2597",
         "CON22-2583",
         "CON22-2594",
         "CON22-2582",
@@ -6030,12 +7093,17 @@
         "CON22-2583",
         "CON22-2594",
         "CON22-2546",
+        "CON22-2643",
+        "CON22-2583",
+        "CON22-2594",
+        "CON22-2546",
         "CON22-2643"
       ]
     ],
     [
       "gets",
       [
+        "CON22-2583",
         "CON22-2583",
         "CON22-2583",
         "CON22-2583",
@@ -6080,12 +7148,14 @@
         "CON22-2583",
         "CON22-2583",
         "CON22-2583",
+        "CON22-2583",
         "CON22-2583"
       ]
     ],
     [
       "behind",
       [
+        "CON22-2583",
         "CON22-2583",
         "CON22-2583",
         "CON22-2583",
@@ -6130,12 +7200,15 @@
         "CON22-2583",
         "CON22-2583",
         "CON22-2583",
+        "CON22-2583",
         "CON22-2583"
       ]
     ],
     [
       "hidden",
       [
+        "CON22-2594",
+        "CON22-2546",
         "CON22-2594",
         "CON22-2546",
         "CON22-2594",
@@ -6220,12 +7293,16 @@
         "CON22-2594",
         "CON22-2546",
         "CON22-2594",
+        "CON22-2546",
+        "CON22-2594",
         "CON22-2546"
       ]
     ],
     [
       "screen",
       [
+        "CON22-2594",
+        "CON22-2546",
         "CON22-2594",
         "CON22-2546",
         "CON22-2594",
@@ -6310,12 +7387,15 @@
         "CON22-2594",
         "CON22-2546",
         "CON22-2594",
+        "CON22-2546",
+        "CON22-2594",
         "CON22-2546"
       ]
     ],
     [
       "demand",
       [
+        "CON22-2582",
         "CON22-2582",
         "CON22-2582",
         "CON22-2582",
@@ -6360,12 +7440,14 @@
         "CON22-2582",
         "CON22-2582",
         "CON22-2582",
+        "CON22-2582",
         "CON22-2582"
       ]
     ],
     [
       "missing",
       [
+        "CON22-2582",
         "CON22-2582",
         "CON22-2582",
         "CON22-2582",
@@ -6410,12 +7492,14 @@
         "CON22-2582",
         "CON22-2582",
         "CON22-2582",
+        "CON22-2582",
         "CON22-2582"
       ]
     ],
     [
       "support",
       [
+        "CON22-2582",
         "CON22-2582",
         "CON22-2582",
         "CON22-2582",
@@ -6460,6 +7544,7 @@
         "CON22-2582",
         "CON22-2582",
         "CON22-2582",
+        "CON22-2582",
         "CON22-2582"
       ]
     ],
@@ -6485,12 +7570,14 @@
         "CON22-2582",
         "CON22-2582",
         "CON22-2582",
+        "CON22-2582",
         "CON22-2582"
       ]
     ],
     [
       "information",
       [
+        "CON22-2582",
         "CON22-2582",
         "CON22-2582",
         "CON22-2582",
@@ -6555,6 +7642,8 @@
         "CON22-3787",
         "CON22-1140",
         "CON22-3787",
+        "CON22-1140",
+        "CON22-3787",
         "CON22-1140"
       ]
     ],
@@ -6580,12 +7669,14 @@
         "CON22-3787",
         "CON22-3787",
         "CON22-3787",
+        "CON22-3787",
         "CON22-3787"
       ]
     ],
     [
       "enters",
       [
+        "CON22-3787",
         "CON22-3787",
         "CON22-3787",
         "CON22-3787",
@@ -6650,12 +7741,15 @@
         "CON22-3787",
         "CON22-1894",
         "CON22-3787",
+        "CON22-1894",
+        "CON22-3787",
         "CON22-1894"
       ]
     ],
     [
       "domain",
       [
+        "CON22-3787",
         "CON22-3787",
         "CON22-3787",
         "CON22-3787",
@@ -6700,12 +7794,14 @@
         "CON22-3787",
         "CON22-3787",
         "CON22-3787",
+        "CON22-3787",
         "CON22-3787"
       ]
     ],
     [
       "registration",
       [
+        "CON22-3787",
         "CON22-3787",
         "CON22-3787",
         "CON22-3787",
@@ -6750,12 +7846,16 @@
         "CON22-2598",
         "CON22-2598",
         "CON22-2598",
+        "CON22-2598",
         "CON22-2598"
       ]
     ],
     [
       "inappropriate",
       [
+        "CON22-2598",
+        "CON22-2597",
+        "CON22-3587",
         "CON22-2598",
         "CON22-2597",
         "CON22-3587",
@@ -6860,12 +7960,15 @@
         "CON22-2598",
         "CON22-2597",
         "CON22-2598",
+        "CON22-2597",
+        "CON22-2598",
         "CON22-2597"
       ]
     ],
     [
       "code",
       [
+        "CON22-2597",
         "CON22-2597",
         "CON22-2597",
         "CON22-2597",
@@ -6910,12 +8013,14 @@
         "CON22-2597",
         "CON22-2597",
         "CON22-2597",
+        "CON22-2597",
         "CON22-2597"
       ]
     ],
     [
       "known",
       [
+        "CON22-3587",
         "CON22-3587",
         "CON22-3587",
         "CON22-3587",
@@ -6960,12 +8065,14 @@
         "CON22-3587",
         "CON22-3587",
         "CON22-3587",
+        "CON22-3587",
         "CON22-3587"
       ]
     ],
     [
       "queue:",
       [
+        "CON22-3587",
         "CON22-3587",
         "CON22-3587",
         "CON22-3587",
@@ -7010,12 +8117,14 @@
         "CON22-3587",
         "CON22-3587",
         "CON22-3587",
+        "CON22-3587",
         "CON22-3587"
       ]
     ],
     [
       "elements",
       [
+        "CON22-3587",
         "CON22-3587",
         "CON22-3587",
         "CON22-3587",
@@ -7060,12 +8169,14 @@
         "CON22-3380",
         "CON22-3380",
         "CON22-3380",
+        "CON22-3380",
         "CON22-3380"
       ]
     ],
     [
       "space",
       [
+        "CON22-3380",
         "CON22-3380",
         "CON22-3380",
         "CON22-3380",
@@ -7110,6 +8221,7 @@
         "CON22-3380",
         "CON22-3380",
         "CON22-3380",
+        "CON22-3380",
         "CON22-3380"
       ]
     ],
@@ -7135,12 +8247,15 @@
         "CON22-3380",
         "CON22-3380",
         "CON22-3380",
+        "CON22-3380",
+        "CON22-4556",
         "CON22-3380"
       ]
     ],
     [
       "scroll",
       [
+        "CON22-3381",
         "CON22-3381",
         "CON22-3381",
         "CON22-3381",
@@ -7185,12 +8300,16 @@
         "CON22-3381",
         "CON22-3381",
         "CON22-3381",
+        "CON22-3381",
+        "CON22-4556",
         "CON22-3381"
       ]
     ],
     [
       "page",
       [
+        "CON22-3381",
+        "CON22-1894",
         "CON22-3381",
         "CON22-1894",
         "CON22-3381",
@@ -7255,12 +8374,14 @@
         "CON22-3381",
         "CON22-3381",
         "CON22-3381",
+        "CON22-3381",
         "CON22-3381"
       ]
     ],
     [
       "dropdown",
       [
+        "CON22-3381",
         "CON22-3381",
         "CON22-3381",
         "CON22-3381",
@@ -7325,12 +8446,15 @@
         "CON22-3381",
         "CON22-3238",
         "CON22-3381",
+        "CON22-3238",
+        "CON22-3381",
         "CON22-3238"
       ]
     ],
     [
       "ui:footer",
       [
+        "CON22-3238",
         "CON22-3238",
         "CON22-3238",
         "CON22-3238",
@@ -7395,12 +8519,15 @@
         "CON22-3238",
         "CON22-2643",
         "CON22-3238",
+        "CON22-2643",
+        "CON22-3238",
         "CON22-2643"
       ]
     ],
     [
       "verify",
       [
+        "CON22-3189",
         "CON22-3189",
         "CON22-3189",
         "CON22-3189",
@@ -7445,12 +8572,14 @@
         "CON22-3189",
         "CON22-3189",
         "CON22-3189",
+        "CON22-3189",
         "CON22-3189"
       ]
     ],
     [
       "primary",
       [
+        "CON22-3189",
         "CON22-3189",
         "CON22-3189",
         "CON22-3189",
@@ -7495,12 +8624,14 @@
         "CON22-3189",
         "CON22-3189",
         "CON22-3189",
+        "CON22-3189",
         "CON22-3189"
       ]
     ],
     [
       "language,",
       [
+        "CON22-3189",
         "CON22-3189",
         "CON22-3189",
         "CON22-3189",
@@ -7545,12 +8676,14 @@
         "CON22-3189",
         "CON22-3189",
         "CON22-3189",
+        "CON22-3189",
         "CON22-3189"
       ]
     ],
     [
       "more",
       [
+        "CON22-2643",
         "CON22-2643",
         "CON22-2643",
         "CON22-2643",
@@ -7595,12 +8728,14 @@
         "CON22-2643",
         "CON22-2643",
         "CON22-2643",
+        "CON22-2643",
         "CON22-2643"
       ]
     ],
     [
       "five",
       [
+        "CON22-2643",
         "CON22-2643",
         "CON22-2643",
         "CON22-2643",
@@ -7645,12 +8780,14 @@
         "CON22-2643",
         "CON22-2643",
         "CON22-2643",
+        "CON22-2643",
         "CON22-2643"
       ]
     ],
     [
       "mobile",
       [
+        "CON22-2643",
         "CON22-2643",
         "CON22-2643",
         "CON22-2643",
@@ -7695,12 +8832,14 @@
         "CON22-2643",
         "CON22-2643",
         "CON22-2643",
+        "CON22-2643",
         "CON22-2643"
       ]
     ],
     [
       "incorrect",
       [
+        "CON22-1894",
         "CON22-1894",
         "CON22-1894",
         "CON22-1894",
@@ -7745,12 +8884,14 @@
         "CON22-1894",
         "CON22-1894",
         "CON22-1894",
+        "CON22-1894",
         "CON22-1894"
       ]
     ],
     [
       "media",
       [
+        "CON22-1894",
         "CON22-1894",
         "CON22-1894",
         "CON22-1894",
@@ -7815,12 +8956,15 @@
         "CON22-1894",
         "CON22-1892",
         "CON22-1894",
+        "CON22-1892",
+        "CON22-1894",
         "CON22-1892"
       ]
     ],
     [
       "count",
       [
+        "CON22-1894",
         "CON22-1894",
         "CON22-1894",
         "CON22-1894",
@@ -7885,12 +9029,15 @@
         "CON22-1894",
         "CON22-1892",
         "CON22-1894",
+        "CON22-1892",
+        "CON22-1894",
         "CON22-1892"
       ]
     ],
     [
       "section",
       [
+        "CON22-1894",
         "CON22-1894",
         "CON22-1894",
         "CON22-1894",
@@ -7935,12 +9082,15 @@
         "CON22-1894",
         "CON22-1894",
         "CON22-1894",
+        "CON22-1894",
         "CON22-1894"
       ]
     ],
     [
       "selected",
       [
+        "CON22-1894",
+        "CON22-1892",
         "CON22-1894",
         "CON22-1892",
         "CON22-1894",
@@ -8025,12 +9175,15 @@
         "CON22-1894",
         "CON22-1892",
         "CON22-1894",
+        "CON22-1892",
+        "CON22-1894",
         "CON22-1892"
       ]
     ],
     [
       "mode",
       [
+        "CON22-1892",
         "CON22-1892",
         "CON22-1892",
         "CON22-1892",
@@ -8075,12 +9228,14 @@
         "CON22-1140",
         "CON22-1140",
         "CON22-1140",
+        "CON22-1140",
         "CON22-1140"
       ]
     ],
     [
       "task",
       [
+        "CON22-1140",
         "CON22-1140",
         "CON22-1140",
         "CON22-1140",
@@ -8125,12 +9280,14 @@
         "CON22-1140",
         "CON22-1140",
         "CON22-1140",
+        "CON22-1140",
         "CON22-1140"
       ]
     ],
     [
       "timeout",
       [
+        "CON22-1140",
         "CON22-1140",
         "CON22-1140",
         "CON22-1140",
@@ -8194,6 +9351,7 @@
         "CON22-4560",
         "CON22-1140",
         "CON22-4560",
+        "CON22-1140",
         "CON22-1140"
       ]
     ],
@@ -8292,9 +9450,51 @@
         "CON22-4560",
         "CON22-4560"
       ]
+    ],
+    [
+      "massmutual",
+      [
+        "CON22-4556"
+      ]
+    ],
+    [
+      "ability",
+      [
+        "CON22-4556"
+      ]
+    ],
+    [
+      "enable/disable",
+      [
+        "CON22-4556"
+      ]
+    ],
+    [
+      "individually",
+      [
+        "CON22-4556"
+      ]
+    ],
+    [
+      "parent",
+      [
+        "CON22-4556"
+      ]
+    ],
+    [
+      "child",
+      [
+        "CON22-4556"
+      ]
+    ],
+    [
+      "sites",
+      [
+        "CON22-4556"
+      ]
     ]
   ],
-  "lastSaved": "2025-09-16T14:39:40.888Z",
+  "lastSaved": "2025-09-18T11:52:25.996Z",
   "isTestMode": false,
   "isDryRun": false
 }

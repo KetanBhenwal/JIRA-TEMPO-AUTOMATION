@@ -1,7 +1,8 @@
 {
   "monitoringInterval": 300000,
-  "workSessionThreshold": 900000,
+  "workSessionThreshold": 1200000,
   "autoLogThreshold": 1800000,
-  "workHoursStart": 9,
-  "workHoursEnd": 18
+  "workHoursStart": 10,
+  "workHoursEnd": 19,
+  "maxSessionDuration": 28800000
 }
