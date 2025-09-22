@@ -7,8 +7,8 @@ const AITimeTrackingAgent = require('./ai-agent');
 
 // Configuration (normalize trailing slash to avoid double // in requests)
 const JIRA_BASE_URL = (process.env.JIRA_BASE_URL || '').replace(/\/+$/,'');
-const JIRA_EMAIL = process.env.JIRA_EMAIL;
-const JIRA_API_TOKEN = process.env.JIRA_API_TOKEN;
+const JIRA_EMAIL = process.env.JIRA_EMAIL; // legacy fallback only when not using OAuth
+const JIRA_API_TOKEN = process.env.JIRA_API_TOKEN; // legacy fallback only when not using OAuth
 const TEMPO_BASE_URL = process.env.TEMPO_BASE_URL;
 const TEMPO_API_TOKEN = process.env.TEMPO_API_TOKEN;
 const TEMPO_ACCOUNT_ID = process.env.TEMPO_ACCOUNT_ID;
@@ -28,26 +28,39 @@ function getDatesBetween(startDate, endDate) {
   return dates;
 }
 
-// Create API clients
-const jiraApi = axios.create({
-  baseURL: JIRA_BASE_URL,
-  headers: {
-    Authorization: `Basic ${Buffer.from(`${JIRA_EMAIL}:${JIRA_API_TOKEN}`).toString('base64')}`,
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  },
-  timeout: 15000
+// Dynamic JIRA client via provider (supports OAuth or legacy basic auth)
+const { getJiraApi, oauthStatus } = require('./atlassianProvider');
+const { buildAuthUrl, exchangeCode, loadTokens, isExpired, refreshTokens } = require('./auth/atlassianOAuth');
+
+// We preserve existing code expecting a jiraApi object by creating a Proxy that defers
+// to a freshly created axios instance each call (so OAuth token refresh is respected).
+// NOTE: For performance-critical sequences, endpoints can call getJiraApi() directly.
+const jiraApi = new Proxy({}, {
+  get(_target, prop) {
+    return async function proxiedMethod(...args) {
+      const client = await getJiraApi();
+      const fn = client[prop];
+      if (typeof fn !== 'function') return fn;
+      try {
+        const result = await fn.apply(client, args);
+        jiraMetrics.total++;
+        jiraMetrics.success++;
+        return result;
+      } catch (e) {
+        jiraMetrics.total++;
+        jiraMetrics.errors++;
+        throw e;
+      }
+    };
+  }
 });
 
-// Optional low-noise interceptor to surface auth failures once
-let _jiraAuthWarned = false;
-jiraApi.interceptors.response.use(r=>r, err => {
-  if (err.response && err.response.status === 401 && !_jiraAuthWarned) {
-    _jiraAuthWarned = true;
-    console.warn('[JIRA AUTH] 401 Unauthorized from JIRA. Check JIRA_EMAIL, JIRA_API_TOKEN, and that the token has not been revoked.');
-  }
-  return Promise.reject(err);
-});
+if (process.env.USE_OAUTH === 'true') {
+  console.log('[auth] USE_OAUTH enabled – Jira API requests will use OAuth tokens when available');
+}
+
+// Simple in-memory Jira metrics
+const jiraMetrics = { total: 0, success: 0, errors: 0 };
 
 const tempoApi = axios.create({
   baseURL: TEMPO_BASE_URL,
@@ -73,10 +86,68 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // API Routes
 
+// ------------------------------------
+// Atlassian OAuth 2.0 Routes
+// ------------------------------------
+// Only active when USE_OAUTH=true; otherwise they return informative messages.
+
+app.get('/auth/atlassian/status', (req, res) => {
+  if (process.env.USE_OAUTH !== 'true') {
+    return res.json({ oauthEnabled: false, hint: 'Set USE_OAUTH=true and configure ATLASSIAN_CLIENT_ID, ATLASSIAN_REDIRECT_URI to enable.' });
+  }
+  const status = oauthStatus();
+  res.json({ oauthEnabled: true, ...status });
+});
+
+app.get('/auth/atlassian/login', (req, res) => {
+  if (process.env.USE_OAUTH !== 'true') {
+    return res.status(400).json({ error: 'OAuth not enabled', hint: 'Set USE_OAUTH=true in env.' });
+  }
+  try {
+    const state = Math.random().toString(36).slice(2);
+    const { url } = buildAuthUrl(state);
+    res.json({ url, state });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to build auth URL', details: e.message });
+  }
+});
+
+app.get('/auth/atlassian/callback', async (req, res) => {
+  if (process.env.USE_OAUTH !== 'true') {
+    return res.status(400).json({ error: 'OAuth not enabled' });
+  }
+  const { code, state, error } = req.query;
+  if (error) return res.status(400).json({ error: 'Auth error', details: error });
+  if (!code || !state) return res.status(400).json({ error: 'Missing code or state' });
+  try {
+    const tokens = await exchangeCode(code, state);
+    res.json({ success: true, obtained_at: tokens.obtained_at, expires_in: tokens.expires_in, scope: tokens.scope });
+  } catch (e) {
+    res.status(500).json({ error: 'Token exchange failed', details: e.message });
+  }
+});
+
+app.post('/auth/atlassian/refresh', async (req, res) => {
+  if (process.env.USE_OAUTH !== 'true') {
+    return res.status(400).json({ error: 'OAuth not enabled' });
+  }
+  try {
+    const tokens = loadTokens();
+    if (!tokens) return res.status(404).json({ error: 'No tokens stored' });
+    if (!isExpired(tokens)) {
+      return res.json({ refreshed: false, message: 'Token still valid', expires_in: tokens.expires_in });
+    }
+    const updated = await refreshTokens();
+    res.json({ refreshed: true, expires_in: updated.expires_in, scope: updated.scope });
+  } catch (e) {
+    res.status(500).json({ error: 'Refresh failed', details: e.message });
+  }
+});
+
 // JIRA current user info
 app.get('/api/jira/me', async (req, res) => {
   try {
-    const userResp = await jiraApi.get('/rest/api/3/myself');
+    const userResp = await jiraApi.get('/rest/api/3/myself'); // proxy ensures fresh client
     // Try fetching groups (separate endpoint) - may require proper scopes
     let groups = [];
     try {
@@ -106,12 +177,24 @@ app.get('/api/jira/me', async (req, res) => {
     if (process.env.AI_AGENT_VERBOSE_LOG === 'true') {
       console.warn('[jira:me] failure', { status, details: detailsRaw });
     }
+    const usingOAuth = process.env.USE_OAUTH === 'true';
+    let hint;
+    if (status === 401) {
+      if (usingOAuth) {
+        hint = 'OAuth token missing/expired. Visit /auth/atlassian/login then retry.';
+      } else if (process.env.JIRA_EMAIL && process.env.JIRA_API_TOKEN) {
+        hint = 'Basic auth rejected. Token may be revoked; consider enabling OAuth: set USE_OAUTH=true and configure ATLASSIAN_CLIENT_ID & ATLASSIAN_REDIRECT_URI.';
+      } else {
+        hint = 'No auth configured. Enable OAuth (USE_OAUTH=true + ATLASSIAN_CLIENT_ID + ATLASSIAN_REDIRECT_URI) or temporarily set JIRA_EMAIL & JIRA_API_TOKEN.';
+      }
+    }
     res.status(status).json({
       error: 'Failed to fetch JIRA user',
       status,
       message: error.message,
       details,
-      hint: status === 401 ? 'Verify JIRA_BASE_URL (no trailing slash), JIRA_EMAIL, JIRA_API_TOKEN. Create new token at id.atlassian.com if uncertain.' : undefined
+      authMode: usingOAuth ? 'oauth' : 'basic-or-missing',
+      hint
     });
   }
 });
@@ -128,12 +211,20 @@ app.get('/api/health', async (req, res) => {
       jiraAuth = 'fail';
     }
   }
+  const oauth = process.env.USE_OAUTH === 'true' ? oauthStatus() : { enabled: false };
   res.json({
     status: 'ok',
     serverPort: PORT,
     jiraBase: JIRA_BASE_URL,
     jiraAuth,
-    aiAgentRunning: isAiAgentRunning
+    oauth,
+    aiAgentRunning: isAiAgentRunning,
+    jiraMetrics: {
+      total: jiraMetrics.total,
+      success: jiraMetrics.success,
+      errors: jiraMetrics.errors,
+      errorRate: jiraMetrics.total ? +(jiraMetrics.errors / jiraMetrics.total).toFixed(4) : 0
+    }
   });
 });
 
@@ -1554,6 +1645,17 @@ app.get('/api/ai/detection/candidates', (req, res) => {
     });
   } catch (e) {
     res.status(500).json({ error: 'Failed to retrieve detection trace', details: e.message });
+  }
+});
+
+// Detection accuracy diagnosis endpoint
+app.get('/api/ai/detection/diagnose', async (req, res) => {
+  try {
+    if (!isAiAgentRunning) return res.status(400).json({ error: 'AI agent not running' });
+    const diagnosis = await aiAgent.diagnoseDetectionAccuracy();
+    res.json(diagnosis);
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to diagnose detection accuracy', details: e.message });
   }
 });
 

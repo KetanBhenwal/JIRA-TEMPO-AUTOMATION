@@ -46,8 +46,32 @@ Added endpoint `GET /api/jira/me` returning current authenticated JIRA user prof
 ## Prerequisites
 
 - Node.js (v14 or higher)
-- JIRA account with API token
-- Tempo account with API token
+- Atlassian Cloud site + OAuth (3LO) app (client ID + redirect URI configured)
+- (Optional) Tempo API token (only if you need Tempo-specific attributes; otherwise Jira worklog fallback is used)
+
+### Atlassian OAuth 2.0 (Required)
+Basic auth has been removed. Set `USE_OAUTH=true` and complete the login flow before using the UI or MCP bridge.
+
+Required additional values:
+| Variable | Description |
+|----------|-------------|
+| `USE_OAUTH` | Set to `true` to enable OAuth flow |
+| `ATLASSIAN_CLIENT_ID` | Client ID of your Atlassian Cloud OAuth (3LO) app |
+| `ATLASSIAN_REDIRECT_URI` | Redirect URL registered in the Atlassian developer console (e.g. `http://localhost:3000/auth/atlassian/callback`) |
+| `ATLASSIAN_SCOPES` | (Optional) Space‑separated scopes. Default covers read/write worklogs: `read:jira-user read:jira-work write:jira-work offline_access` |
+
+Steps to configure:
+1. Create a 3LO app at: https://developer.atlassian.com/console/myapps
+2. Add your redirect URI (must exactly match `ATLASSIAN_REDIRECT_URI`).
+3. Enable scopes (at minimum: `read:jira-user read:jira-work write:jira-work offline_access`).
+4. Copy the Client ID to `.env`.
+5. Set `USE_OAUTH=true` and restart `npm start`.
+6. Initiate login: `GET http://localhost:3000/auth/atlassian/login` → open returned `url` in browser.
+7. After consent, tokens are stored in `.atlassian-tokens.json` (unencrypted – treat as sensitive). The health endpoint now reports OAuth status.
+
+Token Refresh: Automatic when accessing Jira. Manual force refresh: `POST /auth/atlassian/refresh`.
+
+Security Note: Keep `.atlassian-tokens.json` out of version control and consider OS-level file permissions tightening if on a shared machine.
 
 ## Setup (macOS / Linux Quick Start)
 
@@ -62,9 +86,7 @@ Added endpoint `GET /api/jira/me` returning current authenticated JIRA user prof
    - Create a `.env` file with the following content:
      - `JIRA_BASE_URL` (e.g., https://yourcompany.atlassian.net/)
      - `TEMPO_BASE_URL` (should be https://api.tempo.io/4)
-     - `JIRA_EMAIL` (your Atlassian email)
-     - `JIRA_API_TOKEN` (from https://id.atlassian.com/manage-profile/security/api-tokens)
-     - `TEMPO_API_TOKEN` (from Tempo settings)
+   - `TEMPO_API_TOKEN` (optional – if absent Jira worklog fallback will be used)
      - `TEMPO_ACCOUNT_ID` (your Atlassian account ID)
      - `PORT` (optional, defaults to 3000)
    - `LLM_PROVIDER` (optional: `openai` or `ollama`; auto-detects `openai` if OPENAI_API_KEY present, else `ollama`)
@@ -131,11 +153,15 @@ Environment knobs (override in `.env` or runtime config endpoints):
 | Variable | Purpose |
 |----------|---------|
 | `AI_AGENT_TEST_MODE` | Fast test intervals (see test config) |
-| `AI_AGENT_DRY_RUN` | Prevents actual Tempo logging |
+| `AI_AGENT_DRY_RUN` | Prevents actual logging (Tempo or Jira fallback) |
 | `AI_AGENT_VERBOSE_LOG` | Force detailed logs (default off in prod) |
 | `AI_AGENT_RUNNING_APPS_REFRESH_MS` | Override refresh cadence for running app enumeration |
 | `AI_AGENT_MEETING_SCORE_THRESHOLD` | Tune meeting classification threshold (default 7) |
 | `AI_AGENT_LEGACY_MEETING_DETECTION` | Force legacy simpler meeting detection |
+| `AI_AGENT_SPLIT_BY_ISSUE` | When `true` (default) splits sessions immediately when detected issue changes instead of mutating one long session |
+| `AI_AGENT_EXCLUDED_TITLE_KEYWORDS` | Comma list of window title substrings to ignore (default `main,jira-tempo`) – prevents creating/updating sessions for generic tabs/branches |
+| `AI_AGENT_STANDUP_KEYWORDS` | Extra comma-separated keywords treated as standup (added to built-in list) |
+| `AI_AGENT_STANDUP_ISSUE` | If set, standup meetings log to this issue instead of `AI_AGENT_DEFAULT_MEETING_ISSUE` |
 
 Runtime adjustments (no restart): PATCH `/api/ai-agent/runtime-config` with fields like `monitoringInterval`, `workSessionThreshold`, etc. (values in ms or minutes auto‑converted if <1000).
 
@@ -260,6 +286,88 @@ npm run ai-status
 ./start-ai-agent.sh
 ```
 
+## 🔌 MCP / Programmatic Control (Experimental)
+
+The project now ships with a minimal JSON-RPC (MCP-style) bridge exposing Jira + Agent methods over stdin/stdout.
+
+Run bridge directly:
+```
+npm run mcp
+```
+You will see an initial readiness JSON line. Then send JSON lines of the form:
+```json
+{ "id": 1, "method": "agent.status" }
+```
+Responses mirror `{ id, result }` or `{ id, error }`.
+
+Available methods (prefix = namespace):
+| Method | Description |
+|--------|-------------|
+| `agent.start` | Start AI agent (idempotent) |
+| `agent.stop` | Stop agent |
+| `agent.status` | Current status / running flag |
+| `agent.sessions.list` | Return recent sessions (`days` param) |
+| `agent.sessions.pending` | Pending review sessions |
+| `agent.sessions.approve` | Approve & log session (`sessionId`) |
+| `agent.sessions.reject` | Reject session (`sessionId`) |
+| `agent.sessions.updateIssue` | Reassign session (`sessionId`, `issueKey`) |
+| `agent.dailyNotes.parse` | Parse free-form notes to blocks (`date`, `notes`) |
+| `jira.searchIssues` | Run JQL search (`jql`, optional `fields`, `maxResults`) |
+| `jira.issue.get` | Fetch single issue (`issueKey`) |
+
+Example client: `node examples/mcp-client.js` (script: `npm run mcp:example`).
+
+Integrating with other tools: treat `mcpBridge.js` like any JSON-RPC peer – spawn process, read lines, write lines. Add new capabilities by extending `methods` map inside `mcpBridge.js`.
+
+### MCP Logging & Test Mode
+Configure logging verbosity (stderr structured JSON):
+```dotenv
+MCP_LOG_LEVEL=info   # error|warn|info|debug|trace
+```
+Enable deterministic mock responses without real Jira calls:
+```dotenv
+MCP_TEST_MODE=true
+```
+In test mode the Jira methods return mock data and daily notes grounding uses a stub issue list.
+
+### Running Tests
+Jest is configured for MCP bridge tests:
+```sh
+npm test
+```
+Tests spawn `mcpBridge.js` with `MCP_TEST_MODE=true` and validate core methods.
+
+### 🔐 Token Simplification
+Jira basic auth (email + API token) has been fully removed – all Jira access uses OAuth bearer tokens that auto-refresh.
+
+Tempo token now optional:
+* If `TEMPO_API_TOKEN` is set, time is logged via Tempo API (with work attributes).
+* If not set, logging falls back to Jira native worklog endpoint (`/rest/api/3/issue/{key}/worklog`) without Tempo-specific attributes.
+
+Roadmap: Evaluate Tempo OAuth or proxy-based token exchange to eliminate the local Tempo token entirely.
+
+### Tempo Provider Skeleton
+A new `tempoProvider.js` abstraction was added preparing for future OAuth/proxy integration. Currently still returns an axios client with the static `TEMPO_API_TOKEN` bearer header.
+
+## ⚠️ Migration Notes
+
+| Scenario | Action |
+|----------|--------|
+| Using legacy tokens today | Add OAuth vars, enable `USE_OAUTH=true`, perform one login, then optionally remove `JIRA_API_TOKEN` from `.env` |
+| Automated scripts (index.js) | They now auto-detect OAuth via provider – no code changes needed |
+| Programmatic integration | Use MCP bridge or existing REST endpoints; both support OAuth transparently |
+
+If the MCP bridge cannot find a valid OAuth token it will fallback to legacy Basic auth (if env vars provided). For strict environments set `USE_OAUTH=true` and remove the basic auth token to guarantee bearer usage.
+
+## 📈 Health Endpoint Metrics
+`GET /api/health` now includes basic Jira call counters:
+```json
+{
+   "jiraMetrics": { "total": 42, "success": 40, "errors": 2, "errorRate": 0.0476 }
+}
+```
+These counters reset on process restart; use external monitoring if you need persistent SLA tracking.
+
 ## 🧠 LLM / OpenAI Integration
 ### Enhanced Issue Detection & Exclusions
 
@@ -275,6 +383,15 @@ The agent now employs a weighted evidence scoring pipeline (instead of single-hi
 | Excluded path/branch penalty | -100 | Effectively disqualifies workspace |
 
 Top candidate wins unless the margin to the second candidate < 15 points (ambiguous). Ambiguous sessions optionally invoke an LLM refinement step (placeholder baseline currently returns the top candidate; can be expanded).
+
+#### NEW: Per-Issue Session Splitting
+When `AI_AGENT_SPLIT_BY_ISSUE` is enabled (default), if the active detected issue changes mid-stream the current session is ended and a brand new session starts for the new issue. This produces cleaner, per-ticket granularity instead of a single merged block whose issue label mutates over time.
+
+#### NEW: Title Keyword Exclusions
+Window titles containing any substring from `AI_AGENT_EXCLUDED_TITLE_KEYWORDS` (case-insensitive) are ignored for session creation/update (e.g., generic main branch tabs). Adjust this list if you see unwanted sessions.
+
+#### NEW: Standup Meeting Differentiation
+Standup meetings are auto-classified (keyword + meeting app context). Provide extra variants via `AI_AGENT_STANDUP_KEYWORDS`. If `AI_AGENT_STANDUP_ISSUE` is set those sessions log there; otherwise they fall back to `AI_AGENT_DEFAULT_MEETING_ISSUE`.
 
 ### Embedding Similarity (Optional Disambiguation)
 Enable semantic ranking to break ties when scoring pipeline is ambiguous:

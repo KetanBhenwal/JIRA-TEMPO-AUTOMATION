@@ -264,6 +264,10 @@ class AITimeTrackingAgent {
     this._llmRefine = process.env.AI_AGENT_LLM_REFINE_DETECTION === 'true';
     this._detectionVerbose = process.env.AI_AGENT_DETECTION_VERBOSE === 'true';
     this._minConfidenceOverride = parseInt(process.env.AI_AGENT_MIN_SESSION_CONFIDENCE || '0',10) || 0;
+    // Enhanced detection features
+    this._enhancedTitleParsing = process.env.AI_AGENT_ENHANCED_TITLE_PARSING !== 'false'; // enabled by default
+    this._enhancedWorkspaceDetection = process.env.AI_AGENT_ENHANCED_WORKSPACE_DETECTION !== 'false'; // enabled by default
+    this._enhancedScoring = process.env.AI_AGENT_ENHANCED_SCORING !== 'false'; // enabled by default
     // Session history tracking
     this._sessionHistoryFile = process.env.AI_AGENT_SESSION_HISTORY_FILE || path.join(__dirname,'ai-agent-session-history.jsonl');
     this._sessionHistoryInMemoryLimit = parseInt(process.env.AI_AGENT_SESSION_HISTORY_LIMIT || '500',10);
@@ -939,6 +943,17 @@ class AITimeTrackingAgent {
 
     this.lastActivity = activity;
     
+    // Enhanced logging for debugging detection issues
+    if (this._detectionVerbose || CONFIG.verboseLogging) {
+      await this.log('📊 Enhanced Activity Context:');
+      await this.log(`   App: ${activity.applications.active}`);
+      await this.log(`   Window: "${activity.windowTitles}"`);
+      await this.log(`   Directory: ${activity.currentDirectory}`);
+      await this.log(`   Git Branch: ${activity.gitBranch || 'none'}`);
+      await this.log(`   Open Files: [${activity.openFiles.slice(0, 3).join(', ')}${activity.openFiles.length > 3 ? '...' : ''}]`);
+      await this.log(`   Working Hours: ${activity.isWorkingHours}`);
+    }
+    
     const isWork = this.isWorkActivity(activity);
     await this.log(`📊 Activity detected - App: ${activity.applications.active}, Working Hours: ${activity.isWorkingHours}, Work Activity: ${isWork}`);
     
@@ -1127,36 +1142,175 @@ class AITimeTrackingAgent {
   }
 
   async getActiveWindowTitles() {
+    let title = '';
     if (IS_WINDOWS) {
       try {
         const ps = 'powershell -NoProfile -Command "Add-Type -Namespace Win32 -Name User32 -MemberDefinition \"[DllImport(\\\"user32.dll\\\")] public static extern IntPtr GetForegroundWindow(); [DllImport(\\\"user32.dll\\\")] public static extern int GetWindowText(IntPtr h,System.Text.StringBuilder s,int n);\"; $h=[Win32.User32]::GetForegroundWindow(); $sb=New-Object System.Text.StringBuilder 512; [Win32.User32]::GetWindowText($h,$sb,$sb.Capacity) | Out-Null; $sb.ToString()"';
         const { stdout } = await execAsync(ps);
-        return stdout.trim();
-      } catch (_) { return ''; }
+        title = stdout.trim();
+      } catch (_) { title = ''; }
     }
-    if (IS_MAC) {
+    else if (IS_MAC) {
       try {
         const now = Date.now();
         const skipDueToEagain = (now - this._metrics.performance.lastSpawnEagainAt) < CONFIG.spawnEagainCooldown;
         if (skipDueToEagain) return '';
         const script = `osascript -e 'tell application "System Events" to set frontApp to name of first application process whose frontmost is true' -e 'tell application "System Events" to tell process frontApp to if exists window 1 then get name of window 1'`;
         const { stdout } = await this.limitedExec(script);
-        return stdout.trim();
-      } catch (_) { return ''; }
+        title = stdout.trim();
+      } catch (_) { title = ''; }
     }
-    // Linux basic attempt using xprop (optional)
-    try {
-      // Use single quotes for JS string; escape inner single quotes for awk; final cut uses double quotes
-      const cmd = 'xprop -id $(xprop -root _NET_ACTIVE_WINDOW | awk -F \' \'\'{print $5}\'\') WM_NAME 2>/dev/null | sed -E "s/.*WM_NAME\(STRING\) = \\\"(.*)\\\"/\\1/"';
-      const { stdout } = await execAsync(cmd);
-      return stdout.trim();
-    } catch (_) { return ''; }
+    else {
+      // Linux basic attempt using xprop (optional)
+      try {
+        // Use single quotes for JS string; escape inner single quotes for awk; final cut uses double quotes
+        const cmd = 'xprop -id $(xprop -root _NET_ACTIVE_WINDOW | awk -F \' \'\'{print $5}\'\') WM_NAME 2>/dev/null | sed -E "s/.*WM_NAME\(STRING\) = \\\"(.*)\\\"/\\1/"';
+        const { stdout } = await execAsync(cmd);
+        title = stdout.trim();
+      } catch (_) { title = ''; }
+    }
+    
+    // Enhanced title processing to extract more context
+    if (title) {
+      // Log the raw title for debugging
+      if (this._detectionVerbose) {
+        await this.log(`🪟 Window title: "${title}"`);
+      }
+      
+      // Extract additional context from common patterns
+      const enhancedContext = this._extractTitleContext(title);
+      if (enhancedContext.additionalKeys.length > 0) {
+        await this.log(`🔍 Additional keys from title: ${enhancedContext.additionalKeys.join(', ')}`);
+      }
+      
+      return enhancedContext.fullTitle;
+    }
+    
+    return title;
   }
 
-  async getCurrentDirectory() { return process.cwd(); }
+  _extractTitleContext(title) {
+    const additionalKeys = [];
+    let fullTitle = title;
+    
+    // Common patterns in window titles that might contain JIRA keys
+    const patterns = [
+      // VS Code: "file.js - PROJECT-123: Task description"
+      /([A-Z]+-\d+):\s*([^-\|]+)/g,
+      // Browser: "PROJECT-123 | Jira"  
+      /([A-Z]+-\d+)\s*[\|\-]\s*/g,
+      // Terminal: "git checkout feature/PROJECT-123-description"
+      /feature\/([A-Z]+-\d+)/g,
+      // Any isolated JIRA key
+      /\b([A-Z]+-\d+)\b/g
+    ];
+    
+    for (const pattern of patterns) {
+      let match;
+      while ((match = pattern.exec(title)) !== null) {
+        const key = match[1];
+        if (key && !additionalKeys.includes(key)) {
+          additionalKeys.push(key);
+        }
+      }
+    }
+    
+    // Enhance title with extracted context for better matching
+    if (additionalKeys.length > 0) {
+      fullTitle = `${title} [EXTRACTED: ${additionalKeys.join(' ')}]`;
+    }
+    
+    return { fullTitle, additionalKeys };
+  }
+
+  async getCurrentDirectory() { 
+    // Try to get actual working directory from VS Code or other editors
+    try {
+      // First try to get VS Code workspace path
+      const vscodeWorkspace = await this.getVSCodeWorkspacePath();
+      if (vscodeWorkspace) return vscodeWorkspace;
+      
+      // Fallback to process.cwd() but this is less accurate
+      return process.cwd();
+    } catch (error) {
+      return process.cwd();
+    }
+  }
+
+  async getVSCodeWorkspacePath() {
+    if (IS_MAC) {
+      try {
+        // Try to get workspace path from VS Code window title or menu
+        const { stdout } = await execAsync(`
+          osascript -e '
+            tell application "System Events"
+              if exists (process "Code") then
+                tell process "Code"
+                  if exists window 1 then
+                    set windowTitle to name of window 1
+                    -- Extract path from title like "file.js - project-name"
+                    if windowTitle contains " - " then
+                      set titleParts to my split(windowTitle, " - ")
+                      if length of titleParts > 1 then
+                        set lastPart to item -1 of titleParts
+                        -- This might be a project name, try to find it in common locations
+                        return lastPart
+                      end if
+                    end if
+                    return windowTitle
+                  end if
+                end tell
+              end if
+              return ""
+            end tell
+            
+            on split(theString, theDelimiter)
+              set AppleScript'"'"'s text item delimiters to theDelimiter
+              set theArray to every text item of theString
+              set AppleScript'"'"'s text item delimiters to ""
+              return theArray
+            end split
+          '
+        `);
+        
+        const titleInfo = stdout.trim();
+        if (titleInfo) {
+          // Try to find this project in common development directories
+          const commonPaths = [
+            `${process.env.HOME}/Desktop`,
+            `${process.env.HOME}/Documents`,
+            `${process.env.HOME}/Projects`,
+            `${process.env.HOME}/Development`,
+            `${process.env.HOME}/workspace`,
+            `${process.env.HOME}/dev`
+          ];
+          
+          for (const basePath of commonPaths) {
+            try {
+              const { stdout: lsOutput } = await execAsync(`find "${basePath}" -maxdepth 2 -type d -name "*${titleInfo.replace(/[^a-zA-Z0-9-_]/g, '')}*" 2>/dev/null | head -1`);
+              if (lsOutput.trim()) {
+                return lsOutput.trim();
+              }
+            } catch (_) {}
+          }
+        }
+      } catch (_) {}
+    }
+    return null;
+  }
 
   async getCurrentGitBranch() {
     try {
+      // First try in the detected workspace directory
+      const workspaceDir = await this.getCurrentDirectory();
+      if (workspaceDir && workspaceDir !== process.cwd()) {
+        try {
+          const { stdout } = await execAsync(`cd "${workspaceDir}" && git branch --show-current 2>/dev/null`);
+          if (stdout.trim()) return stdout.trim();
+        } catch (_) {}
+      }
+      
+      // Fallback to current process directory
       const { stdout } = await execAsync('git branch --show-current 2>/dev/null');
       return stdout.trim();
     } catch (error) {
@@ -1175,26 +1329,113 @@ class AITimeTrackingAgent {
   }
 
   async getVSCodeOpenFiles() {
+    const files = [];
     try {
-      // Check if VS Code is running and get workspace info
-      const { stdout } = await execAsync(`
-        osascript -e '
-          tell application "System Events"
-            if exists (process "Code") then
-              tell process "Code"
-                if exists window 1 then
-                  return name of window 1
+      if (IS_MAC) {
+        // Get VS Code window title which often contains file info
+        const { stdout } = await execAsync(`
+          osascript -e '
+            tell application "System Events"
+              if exists (process "Code") then
+                tell process "Code"
+                  if exists window 1 then
+                    return name of window 1
+                  end if
+                end tell
+              end if
+              return ""
+            end tell
+          '
+        `);
+        
+        const windowTitle = stdout.trim();
+        if (windowTitle) {
+          files.push(windowTitle);
+          
+          // Try to extract file names from the title
+          const filePatterns = [
+            // "filename.js - project-name"
+            /^([^-]+)\s*-\s*/,
+            // "● filename.js - project-name" (unsaved changes)
+            /^●\s*([^-]+)\s*-\s*/,
+            // Extract any file extensions
+            /(\w+\.\w+)/g
+          ];
+          
+          for (const pattern of filePatterns) {
+            const matches = windowTitle.match(pattern);
+            if (matches) {
+              matches.forEach(match => {
+                if (match && !files.includes(match)) {
+                  files.push(match);
+                }
+              });
+            }
+          }
+        }
+        
+        // Try to get recent files from VS Code recent menu (if accessible)
+        try {
+          const { stdout: recentFiles } = await execAsync(`
+            osascript -e '
+              tell application "System Events"
+                if exists (process "Code") then
+                  tell process "Code"
+                    if exists menu bar 1 then
+                      tell menu bar 1
+                        if exists menu bar item "File" then
+                          tell menu "File" of menu bar item "File"
+                            if exists menu item "Open Recent" then
+                              tell menu "Open Recent" of menu item "Open Recent"
+                                set recentItems to name of every menu item
+                                return recentItems as string
+                              end tell
+                            end if
+                          end tell
+                        end if
+                      end tell
+                    end if
+                  end tell
                 end if
+                return ""
               end tell
-            end if
-            return ""
-          end tell
-        '
-      `);
+            ' 2>/dev/null || echo ""
+          `);
+          
+          if (recentFiles.trim()) {
+            // Parse recent files and add relevant ones
+            const recentList = recentFiles.split(',').slice(0, 5); // Get top 5 recent
+            recentList.forEach(item => {
+              const trimmed = item.trim();
+              if (trimmed && !files.includes(trimmed)) {
+                files.push(trimmed);
+              }
+            });
+          }
+        } catch (_) {
+          // Menu access might fail, that's ok
+        }
+      }
       
-      return stdout.trim() ? [stdout.trim()] : [];
+      // Also try to detect commonly opened files in the workspace
+      const workspaceDir = await this.getCurrentDirectory();
+      if (workspaceDir) {
+        try {
+          // Look for recently modified files that might be relevant
+          const { stdout } = await execAsync(`find "${workspaceDir}" -name "*.js" -o -name "*.ts" -o -name "*.py" -o -name "*.java" -o -name "*.md" -o -name "*.json" 2>/dev/null | head -10`);
+          const recentFiles = stdout.trim().split('\n').filter(Boolean);
+          recentFiles.forEach(file => {
+            const fileName = file.split('/').pop();
+            if (fileName && !files.some(f => f.includes(fileName))) {
+              files.push(fileName);
+            }
+          });
+        } catch (_) {}
+      }
+      
+      return files.filter(Boolean).slice(0, 10); // Limit to 10 most relevant files
     } catch (error) {
-      return [];
+      return files;
     }
   }
 
@@ -1258,6 +1499,20 @@ class AITimeTrackingAgent {
     await this.log(`💼 Handling work activity at ${new Date(now).toLocaleTimeString()}`);
     this._enqueueActivityTrace({ type: 'activity:work', now, activeApp: activity.applications.active, title: activity.windowTitles });
 
+    // Title-based exclusion (declarative) - configurable via env AI_AGENT_EXCLUDED_TITLE_KEYWORDS (comma separated)
+    // We only prepare variables here; actual exclusion logic will be applied just before session creation/update
+    const excludedTitleKeywords = (process.env.AI_AGENT_EXCLUDED_TITLE_KEYWORDS || 'main,jira-tempo')
+      .split(',')
+      .map(k => k.trim().toLowerCase())
+      .filter(Boolean);
+    const lowerWindowTitle = (activity.windowTitles || '').toLowerCase();
+    const isTitleExcluded = excludedTitleKeywords.some(k => k && lowerWindowTitle.includes(k));
+    if (isTitleExcluded) {
+      if (CONFIG.verboseLogging) await this.log(`🚫 Skipping activity due to excluded title keyword match. Title='${activity.windowTitles}' Keywords='${excludedTitleKeywords.join(',')}'`);
+      this._enqueueActivityTrace({ type: 'activity:excludedTitle', title: activity.windowTitles });
+      return; // Do not start or update sessions with excluded titles
+    }
+
     if (!this.currentSession) {
       // Detect issue for the activity
       const detectedIssue = await this.detectRelatedIssue(activity);
@@ -1300,7 +1555,29 @@ class AITimeTrackingAgent {
       // Update detected issue if confidence is higher
       const currentIssue = await this.detectRelatedIssue(activity);
       const newConfidence = this.calculateConfidence(activity);
-      if (currentIssue && newConfidence > this.currentSession.confidence) {
+      const splitByIssue = (process.env.AI_AGENT_SPLIT_BY_ISSUE || 'true').toLowerCase() !== 'false';
+
+      if (currentIssue && splitByIssue && this.currentSession.detectedIssue && currentIssue !== this.currentSession.detectedIssue) {
+        // End the existing session and start a new one tied to the new issue
+        await this.log(`✂️ Issue change detected -> splitting session. ${this.currentSession.detectedIssue} -> ${currentIssue}`);
+        await this.endSession();
+        // Start new session immediately with the new issue
+        this.currentSession = {
+          id: `session_${now}_split`,
+          startTime: now,
+          endTime: null,
+          duration: 0,
+          detectedIssue: currentIssue,
+          activities: [activity],
+          applications: new Set([activity.applications.active]),
+          windowTitles: new Set([activity.windowTitles]),
+          directories: new Set([activity.currentDirectory]),
+          gitBranches: new Set(activity.gitBranch ? [activity.gitBranch] : []),
+          confidence: newConfidence
+        };
+        this._enqueueActivityTrace({ type: 'session:splitStart', id: this.currentSession.id, fromIssue: this.currentSession.detectedIssue, issue: currentIssue, confidence: newConfidence });
+        await this.log(`🆕 Started new session after split for issue ${currentIssue} (Confidence: ${newConfidence}%)`);
+      } else if (currentIssue && newConfidence > this.currentSession.confidence) {
         await this.log(`🔄 Updated session issue: ${this.currentSession.detectedIssue} -> ${currentIssue} (Confidence: ${this.currentSession.confidence}% -> ${newConfidence}%)`);
         this.currentSession.detectedIssue = currentIssue;
         this.currentSession.confidence = newConfidence;
@@ -1524,55 +1801,145 @@ class AITimeTrackingAgent {
         entry.score += weight;
         entry.factors.push({ factor, weight, meta });
       };
-      // 1. Direct keys in window title / git branch / open files
+      
+      // 1. Direct keys in window title / git branch / open files (ENHANCED)
       const aggregateText = `${snapshot.windowTitles} ${snapshot.gitBranch||''} ${(snapshot.openFiles||[]).join(' ')}`;
       const directMatches = aggregateText.match(jiraKeyPattern) || [];
-      directMatches.forEach(k => addFactor(k,'directText',40));
-      // 2. Micro events URL/title keys
-      recentMicro.forEach(ev => { if (ev.jiraKey) addFactor(ev.jiraKey,'microEvent',30,{ source: ev.source }); });
-      // 3. Assigned issues keyword overlap
-      const titleLower = snapshot.windowTitles.toLowerCase();
-      this.assignedIssues.forEach(issue => {
-        // quick tokenization
-        const terms = (issue.fields.summary||'').toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>3).slice(0,12);
-        let hits = 0;
-        terms.forEach(t => { if (titleLower.includes(t)) hits++; });
-        if (hits>0) addFactor(issue.key,'summaryOverlap',Math.min(4*hits,20),{ hits });
+      
+      // Give higher weight to keys that appear multiple times or in multiple contexts
+      const keyFreq = {};
+      directMatches.forEach(k => keyFreq[k] = (keyFreq[k] || 0) + 1);
+      
+      Object.entries(keyFreq).forEach(([k, freq]) => {
+        // Base weight 40, bonus for frequency, max 80
+        const weight = Math.min(40 + (freq - 1) * 20, 80);
+        addFactor(k, 'directText', weight, { frequency: freq });
       });
-      // 4. Frequency count in micro events
+      
+      // 2. Micro events URL/title keys (ENHANCED - more recent = higher weight)
+      recentMicro.forEach((ev, index) => { 
+        if (ev.jiraKey) {
+          // More recent events get higher weight (index 0 = oldest, higher index = newer)
+          const recencyBonus = Math.min(index * 2, 20);
+          const baseWeight = 30 + recencyBonus;
+          addFactor(ev.jiraKey, 'microEvent', baseWeight, { source: ev.source, recency: index });
+        }
+      });
+      
+      // 3. Assigned issues keyword overlap (ENHANCED)
+      const titleLower = snapshot.windowTitles.toLowerCase();
+      const openFilesText = (snapshot.openFiles || []).join(' ').toLowerCase();
+      const fullContext = `${titleLower} ${openFilesText}`;
+      
+      this.assignedIssues.forEach(issue => {
+        // Enhanced tokenization - include the issue key itself
+        const issueText = `${issue.key.toLowerCase()} ${issue.fields.summary || ''}`.toLowerCase();
+        const terms = issueText.split(/[^a-z0-9]+/).filter(w => w.length > 2).slice(0, 15);
+        
+        let hits = 0;
+        let exactKeyMatch = false;
+        
+        terms.forEach(t => { 
+          if (fullContext.includes(t)) {
+            hits++;
+            // Check if this is the exact issue key
+            if (t === issue.key.toLowerCase()) {
+              exactKeyMatch = true;
+            }
+          }
+        });
+        
+        if (hits > 0) {
+          // Base scoring, with bonus for exact key match
+          let weight = Math.min(5 * hits, 25);
+          if (exactKeyMatch) weight += 30; // Big bonus for exact key match
+          
+          addFactor(issue.key, 'summaryOverlap', weight, { hits, exactKeyMatch });
+        }
+      });
+      
+      // 4. Frequency count in micro events (ENHANCED)
       const freq = {};
-      recentMicro.forEach(ev => { if (ev.jiraKey) freq[ev.jiraKey]=(freq[ev.jiraKey]||0)+1; });
-      Object.entries(freq).forEach(([k,c])=> addFactor(k,'recentFrequency',Math.min(c*3,15),{ count:c }));
-      // 5. Git branch weight if branch contains key
+      recentMicro.forEach(ev => { if (ev.jiraKey) freq[ev.jiraKey] = (freq[ev.jiraKey] || 0) + 1; });
+      Object.entries(freq).forEach(([k, c]) => {
+        // Higher weight for more frequent mentions
+        const weight = Math.min(c * 5, 25);
+        addFactor(k, 'recentFrequency', weight, { count: c });
+      });
+      
+      // 5. Git branch weight if branch contains key (ENHANCED)
       if (snapshot.gitBranch) {
         const branchMatches = snapshot.gitBranch.match(jiraKeyPattern) || [];
-        branchMatches.forEach(k => addFactor(k,'gitBranch',35));
+        branchMatches.forEach(k => {
+          // Higher weight for git branch since it's very intentional
+          addFactor(k, 'gitBranch', 50, { branch: snapshot.gitBranch });
+        });
       }
-      // 6. Exclusion penalties
+      
+      // 6. Current directory context (NEW)
+      const workspaceName = snapshot.currentDirectory.split('/').pop() || '';
+      if (workspaceName) {
+        // Check if workspace name contains issue key patterns
+        const workspaceMatches = workspaceName.match(jiraKeyPattern) || [];
+        workspaceMatches.forEach(k => {
+          addFactor(k, 'workspaceName', 25, { workspace: workspaceName });
+        });
+      }
+      
+      // 7. Exclusion penalties (ENHANCED)
       const cwd = snapshot.currentDirectory || '';
       const excludedPathHit = this._excludedPathKeywords.some(p => cwd.toLowerCase().includes(p.toLowerCase()));
       const excludedBranchHit = snapshot.gitBranch && this._excludedBranches.includes(snapshot.gitBranch.trim());
+      
       if ((excludedPathHit || excludedBranchHit) && seenKeys.size) {
         for (const entry of seenKeys.values()) {
-          addFactor(entry.key,'excludedContext',-100,{ excludedPathHit, excludedBranchHit });
+          // Less severe penalty to allow overrides with strong signals
+          addFactor(entry.key, 'excludedContext', -50, { excludedPathHit, excludedBranchHit });
         }
       }
+      
       if (!seenKeys.size) return null;
-      const candidates = Array.from(seenKeys.values()).sort((a,b)=>b.score-a.score);
+      
+      // Enhanced candidate evaluation
+      const candidates = Array.from(seenKeys.values())
+        .filter(c => c.score > 0) // Only consider positive-scoring candidates
+        .sort((a, b) => b.score - a.score);
+      
+      if (!candidates.length) return null;
+      
       const top = candidates[0];
       const second = candidates[1];
-      const ambiguous = second && (top.score - second.score) < 15; // margin
+      
+      // Dynamic ambiguity threshold based on top score
+      const ambiguityThreshold = Math.max(10, Math.min(25, top.score * 0.2));
+      const ambiguous = second && (top.score - second.score) < ambiguityThreshold;
+      
       const normalizedTop = Math.max(0, Math.min(100, Math.round(top.score)));
+      
       if (this._detectionVerbose) {
-        this._enqueueActivityTrace({ type:'detect:score', candidates: candidates.slice(0,5) });
-        await this.log(`🧮 Detection scoring -> Top ${top.key}=${top.score}${ambiguous?' (ambiguous)':''}`);
+        this._enqueueActivityTrace({ type: 'detect:score', candidates: candidates.slice(0, 5) });
+        await this.log(`🧮 Enhanced detection scoring -> Top ${top.key}=${top.score} (normalized: ${normalizedTop}%) ${ambiguous ? '(ambiguous)' : ''}`);
+        if (candidates.length > 1) {
+          await this.log(`   Runner-up: ${second.key}=${second.score}, margin: ${top.score - second.score}, threshold: ${ambiguityThreshold}`);
+        }
       }
-      if (normalizedTop < (this._minConfidenceOverride || 0)) {
-        return { issueKey: null, candidates, ambiguous: true };
+      
+      // Higher minimum confidence for better accuracy
+      const minConfidence = Math.max(this._minConfidenceOverride || 0, 20);
+      if (normalizedTop < minConfidence) {
+        await this.log(`🚫 Top candidate ${top.key} below confidence threshold (${normalizedTop}% < ${minConfidence}%)`);
+        return { issueKey: null, candidates, ambiguous: true, reason: 'low-confidence' };
       }
-      return { issueKey: !ambiguous ? top.key : null, candidates, ambiguous };
+      
+      return { 
+        issueKey: !ambiguous ? top.key : null, 
+        candidates, 
+        ambiguous, 
+        confidence: normalizedTop,
+        margin: second ? (top.score - second.score) : top.score
+      };
     } catch (e) {
-      await this.log(`⚠️ Scoring error: ${e.message}`);
+      await this.log(`⚠️ Enhanced scoring error: ${e.message}`);
       return null;
     }
   }
@@ -1920,6 +2287,7 @@ class AITimeTrackingAgent {
     let targetIssueKey = session.detectedIssue;
     let targetIssueId;
     let activityType;
+    const tempoTokenPresent = !!process.env.TEMPO_API_TOKEN;
     
     try {
       const timeSpentSeconds = Math.round(session.duration / 1000);
@@ -1928,9 +2296,14 @@ class AITimeTrackingAgent {
       
       // Determine issue key and ID based on activity type
       if (activityType.isMeetingActivity) {
-        targetIssueKey = this.defaultMeetingIssue;
+        const standupIssueOverride = process.env.AI_AGENT_STANDUP_ISSUE;
+        if (activityType.meetingType === 'standup' && standupIssueOverride) {
+          targetIssueKey = standupIssueOverride;
+        } else {
+          targetIssueKey = this.defaultMeetingIssue;
+        }
         if (!targetIssueKey) {
-          throw new Error('Meeting activity detected but AI_AGENT_DEFAULT_MEETING_ISSUE is not configured');
+          throw new Error('Meeting activity detected but AI_AGENT_DEFAULT_MEETING_ISSUE (or standup override) is not configured');
         }
       }
       
@@ -2024,53 +2397,70 @@ class AITimeTrackingAgent {
         return { id: 'dry-run-' + Date.now(), dryRun: true };
       }
 
-      let response;
-      try {
-        response = await tempoApi.post('/worklogs', payload);
-      } catch (primaryErr) {
-        // If 400, attempt a diagnostic + attribute removal fallback (common cause: invalid attribute values)
-        if (primaryErr.response && primaryErr.response.status === 400) {
-          await this.log(`⚠️ Tempo 400 for issue ${targetIssueKey} – attempting fallback without attributes`);
-          if (primaryErr.response.data) {
-            const snippet = JSON.stringify(primaryErr.response.data).slice(0,300);
-            await this.log(`   Original 400 payload response: ${snippet}`);
+      if (tempoTokenPresent) {
+        let response;
+        try {
+          response = await tempoApi.post('/worklogs', payload);
+        } catch (primaryErr) {
+          if (primaryErr.response && primaryErr.response.status === 400) {
+            await this.log(`⚠️ Tempo 400 for issue ${targetIssueKey} – attempting fallback without attributes`);
+            if (primaryErr.response.data) {
+              const snippet = JSON.stringify(primaryErr.response.data).slice(0,300);
+              await this.log(`   Original 400 payload response: ${snippet}`);
+            }
+            const kept = (payload.attributes || []).filter(a => a.key === '_TimeCategory_');
+            const fallbackPayload = { ...payload, attributes: kept };
+            try {
+              response = await tempoApi.post('/worklogs', fallbackPayload);
+              await this.log('✅ Fallback without attributes succeeded');
+            } catch (fallbackErr) {
+              const errInfo = {
+                primary: primaryErr.response?.data || primaryErr.message,
+                fallback: fallbackErr.response?.data || fallbackErr.message,
+                issue: targetIssueKey
+              };
+              const combined = new Error(`Tempo logging failed (400) even after fallback: ${JSON.stringify(errInfo).slice(0,500)}`);
+              combined.original = primaryErr;
+              combined.fallback = fallbackErr;
+              throw combined;
+            }
+          } else {
+            throw primaryErr;
           }
-          // Keep required _TimeCategory_ but drop _TechnologyTimeType_ only, since error indicated invalid list value.
-          const kept = (payload.attributes || []).filter(a => a.key === '_TimeCategory_');
-          const fallbackPayload = { ...payload, attributes: kept };
-          try {
-            response = await tempoApi.post('/worklogs', fallbackPayload);
-            await this.log('✅ Fallback without attributes succeeded');
-          } catch (fallbackErr) {
-            // Re-throw richer error including both responses
-            const errInfo = {
-              primary: primaryErr.response?.data || primaryErr.message,
-              fallback: fallbackErr.response?.data || fallbackErr.message,
-              issue: targetIssueKey
-            };
-            const combined = new Error(`Tempo logging failed (400) even after fallback: ${JSON.stringify(errInfo).slice(0,500)}`);
-            combined.original = primaryErr;
-            combined.fallback = fallbackErr;
-            throw combined;
+        }
+        const worklogId = response.data?.id || response.data?.tempoWorklogId || response.data?.worklogId;
+        session.loggedIssueKey = targetIssueKey;
+        session.loggedWorklogId = worklogId;
+        if (!worklogId) {
+          await this.log(`⚠️ Tempo response missing worklog ID field. Raw response keys: ${Object.keys(response.data || {}).join(', ')} `);
+          if (process.env.AI_AGENT_LOG_TEMPO_RESPONSE === 'true') {
+            await this.log(`🔬 Raw Tempo response: ${JSON.stringify(response.data, null, 2)}`);
           }
-        } else {
-          throw primaryErr;
+        }
+        await this.log(`✅ Auto-logged ${this.formatDuration(session.duration)} to ${targetIssueKey} (${activityType?.description || 'Unknown'}) - Tempo Worklog ID: ${worklogId || 'unknown'}`);
+        session.logStatus = 'logged';
+        session.logReason = activityType.isMeetingActivity ? 'meeting-auto' : 'logged';
+        return response.data;
+      } else {
+        // Jira worklog fallback
+        const jiraPayload = {
+          comment: description,
+          started: new Date(session.startTime).toISOString(),
+          timeSpentSeconds: timeSpentSeconds
+        };
+        try {
+          const wl = await jiraApi.post(`/rest/api/3/issue/${targetIssueKey}/worklog`, jiraPayload);
+          const worklogId = wl.data?.id || null;
+          await this.log(`✅ Auto-logged ${this.formatDuration(session.duration)} to ${targetIssueKey} via Jira fallback (worklog ${worklogId || 'unknown'})`);
+          session.logStatus = 'logged';
+            session.logReason = activityType.isMeetingActivity ? 'meeting-auto' : 'logged';
+          session.loggedIssueKey = targetIssueKey;
+          session.loggedWorklogId = worklogId;
+          return { ...wl.data, fallback: 'jira-worklog' };
+        } catch (jiraErr) {
+          throw new Error(`Tempo token missing and Jira worklog fallback failed: ${jiraErr.response?.status || jiraErr.message}`);
         }
       }
-      const worklogId = response.data?.id || response.data?.tempoWorklogId || response.data?.worklogId;
-      session.loggedIssueKey = targetIssueKey;
-      session.loggedWorklogId = worklogId;
-      if (!worklogId) {
-        await this.log(`⚠️ Tempo response missing worklog ID field. Raw response keys: ${Object.keys(response.data || {}).join(', ')} `);
-        if (process.env.AI_AGENT_LOG_TEMPO_RESPONSE === 'true') {
-          await this.log(`🔬 Raw Tempo response: ${JSON.stringify(response.data, null, 2)}`);
-        }
-      }
-      await this.log(`✅ Auto-logged ${this.formatDuration(session.duration)} to ${targetIssueKey} (${activityType?.description || 'Unknown'}) - Worklog ID: ${worklogId || 'unknown'}`);
-      session.logStatus = 'logged';
-      session.logReason = activityType.isMeetingActivity ? 'meeting-auto' : 'logged';
-      
-      return response.data;
     } catch (error) {
       // Enhanced error logging for test mode
       if (isTestMode) {
@@ -2175,8 +2565,12 @@ class AITimeTrackingAgent {
     }
 
     // Detect specific meeting type only if classified as meeting
+    const extraStandup = (process.env.AI_AGENT_STANDUP_KEYWORDS || '')
+      .split(',')
+      .map(s => s.trim().toLowerCase())
+      .filter(Boolean);
     const meetingTypes = {
-      'standup': ['standup','daily standup','daily standup meeting','daily','scrum'],
+      'standup': ['standup','daily standup','daily standup meeting','daily','scrum', ...extraStandup],
       'sprint-planning': ['sprint planning','planning','sprint plan','iteration planning'],
       'code-review': ['code review','pr review','pull request review','review meeting','architecture review','arch review'],
       'test-case-review': ['test case review','test review','qa review'],
@@ -2747,6 +3141,98 @@ class AITimeTrackingAgent {
 
   getLastDetectionTrace() {
     return this._lastDetectionTrace || null;
+  }
+
+  // New method to help debug detection accuracy
+  async diagnoseDetectionAccuracy() {
+    const issues = [];
+    const suggestions = [];
+    
+    // Check current activity context
+    const activity = this.lastActivity;
+    if (!activity) {
+      issues.push("No recent activity detected");
+      suggestions.push("Ensure the agent is running and monitoring");
+      return { issues, suggestions };
+    }
+    
+    // Check directory detection
+    if (activity.currentDirectory === process.cwd()) {
+      issues.push("Using agent directory instead of workspace directory");
+      suggestions.push("Ensure VS Code is open with your project workspace");
+    }
+    
+    // Check for JIRA keys in context
+    const jiraKeyPattern = /([A-Z]+-\d+)/g;
+    const allText = `${activity.windowTitles} ${activity.gitBranch || ''} ${activity.openFiles.join(' ')}`;
+    const foundKeys = allText.match(jiraKeyPattern) || [];
+    
+    if (foundKeys.length === 0) {
+      issues.push("No JIRA keys found in current context");
+      suggestions.push("Include JIRA key in window title, git branch name, or file names");
+      suggestions.push("Open JIRA ticket in browser while working");
+    }
+    
+    // Check assigned issues
+    if (this.assignedIssues.length === 0) {
+      issues.push("No assigned JIRA issues found");
+      suggestions.push("Ensure JIRA authentication is working");
+      suggestions.push("Check if you have issues assigned to you");
+    }
+    
+    // Check for unrecognized keys
+    const unrecognizedKeys = foundKeys.filter(key => 
+      !this.assignedIssues.some(issue => issue.key === key)
+    );
+    
+    if (unrecognizedKeys.length > 0) {
+      issues.push(`Found unassigned JIRA keys: ${unrecognizedKeys.join(', ')}`);
+      suggestions.push("Ensure these issues are assigned to you or add them to your watch list");
+    }
+    
+    // Check exclusion rules
+    const excludedPathHit = this._excludedPathKeywords.some(p => 
+      activity.currentDirectory.toLowerCase().includes(p.toLowerCase())
+    );
+    const excludedBranchHit = activity.gitBranch && 
+      this._excludedBranches.includes(activity.gitBranch.trim());
+    
+    if (excludedPathHit || excludedBranchHit) {
+      issues.push("Current context matches exclusion rules");
+      suggestions.push("Check AI_AGENT_EXCLUDED_PATH_KEYWORDS and AI_AGENT_EXCLUDED_BRANCHES");
+      suggestions.push("Work in a different directory or branch if this is not the intended behavior");
+    }
+    
+    // Check micro events
+    const microEventCount = this.currentSession?.microEvents?.length || 0;
+    if (microEventCount === 0) {
+      issues.push("No micro events captured");
+      suggestions.push("Ensure active window sampler is enabled");
+      suggestions.push("Try switching between browser tabs or VS Code files");
+    }
+    
+    // Provide recommendations based on current state
+    if (issues.length === 0) {
+      suggestions.push("Detection context looks good");
+      if (this._lastDetectionTrace) {
+        suggestions.push(`Last detection phase: ${this._lastDetectionTrace.phase}`);
+      }
+    }
+    
+    return { 
+      issues, 
+      suggestions,
+      context: {
+        directory: activity.currentDirectory,
+        branch: activity.gitBranch,
+        windowTitle: activity.windowTitles,
+        foundKeys,
+        assignedIssueCount: this.assignedIssues.length,
+        microEventCount,
+        excludedPathHit,
+        excludedBranchHit
+      }
+    };
   }
 }
 

@@ -1,45 +1,44 @@
 const axios = require('axios');
+const { getJiraApi } = require('./atlassianProvider');
 const cron = require('node-cron');
 
 // Configuration
 require('dotenv').config();
 const JIRA_BASE_URL = process.env.JIRA_BASE_URL;
 const TEMPO_BASE_URL = process.env.TEMPO_BASE_URL;
-const JIRA_EMAIL = process.env.JIRA_EMAIL;
-const JIRA_API_TOKEN = process.env.JIRA_API_TOKEN;
-const TEMPO_API_TOKEN = process.env.TEMPO_API_TOKEN;
+// Legacy JIRA basic auth & direct Tempo token removed – OAuth required
+const TEMPO_API_TOKEN = process.env.TEMPO_API_TOKEN; // optional; if missing we will fall back to Jira native worklog API
 const TEMPO_ACCOUNT_ID = process.env.TEMPO_ACCOUNT_ID;
 
 console.log('Configuration loaded:');
 console.log('- JIRA Base URL:', JIRA_BASE_URL);
 console.log('- TEMPO Base URL:', TEMPO_BASE_URL);
-console.log('- JIRA Email:', JIRA_EMAIL);
-console.log('- JIRA API Token:', JIRA_API_TOKEN ? '✅ Set' : '❌ Missing');
-console.log('- TEMPO API Token:', TEMPO_API_TOKEN ? '✅ Set' : '❌ Missing');
+console.log('- USE_OAUTH:', process.env.USE_OAUTH === 'true' ? 'Enabled' : 'Disabled (REQUIRED)');
+console.log('- TEMPO API Token:', TEMPO_API_TOKEN ? '✅ Present (Tempo logging)' : '⌛ Missing (will use Jira /worklog fallback)');
 console.log('- TEMPO Account ID:', TEMPO_ACCOUNT_ID);
 
-// Axios instances for JIRA and Tempo
-const jiraApi = axios.create({
-  baseURL: JIRA_BASE_URL,
-  headers: {
-    Authorization: `Basic ${Buffer.from(`${JIRA_EMAIL}:${JIRA_API_TOKEN}`).toString('base64')}`,
-    'Content-Type': 'application/json',
-  },
-});
+// Jira API accessor returns fresh client per call (OAuth aware)
+async function jiraClient() {
+  return await getJiraApi();
+}
 
-const tempoApi = axios.create({
-  baseURL: TEMPO_BASE_URL,
-  headers: {
-    Authorization: `Bearer ${TEMPO_API_TOKEN}`,
-    'Content-Type': 'application/json',
-  },
-});
+let tempoApi = null;
+if (TEMPO_API_TOKEN) {
+  tempoApi = axios.create({
+    baseURL: TEMPO_BASE_URL,
+    headers: {
+      Authorization: `Bearer ${TEMPO_API_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+  });
+}
 
 // Fetch JIRA issues assigned to the user using JQL (recommended for automation)
 async function fetchJiraIssues() {
   try {
     console.log('Fetching JIRA issues...');
-    const response = await jiraApi.post('/rest/api/3/search/jql', {
+  const jira = await jiraClient();
+  const response = await jira.post('/rest/api/3/search/jql', {
       jql: 'assignee = currentUser() AND statusCategory != Done',
       fields: ['summary','key']
     });
@@ -63,7 +62,8 @@ async function fetchJiraIssues() {
 async function fetchMentionedIssues() {
   try {
     console.log('Fetching JIRA issues where user was mentioned in comments...');
-    const response = await jiraApi.post('/rest/api/3/search/jql', {
+  const jira = await jiraClient();
+  const response = await jira.post('/rest/api/3/search/jql', {
       jql: 'comment ~ currentUser() AND assignee != currentUser() AND statusCategory != Done',
       fields: ['summary','key','status']
     });
@@ -87,7 +87,8 @@ async function fetchMentionedIssues() {
 async function getIssueId(issueKey) {
   try {
     console.log(`Fetching issue ID for ${issueKey}...`);
-    const response = await jiraApi.get(`/rest/api/3/issue/${issueKey}`);
+  const jira = await jiraClient();
+  const response = await jira.get(`/rest/api/3/issue/${issueKey}`);
     console.log(`Found issue ID: ${response.data.id}`);
     return response.data.id;
   } catch (error) {
@@ -122,9 +123,21 @@ async function logTimeInTempo(issueKey, timeSpentSeconds, description) {
     
     console.log('Request payload:', JSON.stringify(payload, null, 2));
     
-    const response = await tempoApi.post('/worklogs', payload);
-    console.log(`Success! Logged time for issue ${issueKey}:`, JSON.stringify(response.data, null, 2));
-    return response.data;
+    if (tempoApi) {
+      const response = await tempoApi.post('/worklogs', payload);
+      console.log(`Success! Logged time (Tempo) for issue ${issueKey}:`, JSON.stringify(response.data, null, 2));
+      return response.data;
+    } else {
+      // Jira fallback
+      const jira = await jiraClient();
+      const wlResp = await jira.post(`/rest/api/3/issue/${issueKey}/worklog`, {
+        comment: description,
+        started: new Date().toISOString(),
+        timeSpentSeconds
+      });
+      console.log(`Success! Logged time (Jira fallback) for issue ${issueKey}:`, JSON.stringify(wlResp.data, null, 2));
+      return { ...wlResp.data, fallback: 'jira-worklog' };
+    }
   } catch (error) {
     console.error(`Error logging time for issue ${issueKey}:`);
     if (error.response) {
@@ -169,7 +182,8 @@ console.log('JIRA Tempo automation script is running...');
 // Pass a search string (e.g., part of an issue key or summary)
 async function fetchJiraIssuePicker(searchString) {
   try {
-    const response = await jiraApi.get('/rest/api/3/issue/picker', {
+  const jira = await jiraClient();
+  const response = await jira.get('/rest/api/3/issue/picker', {
       params: { query: searchString },
       headers: {
         Accept: 'application/json',
