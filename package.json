@@ -14,8 +14,9 @@
     "init": "node scripts/init.js",
     "reset": "AI_AGENT_RESET=true node scripts/init.js",
     "mcp": "node mcpBridge.js",
-    "mcp:example": "node examples/mcp-client.js",
-    "test": "jest"
+    "mcp:client": "node examples/mcp-client.js",
+    "test": "jest",
+    "test:llm": "jest tests/llmParser.test.js"
   },
   "optionalDependencies": {
   },

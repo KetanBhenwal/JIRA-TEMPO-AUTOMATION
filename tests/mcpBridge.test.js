@@ -50,7 +50,9 @@ describe('MCP Bridge (TEST_MODE)', () => {
   });
 
   test('agent.sessions.list returns an array', async () => {
+    // Wait briefly to ensure bridge finished any lazy initialization
+    await new Promise(r => setTimeout(r, 1000));
     const sessions = await rpc(proc, 5, 'agent.sessions.list', { days: 1 });
     expect(Array.isArray(sessions)).toBe(true);
-  });
+  }, 30000); // generous timeout for slower CI shells
 });

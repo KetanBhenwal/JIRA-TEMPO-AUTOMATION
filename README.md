@@ -162,6 +162,8 @@ Environment knobs (override in `.env` or runtime config endpoints):
 | `AI_AGENT_EXCLUDED_TITLE_KEYWORDS` | Comma list of window title substrings to ignore (default `main,jira-tempo`) – prevents creating/updating sessions for generic tabs/branches |
 | `AI_AGENT_STANDUP_KEYWORDS` | Extra comma-separated keywords treated as standup (added to built-in list) |
 | `AI_AGENT_STANDUP_ISSUE` | If set, standup meetings log to this issue instead of `AI_AGENT_DEFAULT_MEETING_ISSUE` |
+| `AI_AGENT_DEFAULT_MEETING_ISSUE` | Issue key used for all meeting sessions (Teams / Zoom / etc.) |
+| `AI_AGENT_DEFAULT_DEVELOPMENT_ISSUE` | Current sprint story fallback used when dev work is detected but no specific issue could be inferred (prevents "Unknown" sessions) |
 
 Runtime adjustments (no restart): PATCH `/api/ai-agent/runtime-config` with fields like `monitoringInterval`, `workSessionThreshold`, etc. (values in ms or minutes auto‑converted if <1000).
 
@@ -247,6 +249,27 @@ Troubleshooting:
 3. Click "Start Agent" to begin monitoring
 4. Work on your JIRA issues as usual
 5. Review and approve detected sessions in the dashboard
+
+### Meeting vs Development Fallback Issues (NEW)
+
+To eliminate "Unknown" auto-logged periods you can now configure two separate default issue keys:
+
+1. `AI_AGENT_DEFAULT_MEETING_ISSUE` – applied to all meeting sessions (or standup override if `AI_AGENT_STANDUP_ISSUE` present). 
+2. `AI_AGENT_DEFAULT_DEVELOPMENT_ISSUE` – applied only to development sessions that have sufficient duration to auto-log but where detection could not reach the confidence threshold or identify a concrete issue key.
+
+You can set or override these at runtime on the Config page (`/config.html`) without restarting the agent. The UI fields "Default Meeting Issue Key" and "Default Development Issue Key" map to these environment variables and are persisted to `user-config.json`.
+
+Logging Behavior:
+* Meeting session → always logs to meeting issue (or standup issue) regardless of detection score.
+* Development session with high-confidence detected issue (≥70%) → logs to detected issue.
+* Development session with no detected issue but fallback configured → logs to `AI_AGENT_DEFAULT_DEVELOPMENT_ISSUE` (log reason `dev-fallback-issue`).
+* Development session with no detected issue and no fallback → remains unlogged until you manually assign.
+
+Descriptions now include an explicit line:
+* `Detection: fallback default development issue` OR
+* `Detection: meeting session using configured meeting issue`
+
+This makes it transparent which worklogs used fallback logic.
 
 ### How the AI Agent Works
 

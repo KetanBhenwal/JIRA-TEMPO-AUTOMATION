@@ -27,6 +27,13 @@ function getDefaultMeetingIssue() {
     : null; // Intentionally no fallback hardcode; caller must handle null
 }
 
+// Helper to resolve default development (sprint story) issue used when detection fails
+function getDefaultDevelopmentIssue() {
+  return process.env.AI_AGENT_DEFAULT_DEVELOPMENT_ISSUE && process.env.AI_AGENT_DEFAULT_DEVELOPMENT_ISSUE.trim()
+    ? process.env.AI_AGENT_DEFAULT_DEVELOPMENT_ISSUE.trim()
+    : null;
+}
+
 // AI Agent configuration
 const AI_AGENT_CONFIG = {
   monitoringInterval: 5 * 60 * 1000, // 5 minutes
@@ -39,6 +46,7 @@ const AI_AGENT_CONFIG = {
   workHoursEnd: 20, // 8 PM
   // Read from environment only (no hardcoded default). Validation later.
   defaultMeetingIssue: getDefaultMeetingIssue(), // Default issue for Microsoft Teams calls and adhoc meetings
+  defaultDevelopmentIssue: getDefaultDevelopmentIssue(), // Fallback sprint story for generic development when detection uncertain
   activeWindowSamplingInterval: 60/2 * 1000, // 30s lightweight foreground window sampling
   enableActiveWindowSampler: true, // Feature flag for new sampler
   runningAppsRefreshInterval: 5 * 60 * 1000, // cache running visible apps for 5m
@@ -68,6 +76,7 @@ const AI_AGENT_TEST_CONFIG = {
   workHoursStart: 0, // Accept any hour in test mode
   workHoursEnd: 24,
   defaultMeetingIssue: getDefaultMeetingIssue(),
+  defaultDevelopmentIssue: getDefaultDevelopmentIssue(),
   activeWindowSamplingInterval: 5 * 1000, // 5s sampler (was 15s, prod 30s)
   enableActiveWindowSampler: true,
   runningAppsRefreshInterval: 30 * 1000, // 30s (was 60s, prod 5m)
@@ -289,6 +298,11 @@ class AITimeTrackingAgent {
   get defaultMeetingIssue() {
     // Allow runtime override via RUNTIME_OVERRIDES if supplied
     const effective = this._effectiveConfig?.defaultMeetingIssue || AI_AGENT_CONFIG.defaultMeetingIssue;
+    return (effective && typeof effective === 'string' && effective.trim()) ? effective.trim() : null;
+  }
+
+  get defaultDevelopmentIssue() {
+    const effective = this._effectiveConfig?.defaultDevelopmentIssue || AI_AGENT_CONFIG.defaultDevelopmentIssue;
     return (effective && typeof effective === 'string' && effective.trim()) ? effective.trim() : null;
   }
 
@@ -2207,19 +2221,33 @@ class AITimeTrackingAgent {
   // For meeting activities, always log to configured default meeting issue regardless of detected issue
     // For story development, require detected issue and confidence >= 70%
     const shouldLog = activityType.isMeetingActivity || 
-                     (this.currentSession.detectedIssue && this.currentSession.confidence >= 70);
+                     (this.currentSession.detectedIssue && this.currentSession.confidence >= 70) ||
+                     (!activityType.isMeetingActivity && !this.currentSession.detectedIssue && this.defaultDevelopmentIssue);
 
     await this.log(`📋 Auto-log evaluation - Meeting: ${activityType.isMeetingActivity}, Issue: ${this.currentSession.detectedIssue}, Confidence: ${this.currentSession.confidence}%, Should Log: ${shouldLog}`);
 
     if (shouldLog) {
       try {
+        // If dev session had no detected issue but fallback configured, inject it now
+        if (!activityType.isMeetingActivity && !this.currentSession.detectedIssue && this.defaultDevelopmentIssue) {
+          this.currentSession.detectedIssue = this.defaultDevelopmentIssue;
+          // mark as fallback with low confidence but force description enrichment
+          this.currentSession.confidence = Math.max(this.currentSession.confidence, 25);
+          await this.log(`🧷 Applied default development issue fallback: ${this.defaultDevelopmentIssue}`);
+        }
         const result = await this.logTimeToTempo(this.currentSession);
         if (result && result.dryRun) {
           this.currentSession.logStatus = 'dry-run';
           this.currentSession.logReason = 'dry-run-mode';
         } else {
           this.currentSession.logStatus = 'logged';
-          this.currentSession.logReason = activityType.isMeetingActivity ? 'meeting-auto' : 'dev-threshold-met';
+          if (activityType.isMeetingActivity) {
+            this.currentSession.logReason = 'meeting-auto';
+          } else if (!this.currentSession.detectedIssue && this.defaultDevelopmentIssue) {
+            this.currentSession.logReason = 'dev-fallback-issue';
+          } else {
+            this.currentSession.logReason = 'dev-threshold-met';
+          }
           this.loggedSessions.add(this.currentSession.id);
         }
       } catch (e) {
@@ -2307,7 +2335,11 @@ class AITimeTrackingAgent {
         }
       }
       
-      // Validate that we have a target issue key
+      // Validate that we have a target issue key; if dev without detection but fallback present, apply
+      if (!targetIssueKey && !activityType.isMeetingActivity && this.defaultDevelopmentIssue) {
+        targetIssueKey = this.defaultDevelopmentIssue;
+        await this.log(`🧷 Fallback to default development issue for logging: ${targetIssueKey}`);
+      }
       if (!targetIssueKey) {
         throw new Error('No target issue key available for logging');
       }
@@ -2764,6 +2796,12 @@ class AITimeTrackingAgent {
     if (decisionsOut.length) lines.push(`Decisions: ${decisionsOut.join(' | ')}`);
     if (actionsOut.length) lines.push(`Actions: ${actionsOut.join(' | ')}`);
     lines.push(`Confidence: ${session.confidence}%`);
+    if (!session.originalDetectedIssue && session.detectedIssue && (session.detectedIssue === this.defaultDevelopmentIssue)) {
+      lines.push('Detection: fallback default development issue');
+    }
+    if (this.detectActivityType(session).isMeetingActivity && session.detectedIssue === this.defaultMeetingIssue) {
+      lines.push('Detection: meeting session using configured meeting issue');
+    }
 
     return lines.join('\n');
   }
@@ -2797,7 +2835,7 @@ class AITimeTrackingAgent {
   }
 
   updateRuntimeConfig(partial) {
-    const allowed = ['monitoringInterval','workSessionThreshold','autoLogThreshold','maxSessionDuration','workHoursStart','workHoursEnd'];
+    const allowed = ['monitoringInterval','workSessionThreshold','autoLogThreshold','maxSessionDuration','workHoursStart','workHoursEnd','defaultMeetingIssue','defaultDevelopmentIssue'];
     let changed = false;
     for (const k of Object.keys(partial)) {
       if (allowed.includes(k) && partial[k] != null && partial[k] !== '') {

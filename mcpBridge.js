@@ -6,14 +6,33 @@ const { getJiraApi } = require('./atlassianProvider');
 const AITimeTrackingAgent = require('./ai-agent');
 const { parseDailyNotes } = require('./llmParser');
 
-// Logging utilities
+// Logging utilities (colorized, timestamped, both human and machine readable)
 const LOG_LEVEL = (process.env.MCP_LOG_LEVEL || 'info').toLowerCase();
 const LEVELS = { error: 0, warn: 1, info: 2, debug: 3, trace: 4 };
+const colors = {
+	reset: '\x1b[0m',
+	gray: '\x1b[90m',
+	cyan: '\x1b[36m',
+	green: '\x1b[32m',
+	yellow: '\x1b[33m',
+	red: '\x1b[31m',
+	magenta: '\x1b[35m'
+};
 function log(level, msg, meta) {
 	if (LEVELS[level] <= LEVELS[LOG_LEVEL]) {
+		const ts = new Date().toLocaleTimeString();
+		let color = colors.gray;
+		if (level === 'info') color = colors.cyan;
+		if (level === 'warn') color = colors.yellow;
+		if (level === 'error') color = colors.red;
+		if (level === 'debug') color = colors.green;
+		if (level === 'trace') color = colors.magenta;
+		// Human readable
+		process.stderr.write(`${color}[MCP-BRIDGE][${ts}][${level.toUpperCase()}]${colors.reset} ${msg}` + (meta ? ` ${JSON.stringify(meta)}` : '') + '\n');
+		// Machine readable
 		const rec = { ts: new Date().toISOString(), level, msg };
 		if (meta) rec.meta = meta;
-		process.stderr.write(JSON.stringify(rec) + '\n');
+		process.stderr.write(colors.gray + JSON.stringify(rec) + colors.reset + '\n');
 	}
 }
 function time(fnName) {
@@ -127,31 +146,35 @@ function respond(obj) {
 async function handle(line) {
 	let msg;
 	try { msg = JSON.parse(line); } catch (e) {
+		log('error', 'Invalid JSON received', { line, error: e.message });
 		return respond({ id: null, error: { message: 'Invalid JSON', details: e.message } });
 	}
 	if (!msg || typeof msg !== 'object') {
+		log('error', 'Invalid message shape', { line });
 		return respond({ id: null, error: { message: 'Invalid message shape' } });
 	}
 	const { id, method, params } = msg;
-		if (!method || !methods[method]) {
-			log('warn', 'Unknown method', { method });
-			return respond({ id, error: { message: 'Unknown method', method } });
+	log('info', `Received request`, { id, method, params });
+	if (!method || !methods[method]) {
+		log('warn', 'Unknown method', { method });
+		return respond({ id, error: { message: 'Unknown method', method } });
+	}
+	const stopTimer = time(method);
+	try {
+		if (method.startsWith('agent.') && method !== 'agent.status') {
+			await ensureAgentStarted();
 		}
-		const stopTimer = time(method);
-		try {
-			if (method.startsWith('agent.') && method !== 'agent.status') {
-				await ensureAgentStarted();
-			}
-			log('debug', 'Invoke', { method, params });
-			const result = await methods[method](params || {});
-			const dur = stopTimer();
-			log('info', 'Success', { method, ms: dur });
-			respond({ id, result, ms: dur });
-		} catch (e) {
-			const dur = stopTimer();
-			log('error', 'Failure', { method, ms: dur, error: e.message });
-			respond({ id, error: { message: e.message }, ms: dur });
-		}
+		log('debug', 'Invoke', { method, params });
+		const result = await methods[method](params || {});
+		const dur = stopTimer();
+		log('info', 'Success', { method, ms: dur, id });
+		log('debug', 'Response', { id, result });
+		respond({ id, result, ms: dur });
+	} catch (e) {
+		const dur = stopTimer();
+		log('error', 'Failure', { method, ms: dur, error: e.message, id });
+		respond({ id, error: { message: e.message }, ms: dur });
+	}
 }
 
 // Start reading stdin
