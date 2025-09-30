@@ -287,6 +287,11 @@ class AITimeTrackingAgent {
     this._embeddingMinSim = parseFloat(process.env.AI_AGENT_EMBEDDING_MIN_SIM || '0.80');
     this._issueEmbeddings = new Map(); // key -> { vector, summary }
     this._lastDetectionTrace = null; // for API transparency
+    // LLM activity classification (broader taxonomy beyond meeting/dev)
+    this._llmActivityClassificationEnabled = process.env.AI_AGENT_LLM_ACTIVITY_CLASSIFICATION === 'true';
+    this._llmActivityModel = process.env.AI_AGENT_LLM_ACTIVITY_MODEL || process.env.LLM_MODEL || (process.env.OPENAI_API_KEY ? 'gpt-4o-mini' : (process.env.OLLAMA_MODEL || 'qwen2.5:7b'));
+    this._lastActivityClassificationAt = 0;
+    this._activityClassificationMinIntervalMs = parseInt(process.env.AI_AGENT_LLM_ACTIVITY_INTERVAL_MS || '600000',10); // default 10m reclassification guard
   }
 
   static validateConfig() {
@@ -1547,6 +1552,13 @@ class AITimeTrackingAgent {
       };
       this._enqueueActivityTrace({ type: 'session:start', id: this.currentSession.id, issue: detectedIssue || null, confidence: this.currentSession.confidence });
 
+      // Fire LLM activity classification (non-blocking optional)
+      if (this._llmActivityClassificationEnabled) {
+        this._classifyActivityWithLLM(this.currentSession).catch(e => {
+          this.log(`⚠️ LLM activity classification failed: ${e.message}`);
+        });
+      }
+
       const sessionType = this.detectActivityType(this.currentSession);
       const sessionDescription = sessionType.isMeetingActivity 
         ? (detectedIssue ? `Meeting for ${detectedIssue}` : 'Microsoft Teams Call/Meeting') 
@@ -1602,6 +1614,13 @@ class AITimeTrackingAgent {
 
   // Attempt hourly slicing auto-log (or test-mode accelerated)
   try { await this.attemptHourlySlice(now); } catch(e){ if (CONFIG.verboseLogging) this.log('Slice attempt error: '+e.message); }
+
+      // Opportunistic reclassification if enough time has passed & feature enabled
+      if (this._llmActivityClassificationEnabled) {
+        if (Date.now() - this._lastActivityClassificationAt > this._activityClassificationMinIntervalMs) {
+          this._classifyActivityWithLLM(this.currentSession, true).catch(()=>{});
+        }
+      }
       
       // Log session progress every 15 minutes
       const currentDurationMinutes = Math.floor(this.currentSession.duration / (1000 * 60));
@@ -2796,6 +2815,10 @@ class AITimeTrackingAgent {
     if (decisionsOut.length) lines.push(`Decisions: ${decisionsOut.join(' | ')}`);
     if (actionsOut.length) lines.push(`Actions: ${actionsOut.join(' | ')}`);
     lines.push(`Confidence: ${session.confidence}%`);
+    if (session.classification && session.classification.primaryCategory) {
+      const cats = session.classification.categories ? session.classification.categories.join(', ') : session.classification.primaryCategory;
+      lines.push(`AI Classification: ${session.classification.primaryCategory}${session.classification.primaryCategory && session.classification.categories ? ' ['+cats+']' : ''}`);
+    }
     if (!session.originalDetectedIssue && session.detectedIssue && (session.detectedIssue === this.defaultDevelopmentIssue)) {
       lines.push('Detection: fallback default development issue');
     }
@@ -2804,6 +2827,80 @@ class AITimeTrackingAgent {
     }
 
     return lines.join('\n');
+  }
+
+  /* -------------------- LLM Activity Classification -------------------- */
+  async _classifyActivityWithLLM(session, isUpdate = false) {
+    try {
+      const now = Date.now();
+      this._lastActivityClassificationAt = now;
+      const recentActivity = this.lastActivity || session.activities[session.activities.length -1];
+      if (!recentActivity) return;
+      // Build context snapshot
+      const microTitles = (session.microEvents || []).slice(-20).map(ev => ev.title).filter(Boolean);
+      const context = {
+        windowTitle: recentActivity.windowTitles,
+        activeApp: recentActivity.applications?.active,
+        runningApps: recentActivity.applications?.running?.slice(0,12),
+        gitBranch: recentActivity.gitBranch,
+        directory: recentActivity.currentDirectory,
+        openFiles: recentActivity.openFiles?.slice(0,10),
+        microRecentTitles: microTitles
+      };
+      const categories = [
+        'meeting','standup','planning','code_development','code_review','debugging','testing','documentation','jira_ticket_grooming','research_spike','administration','other'
+      ];
+      const system = 'You label software engineering work activity. Output ONLY JSON.';
+      const user = `CONTEXT:\n${JSON.stringify(context, null, 2)}\n\nInstruction: Classify the PRIMARY category (one of ${categories.join(', ')}) and optionally secondary categories (array). Provide reasoning (<200 chars) and confidence 0-100. JSON schema: {"primaryCategory":"string","categories":["string",...],"confidence":number,"reasoning":"string"}. Prefer more specific category over general (e.g., standup over meeting, code_review over code_development if review indicators). If window/application strongly indicates documentation (e.g., Confluence, Markdown editing) use documentation.`;
+      const provider = (process.env.LLM_PROVIDER || (process.env.OPENAI_API_KEY ? 'openai' : 'ollama')).toLowerCase();
+      let raw;
+      if (provider === 'openai') {
+        let OpenAI=null; try { OpenAI = require('openai').OpenAI || require('openai'); } catch(_) {}
+        if (!OpenAI) throw new Error('openai package missing');
+        if (!this._openaiActivityClient) this._openaiActivityClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+        const completion = await this._openaiActivityClient.chat.completions.create({
+          model: this._llmActivityModel,
+            temperature: 0,
+            messages: [ { role:'system', content: system }, { role:'user', content: user } ],
+            response_format: { type: 'json_object' }
+        });
+        raw = completion.choices[0].message.content;
+        this.log(`💬 OpenAI classify model ${this._llmActivityModel} usage: prompt ${completion.usage.prompt_tokens}, completion ${completion.usage.completion_tokens}, total ${completion.usage.total_tokens}`);
+      } else if (provider === 'ollama') {
+        const fetchFn = global.fetch ? global.fetch.bind(global) : (await import('node-fetch')).default;
+        const ollamaUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
+        const body = { model: this._llmActivityModel, stream:false, prompt: `${system}\n${user}` };
+        const resp = await fetchFn(`${ollamaUrl}/api/generate`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+        if (!resp.ok) throw new Error(`ollama classify failed ${resp.status}`);
+        const json = await resp.json(); raw = json.response;
+      } else {
+        // Fallback heuristic classification
+        const lowerTitle = (context.windowTitle||'').toLowerCase();
+        let primary = 'other';
+        if (/stand.?up/.test(lowerTitle)) primary='standup';
+        else if (/retro|retrospective/.test(lowerTitle)) primary='meeting';
+        else if (/review|pull request|pr\b/.test(lowerTitle)) primary='code_review';
+        else if (/debug|error|stack trace/.test(lowerTitle)) primary='debugging';
+        else if (/test|jest|cypress/.test(lowerTitle)) primary='testing';
+        else if (/confluence|notion|doc|readme|spec/i.test(lowerTitle)) primary='documentation';
+        else if (/jira|backlog|groom|refine/.test(lowerTitle)) primary='jira_ticket_grooming';
+        else if (/research|spike/.test(lowerTitle)) primary='research_spike';
+        else if (context.gitBranch) primary = 'code_development';
+        session.classification = { primaryCategory: primary, categories:[primary], confidence: 60, reasoning: 'heuristic fallback' };
+        this._enqueueActivityTrace({ type: 'classification', sessionId: session.id, provider:'fallback', primary });
+        await this.log(`🧪 Heuristic classification -> ${primary}`);
+        return;
+      }
+      let parsed; try { parsed = JSON.parse(raw); } catch(_) { throw new Error('Non-JSON classification output'); }
+      if (!parsed.primaryCategory) throw new Error('Missing primaryCategory');
+      parsed.categories = Array.isArray(parsed.categories) && parsed.categories.length ? parsed.categories : [parsed.primaryCategory];
+      if (parsed.confidence == null) parsed.confidence = 50;
+      session.classification = parsed;
+      this._enqueueActivityTrace({ type: 'classification', sessionId: session.id, provider, primary: parsed.primaryCategory, confidence: parsed.confidence });
+      await this.log(`${isUpdate? '🔄 Reclassified' : '🧠 Classified'} session activity: ${parsed.primaryCategory} (conf ${parsed.confidence}%)`);
+    } catch (e) {
+      if (CONFIG.verboseLogging) this.log('Classification error: '+e.message);
+    }
   }
 
   formatDuration(milliseconds) {
