@@ -30,6 +30,7 @@ A web application and AI-powered background agent to help you log work time for 
 
 ## New in Latest Version
 - 🤖 **AI Time Tracking Agent** - Automatically monitors and logs your work
+- 🧠 **LLM Activity Classification** - Deeper taxonomy (code_review, debugging, documentation, grooming, research, etc.)
 - 📊 **AI Agent Dashboard** - Web interface to manage auto-tracked sessions
 - 🎯 **Smart Issue Detection** - Recognizes JIRA issues from window titles and Git branches
 - ⚡ **Auto-Logging** - High-confidence sessions logged automatically
@@ -164,6 +165,9 @@ Environment knobs (override in `.env` or runtime config endpoints):
 | `AI_AGENT_STANDUP_ISSUE` | If set, standup meetings log to this issue instead of `AI_AGENT_DEFAULT_MEETING_ISSUE` |
 | `AI_AGENT_DEFAULT_MEETING_ISSUE` | Issue key used for all meeting sessions (Teams / Zoom / etc.) |
 | `AI_AGENT_DEFAULT_DEVELOPMENT_ISSUE` | Current sprint story fallback used when dev work is detected but no specific issue could be inferred (prevents "Unknown" sessions) |
+| `AI_AGENT_LLM_ACTIVITY_CLASSIFICATION` | Enable LLM-based activity taxonomy enrichment (default false) |
+| `AI_AGENT_LLM_ACTIVITY_MODEL` | Override model for activity classification (defaults to `LLM_MODEL` fallback) |
+| `AI_AGENT_LLM_ACTIVITY_INTERVAL_MS` | Min interval between reclassification passes (default 600000 ms) |
 
 Runtime adjustments (no restart): PATCH `/api/ai-agent/runtime-config` with fields like `monitoringInterval`, `workSessionThreshold`, etc. (values in ms or minutes auto‑converted if <1000).
 
@@ -415,6 +419,32 @@ Window titles containing any substring from `AI_AGENT_EXCLUDED_TITLE_KEYWORDS` (
 
 #### NEW: Standup Meeting Differentiation
 Standup meetings are auto-classified (keyword + meeting app context). Provide extra variants via `AI_AGENT_STANDUP_KEYWORDS`. If `AI_AGENT_STANDUP_ISSUE` is set those sessions log there; otherwise they fall back to `AI_AGENT_DEFAULT_MEETING_ISSUE`.
+
+### LLM Activity Classification (Optional)
+Enable richer categorization beyond meeting vs development:
+
+```dotenv
+AI_AGENT_LLM_ACTIVITY_CLASSIFICATION=true
+AI_AGENT_LLM_ACTIVITY_MODEL=gpt-4o-mini
+AI_AGENT_LLM_ACTIVITY_INTERVAL_MS=600000
+```
+
+Assigned primary categories:
+`meeting`, `standup`, `planning`, `code_development`, `code_review`, `debugging`, `testing`, `documentation`, `jira_ticket_grooming`, `research_spike`, `administration`, `other`.
+
+Each session gains a `classification` object:
+```json
+{
+   "primaryCategory": "code_review",
+   "categories": ["code_review","code_development"],
+   "confidence": 82,
+   "reasoning": "Window titles show PR diff & review context"
+}
+```
+Description lines append:
+`AI Classification: code_review [code_review, code_development]`.
+
+If the LLM call fails or provider unsupported the agent falls back to a heuristic using window title, branch name, and tool signals (reasoning: `heuristic fallback`).
 
 ### Embedding Similarity (Optional Disambiguation)
 Enable semantic ranking to break ties when scoring pipeline is ambiguous:
